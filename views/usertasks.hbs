@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-md-9">
+    <h3>Assigned Tasks</h3>
+  </div>
+  <div class="col-md-3" style="text-align: right;">
+    {{#if_in user_roles "PROJECT_MANAGEMENT"}}
+      <a class="btn btn-primary" href="/leadtime">Lead Time Default Settings</a>      
+    {{/if_in}}
+  </div>
+</div>
+
+<br/>
+<div class="">
+<ul class="nav nav-tabs">
+  <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#usertab">My Tasks</a></li>
+   {{#if_in user_roles "PROJECT_MANAGEMENT"}}
+  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#opentab">Open Tasks</a></li>
+  {{/if_in}}
+</ul>
+<div class="tab-content">
+<div class="tab-pane fade in active" id="usertab" role="tablist" aria-multiselectable="true">
+  <div class="card">
+    <div class="card-header bg-primary" role="tab" id="headingTwo">
+      <h5 class="mb-0">
+      
+      </h5>
+    </div>
+    <div id="myTasks" class="" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="card-block">
+        <table class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th class="col-md-3">Application</th>
+              <th class="col-md-2">Start Date</th>
+              <th class="col-md-7">Task</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {{#each plan}}
+              <tr class="row row-eq-height" >
+                <td class="col-md-3" style="height: 120px; overflow: hidden">
+                  <a href="/projectview/{{applicationId}}" target="_new">{{
+                    getAppNameForPlan ../applications applicationId
+                    }}</a>
+                  {{getPreferredName ../applications applicationId}}
+                </td>
+                <td class="col-md-2" style="height: 120px; overflow: hidden">{{getApplicationStartTime ../applications applicationId}}</td>
+                <td class="col-md-7">{{
+                  getPlanTaskAssignments this ../userId ../applications applicationId
+                  }}</td>
+              </tr>
+            {{/each}}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tab-pane fade" id="opentab" role="tablist" aria-multiselectable="true">
+  <div class="card">
+    <div class="card-header bg-primary" role="tab" id="headingTwo">
+      <h5 class="mb-0">
+      
+      </h5>
+    </div>
+    <div class="" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="card-block">
+        <table class="table table-sm table-bordered table-hover" style="table-layout: fixed">
+          <thead>
+            <tr>
+              <th class="col-md-3">Application</th>
+              <th class="col-md-2">Start Date</th>
+              <th class="col-md-7">Hot Tasks</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {{#each open}}
+              <tr >
+                <td class="col-md-3">
+                  <a href="/projectview/{{applicationId}}" target="_new">{{
+                    getAppNameForPlan ../openApplications applicationId
+                    }}
+                    </a>
+                  {{getPreferredName ../openApplications applicationId}}
+                  <br/>&nbsp; <br/>&nbsp;
+                </td>
+                <td class="col-md-2">{{getApplicationStartTime ../openApplications applicationId}}<br/>&nbsp; <br/>&nbsp;</td>
+                <td class="col-md-7">{{
+                  getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 
+                  }}</td>
+              </tr>
+            {{/each}}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+

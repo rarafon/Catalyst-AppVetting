@@ -3,24 +3,50 @@
 <script src="/javascript/xedit.js" type="text/javascript"></script>
 
 <style>
-  button.btn.btn-primary.btn-sm.editable-submit {
-    width: 35px;
-    height: 35px;
-  }
+ button.btn.btn-primary.btn-sm.editable-submit {
+   width: 35px;
+   height: 35px;
+ }
 
-  button.btn.btn-primary.btn-sm.editable-submit:after {
-    content:  "\2713 ";
-    font-size: 24px;
-  }
+ button.btn.btn-primary.btn-sm.editable-submit:after {
+   content:  "\2713 ";
+   font-size: 24px;
+ }
 
-  button.btn.btn-default.btn-sm.editable-cancel {
-    width: 35px;
-    height: 35px;
-  }
-  button.btn.btn-default.btn-sm.editable-cancel:after {
-    content:  "\2190 ";
-    font-size: 24px;
-  }
+ button.btn.btn-default.btn-sm.editable-cancel {
+   width: 35px;
+   height: 35px;
+ }
+ button.btn.btn-default.btn-sm.editable-cancel:after {
+   content:  "\2190 ";
+   font-size: 24px;
+ }
+
+ .assessment-checklist fieldset {
+   padding: 1em;
+   border: 1px solid rgba(0, 0, 0, 0.125);
+   border-radius: 4px;
+   display: inline-block;
+ }
+ .assessment-checklist legend {
+   border: 1px solid rgba(0, 0, 0, 0.125);
+   border-radius: 4px;
+   padding: 0.5em;
+ }
+ .assessment-checklist li {
+   list-style-type: none;
+   margin-bottom: 2em;
+ }
+ .assessment-checklist li.checklist-item label {
+   padding: 0.5em;
+ }
+ .assessment-checklist li label input:checked + span {
+   font-weight: bold;
+ }
+ .assessment-checklist textarea {
+   width: 22em;
+   height: 10em;
+ }
 </style>
 
 
@@ -47,6 +73,9 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#work" role="tab">Work Items</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#checklist" role="tab">Checklist</a>
       </li>
     </ul>
 
@@ -80,7 +109,7 @@
                   <td class="col-xs-9">
                     {{#if_not_eq application.email ''}}
                       <a href="mailto:{{application.email}}">{{application.email}}</a>
-                    {{else}}
+        {{else}}
                       None
                     {{/if_not_eq}}
                   </td>
@@ -176,7 +205,7 @@
 
               <h4>Map</h4>
               <iframe width="100%" height="350" frameborder="0" style="border:0"
-              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD2CmgnSECdg_g-aFgp95NUBv2QUEidDvs&q={{googleMapAddr application.address}}"></iframe>
+                      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD2CmgnSECdg_g-aFgp95NUBv2QUEidDvs&q={{googleMapAddr application.address}}"></iframe>
             </div>
           </div>
         {{/each}}
@@ -281,6 +310,9 @@
                     <strong>Site comments:</strong><br/>
                     <span name="{{_id}}.siteComments">{{siteComments}}</span><br/>
                     <br/>
+                    <strong>Project Comments:</strong><br/>
+                    {{projectComments}}<br/>
+                    <br/>
                     <strong>Cost:</strong><br/>
                     <span name="{{_id}}.cost">{{cost}}</span>
                   </p>
@@ -292,350 +324,589 @@
         </div>
       </div><!-- end #work -->
 
+      <!-- Assessment Checklist -->
+      <div class="tab-pane" id="checklist" role="tabpanel">
+        <form>
+          {{#each assessment}}
+          <ul class="assessment-checklist">
+            <br />
+            <li class="checklist-item">
+              <fieldset>
+                <legend>Materials</legend>
+                <textarea name="materials" class="materials">{{ materials }}</textarea>
+              </fieldset>
+            </li>
+            <li class="checklist-item">
+              <fieldset>
+                <legend>Hazardous Materials</legend>
+                <p>
+                  <strong>Lead</strong> <br/>
+                  <label>
+                    <input type="radio" name="has_lead" class="has_lead" value="yes"
+                           {{#if_eq hazard_safety.has_lead 'yes' }}checked="checked"{{/if_eq}}>
+                    Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="has_lead" class="has_lead" value="no"
+                           {{#if_eq hazard_safety.has_lead 'no' }}checked="checked"{{/if_eq}}>
+                    No
+                  </label>
+                  <label>
+                    <input type="radio" name="has_lead" class="has_lead" value="unsure"
+                           {{#if_eq hazard_safety.has_lead 'unsure' }}checked="checked"{{/if_eq}}>
+                    Unsure
+                  </label>              
+                </p>
+                <p>
+                  <strong>Asbestos</strong> <br/>
+                  <label>
+                    <input type="radio" name="has_asbestos" class="has_asbestos" value="yes"
+                           {{#if_eq hazard_safety.has_asbestos 'yes' }}checked="checked"{{/if_eq}}>
+                    Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="has_asbestos" class="has_asbestos" value="no"
+                           {{#if_eq hazard_safety.has_asbestos 'no' }}checked="checked"{{/if_eq}}>
+                    No
+                  </label>
+                  <label>
+                    <input type="radio" name="has_asbestos" class="has_asbestos" value="unsure"
+                           {{#if_eq hazard_safety.has_asbestos 'unsure' }}checked="checked"{{/if_eq}}>
+                    Unsure
+                  </label>              
+                </p>
+                <p>
+                  <strong>Safety Plan</strong> <br />
+                  <textarea name="safety_plan" class="safety_plan">{{
+                    hazard_safety.safety_plan
+                  }}</textarea>
+                </p>
+              </fieldset>
+            </li>
+
+            <li>
+              <fieldset>
+                <legend>Tools / Rentals</legend>
+                <textarea name="tool_rentals" class="tool_rentals">{{ tool_rentals }}</textarea>
+              </fieldset>
+            </li>
+
+            <li>
+              <fieldset>
+                <legend>Subcontractors</legend>
+                <textarea name="subcontractors" class="subcontractors">{{ subcontractors }}</textarea>
+              </fieldset>
+            </li>
+
+            <li class="checklist-item">
+              <fieldset>
+                <legend>Other Costs</legend>
+                <p>
+                  <strong>Permit</strong>
+                  <br/>
+                  <textarea name="permit_name" class="permit_name"></textarea>
+                  <br/>
+                  <label>Total Cost:
+                    <input type="number" name="permit_cost" class="permit_cost" value="0.00">
+                  </label>
+                </p>
+                <p>
+                  <strong>Portapottie</strong><br/>
+                  <label>
+                    <input type="checkbox" name="porta_pottie_required"
+                           class="porta_pottie_required" />
+                    <span>Required</span>
+                  </label>
+                  <br/>
+                  <label>
+                    Cost:
+                    <input type="number" name="porta_pottie_cost"
+                           class="porta_pottie_cost" value="0.00" />
+                  </label>
+                </p>
+                <p>
+                  <strong>Waste / Dump Trailer</strong><br/>
+                  <label>
+                    <input type="checkbox" name="waste_dumpster_required"
+                           class="waste_dumpster_required" />
+                    <span>Required</span>
+                  </label>
+                  <br/>
+                  <label>
+                    Cost:
+                    <input type="number" name="waste_dumpster_cost"
+                           class="waste_dumpster_cost" value="0.00" />
+                  </label>
+                </p>
+              </fieldset>
+            </li>
+
+            <li>
+              <fieldset>
+                <legend>Estimates</legend>
+                <p>
+                  <label>
+                    <strong>Total Cost</strong><br>
+                    <input type="number" name="estimates_total_cost"
+                           class="estimates_total_cost" value="0.00" />
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    <strong>Volunteers Needed</strong><br>
+                    <input type="number" name="estimates_volunteers_needed"
+                           class="estimates_volunteers_needed" value="0" />
+                  </label>
+                </p>
+              </fieldset>
+            </li>
+
+            <li>
+              <fieldset>
+                <legend>Proposed Dates</legend>
+                <p>
+                  <label>
+                    <strong>Start Date</strong>
+                    <input type="date" name="proposed_dates_start"
+                           class="proposed_dates_start" />
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    <strong>End Date</strong>
+                    <input type="date" name="proposed_dates_end"
+                           class="proposed_dates_end" />
+                  </label>
+                </p>
+              </fieldset>
+            </li>
+            
+          </ul>
+          {{/each}}
+        </form>  
+      </div><!-- end #checklist -->
+      
     </div>
 
   </div>
 </div>
 
 <script>
-  var workItems = {{{stringify results.work}}}
-  var docs = {{{stringify results.doc}}}
-  $(document).ready(function() {
-    $('.work-item-edit').each(watchEditButton)
-    $('.work-item-new').on('click', handleNewWorkItemSubmission)
-    $('.work-item-clear').on('click', handleNewWorkItemClear)
-    $('#site_summary').on('keydown', handleSiteSummaryInput)
-
-    $('#status').editable({
-        value: docs[0].status,
-        source: [
-          {value: 'assess', text: 'Site Assessment - Pending'},
-          {value: 'assessComp', text: 'Site Assessment - Complete'},
-        ]
-    });
-
-
-  })
-
-  function handleSiteSummaryInput(e) {
-    if (window.siteSummaryTimeout) {
-      window.clearTimeout(window.siteSummaryTimeout)
-    }
-    // TODO: set this URL
-    window.siteSummaryTimeout = window.setTimeout(function() {
-      xhr(
-        { id: docs[0]._id, name: 'notes.site_summary', value: this.val },
-        'POST',
-        '/site/updatesummary',
-        function(err, data) {
-          console.info('site summary saved')
-        }
-      )
-    }.bind({val: e.target.value}), 500)
-  }
-
-  // Used with $(*).each
-  function watchEditButton(idx) {
-    $(this).on('click', showWorkItemEditForm)
-  }
-
-  function showWorkItemEditForm(e) {
-    e.preventDefault()
-    var workItemParent = this.parentElement
-    var workItemContainer = $(workItemParent)
-    var workItemId = $(workItemParent.parentElement).attr('name')
-
-    var currentData = {}
-    $('[name*="' + workItemId + '"]', workItemContainer).each(function(idx) {
-      var path = $(this).attr('name').replace(workItemId + '.', '')
-      currentData[path] = this.innerText
-    })
-
-    workItemContainer.empty()
-
-    var fields = [
-      {field: 'name', text:'Name'},
-      {field: 'description', text: 'Description', type: 'textarea'},
-      {field: 'siteComments', text: 'Site Comments', type: 'textarea'},
-      {field: 'cost', text: 'Cost'},
-    ]
-
-    fields.forEach(function(f) {
-      var formGroup = $('<div class="form-group"></div>')
-      $('<label>' + f.text + '</label>').appendTo(formGroup)
-      if (f.type && f.type === 'textarea') {
-        $('<textarea></textarea>')
-        .addClass('form-control')
-        .attr('name', workItemId + '.' + f.field)
-        .attr('rows', 5)
-        .val(currentData[f.field])
-        .appendTo(formGroup)
-      } else {
-        $('<input></input>')
-        .addClass('form-control')
-        .attr('name', workItemId + '.' + f.field)
-        .val(currentData[f.field])
-        .appendTo(formGroup)
-      }
-
-      workItemContainer.append(formGroup)
-    })
-
-    $('<button></button>')
-    .text('Save')
-    .addClass('btn').addClass('btn-primary')
-    .addClass('card-link')
-    .on('click', function(e) {
-      saveWorkItem(workItemContainer)
-    })
-    .appendTo(workItemContainer)
-
-    $('<button></button>')
-    .text('Cancel')
-    .addClass('btn').addClass('btn-danger')
-    .addClass('card-link')
-    .on('click', function(e) {
-      for (let i=0; i<workItems.length; i++) {
-        if (workItems[i]._id === workItemId) {
-          showWorkItem(workItems[i], workItemContainer)
-        }
-      }
-    })
-    .appendTo(workItemContainer)
-  }
+ var assessment = {{{ stringify assessment }}}
+   window.assessment = assessment;
+
+ var workItems = {{{stringify results.work}}}
+   var docs = {{{stringify results.doc}}}
+     $(document).ready(function() {
+       $('.work-item-edit').each(watchEditButton)
+       $('.work-item-new').on('click', handleNewWorkItemSubmission)
+       $('.work-item-clear').on('click', handleNewWorkItemClear)
+       $('#site_summary').on('keydown', handleSiteSummaryInput)
+
+       $('#status').editable({
+         value: docs[0].status,
+         source: [
+           {value: 'assess', text: 'Site Assessment - Pending'},
+           {value: 'assessComp', text: 'Site Assessment - Complete'},
+         ]
+       });
+
+       // Assessment Checklist autosaving
+       $('.assessment-checklist input[type="radio"], .assessment-checklist input[type="checkbox"], ' +
+         '.assessment-checklist input[type="date"], .assessment-checklist input[type="number"]')
+         .change(saveAssessmentDocument);
+       $('.assessment-checklist input[type="text"], .assessment-checklist textarea')
+         .blur(saveAssessmentDocument);
+     })
+
+ function handleSiteSummaryInput(e) {
+   if (window.siteSummaryTimeout) {
+     window.clearTimeout(window.siteSummaryTimeout)
+   }
+   // TODO: set this URL
+   window.siteSummaryTimeout = window.setTimeout(function() {
+     xhr(
+       { id: docs[0]._id, name: 'notes.site_summary', value: this.val },
+       'POST',
+       '/site/updatesummary',
+       function(err, data) {
+         console.info('site summary saved')
+       }
+     )
+   }.bind({val: e.target.value}), 500)
+ }
+
+ // Used with $(*).each
+ function watchEditButton(idx) {
+   $(this).on('click', showWorkItemEditForm)
+ }
+
+ function showWorkItemEditForm(e) {
+   e.preventDefault()
+   var workItemParent = this.parentElement
+   var workItemContainer = $(workItemParent)
+   var workItemId = $(workItemParent.parentElement).attr('name')
+
+   var currentData = {}
+   $('[name*="' + workItemId + '"]', workItemContainer).each(function(idx) {
+     var path = $(this).attr('name').replace(workItemId + '.', '')
+     currentData[path] = this.innerText
+   })
+
+   workItemContainer.empty()
+
+   var fields = [
+     {field: 'name', text:'Name'},
+     {field: 'description', text: 'Description', type: 'textarea'},
+     {field: 'siteComments', text: 'Site Comments', type: 'textarea'},
+     {field: 'cost', text: 'Cost'},
+   ]
+
+   fields.forEach(function(f) {
+     var formGroup = $('<div class="form-group"></div>')
+     $('<label>' + f.text + '</label>').appendTo(formGroup)
+     if (f.type && f.type === 'textarea') {
+       $('<textarea></textarea>')
+         .addClass('form-control')
+         .attr('name', workItemId + '.' + f.field)
+         .attr('rows', 5)
+         .val(currentData[f.field])
+         .appendTo(formGroup)
+     } else {
+       $('<input></input>')
+         .addClass('form-control')
+         .attr('name', workItemId + '.' + f.field)
+         .val(currentData[f.field])
+         .appendTo(formGroup)
+     }
+
+     workItemContainer.append(formGroup)
+   })
+
+   $('<button></button>')
+         .text('Save')
+         .addClass('btn').addClass('btn-primary')
+         .addClass('card-link')
+         .on('click', function(e) {
+           saveWorkItem(workItemContainer)
+         })
+         .appendTo(workItemContainer)
+
+   $('<button></button>')
+         .text('Cancel')
+         .addClass('btn').addClass('btn-danger')
+         .addClass('card-link')
+         .on('click', function(e) {
+           for (let i=0; i<workItems.length; i++) {
+             if (workItems[i]._id === workItemId) {
+               showWorkItem(workItems[i], workItemContainer)
+             }
+           }
+         })
+         .appendTo(workItemContainer)
+ }
 
-  function showWorkItem(data, node) {
-    node.empty()
+ function showWorkItem(data, node) {
+   node.empty()
 
-    var cardBlock = node
+   var cardBlock = node
 
-    $('<h4></h4>').addClass('card-title')
-    .attr('name', data._id + '.name')
-    .text(data.name)
-    .appendTo(cardBlock)
-
-    $('<p></p>').addClass('text-muted')
-    .text(new Date(data.date).toString())
-    .appendTo(cardBlock)
-
-    var cardText = $('<p></p>').addClass('card-text')
-    .appendTo(cardBlock)
-
-    $('<strong>Description:</strong>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<span></span>')
-    .attr('name', data._id + '.description')
-    .text(data.description)
-    .appendTo(cardText)
-
-    $('<br></br>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<strong>Vetting Comments:</strong>').appendTo(cardText)
-    // $('<br></br>').appendTo(cardText)
-
-    $('<p></p>').text(data.vettingComments).appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<strong>Site Comments:</strong>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<p></p>').attr('name', data._id + '.siteComments')
-    .text(data.siteComments).appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<strong>Cost:</strong>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<span></span>')
-    .attr('name', data._id + '.cost')
-    .text(data.cost)
-    .appendTo(cardText)
-
-    $('<a></a>').addClass('btn').addClass('btn-primary')
-    .addClass('card-link').addClass('work-item-edit')
-    .text('Edit')
-    .attr('href', '#')
-    .on('click', showWorkItemEditForm)
-    .appendTo(cardBlock)
-  }
-
-  function saveWorkItem(node) {
-    var data = {}, id = false
-    $('input, textarea', node).each(function(idx) {
-      var path = this.name.split('.')[1]
-      data[path] = this.value
-      if (!id) id = this.name.split('.')[0]
-    })
-
-    // XHR here
-    var xhrData = JSON.parse(JSON.stringify(data))
-    xhrData.id = id
-
-    xhr(xhrData, 'POST', '/site/updateitem', function(err) {
-      if (err) {
-        // TODO: If error, flip the value back and show an error message to the user
-        // alert('Value did not save, please reload the page')
-      }
-
-      for (var i=0; i<workItems.length; i++) {
-        if (workItems[i]._id === id) {
-          Object.keys(data).forEach(function(k) {
-            workItems[i][k] = data[k]
-          })
-
-          showWorkItem(workItems[i], node)
-        }
-      }
-    })
-
-
-
-
-
-
-  }
-
-  function xhr(data, method, url, next) {
-    //post to database
-
-    var posting = $.ajax({
-      type : method,
-      url : url,
-      dataType : 'json',
-      contentType : 'application/json; charset=UTF-8',
-      data : JSON.stringify(data)
-    });
-
-    //check for error
-    posting.done(function (xhr) {
-      if(xhr.status === 'success' || xhr.status === 200 || xhr.status ==='200') {
-        next(null, xhr)
-      } else {
-        next(new Error('Could not complete xhr'))
-      }
-    });
-
-    posting.fail(function (res) {
-      next(new Error('Could not complete xhr'))
-    });
-  }
-
-  function handleNewWorkItemSubmission(e) {
-    var newWorkItem = {}, error = false
-
-    $('input, textarea', e.target.parentNode).each(function(idx) {
-      if (this.value.length === 0 && this.name !== 'cost') {
-        $(this.parentNode).addClass('has-danger')
-        error = true
-      } else {
-        newWorkItem[this.name] = this.value
-        $(this.parentNode).removeClass('has-danger')
-      }
-    })
-
-    if (error === false) {
-      createNewWorkItem(newWorkItem, function(err) {
-        handleNewWorkItemClear()
-      })
-    }
-  }
-
-  function handleNewWorkItemClear(e, node) {
-    $('input, textarea', (e ? e.target.parentNode : node)).each(function(idx) {
-      $(this).val('')
-      $(this.parentNode).removeClass('has-danger')
-    })
-  }
-
-  function createNewWorkItem(w, next) {
-    var id = docs[0]._id
-    var rightNow = new Date()
-
-    w.date = rightNow
-    w.updated = rightNow
-    w.applicationId = id
-
-    xhr(w, 'POST', '/site/additem', function(err, data) {
-      // TODO: Handle error
-      if (err) { alert('There was an error saving your work item') }
-
-      w._id = data.itemId
-      workItems.push(w)
-      var newNode = addWorkItem(w)
-      handleNewWorkItemClear(null, $('[name="new"]'))
-
-    })
-  }
-
-  function addWorkItem(w) {
-    var cardContainer = $('#workItemCards')
-
-    var cardDiv = $('<div></div>').addClass('col-xs-12').addClass('col-sm-6')
-    .appendTo(cardContainer)
-
-    var card = $('<div></div>').addClass('card').addClass('work-item')
-    .attr('name', w._id)
-    .appendTo(cardDiv)
-
-    var cardBlock = $('<div></div>').addClass('card-block')
-    .appendTo(card)
-
-
-    $('<h4></h4>').addClass('card-title')
-    .attr('name', w._id + '.name')
-    .text(w.name)
-    .appendTo(cardBlock)
-
-    $('<p></p>').addClass('text-muted')
-    .text(w.date.toString())
-    .appendTo(cardBlock)
-
-    var cardText = $('<p></p>').addClass('card-text')
-    .appendTo(cardBlock)
-
-    $('<strong>Description:</strong>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<span></span>')
-    .attr('name', w._id + '.description')
-    .text(w.description)
-    .appendTo(cardText)
-
-    $('<br></br>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<strong>Vetting Comments:</strong>').appendTo(cardText)
-    // $('<br></br>').appendTo(cardText)
-
-    $('<p></p>').text(w.vettingComments).appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<strong>Site Comments:</strong>').appendTo(cardText)
-    // $('<br></br>').appendTo(cardText)
-
-    $('<p></p>').text(w.siteComments).appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<strong>Cost:</strong>').appendTo(cardText)
-    $('<br></br>').appendTo(cardText)
-
-    $('<span></span>')
-    .attr('name', w._id + '.cost')
-    .text(w.cost)
-    .appendTo(cardText)
-
-    $('<a></a>').addClass('btn').addClass('btn-primary')
-    .addClass('card-link').addClass('work-item-edit')
-    .text('Edit')
-    .attr('href', '#')
-    .on('click', showWorkItemEditForm)
-    .appendTo(cardBlock)
-
-    return cardBlock
-  }
-
+   $('<h4></h4>').addClass('card-title')
+                 .attr('name', data._id + '.name')
+                 .text(data.name)
+                 .appendTo(cardBlock)
+
+   $('<p></p>').addClass('text-muted')
+                 .text(new Date(data.date).toString())
+                 .appendTo(cardBlock)
+
+   var cardText = $('<p></p>').addClass('card-text')
+                              .appendTo(cardBlock)
+
+   $('<strong>Description:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', data._id + '.description')
+                              .text(data.description)
+                              .appendTo(cardText)
+
+   $('<br></br>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Vetting Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(data.vettingComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Site Comments:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').attr('name', data._id + '.siteComments')
+                              .text(data.siteComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Project Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(data.projectComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Cost:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', data._id + '.cost')
+                              .text(data.cost)
+                              .appendTo(cardText)
+
+   $('<a></a>').addClass('btn').addClass('btn-primary')
+                              .addClass('card-link').addClass('work-item-edit')
+                              .text('Edit')
+                              .attr('href', '#')
+                              .on('click', showWorkItemEditForm)
+                              .appendTo(cardBlock)
+ }
+
+ function saveWorkItem(node) {
+   var data = {}, id = false
+   $('input, textarea', node).each(function(idx) {
+     var path = this.name.split('.')[1]
+     data[path] = this.value
+     if (!id) id = this.name.split('.')[0]
+   })
+
+   // XHR here
+   var xhrData = JSON.parse(JSON.stringify(data))
+   xhrData.id = id
+
+   xhr(xhrData, 'POST', '/site/updateitem', function(err) {
+     if (err) {
+       // TODO: If error, flip the value back and show an error message to the user
+       // alert('Value did not save, please reload the page')
+     }
+
+     for (var i=0; i<workItems.length; i++) {
+       if (workItems[i]._id === id) {
+         Object.keys(data).forEach(function(k) {
+           workItems[i][k] = data[k]
+         })
+
+         showWorkItem(workItems[i], node)
+       }
+     }
+   })
+
+
+
+
+
+
+ }
+
+ function xhr(data, method, url, next) {
+   //post to database
+
+   var posting = $.ajax({
+     type : method,
+     url : url,
+     dataType : 'json',
+     contentType : 'application/json; charset=UTF-8',
+     data : JSON.stringify(data)
+   });
+
+   //check for error
+   posting.done(function (xhr) {
+     if(xhr.status === 'success' || xhr.status === 200 || xhr.status ==='200') {
+       next(null, xhr)
+     } else {
+       next(new Error('Could not complete xhr'))
+     }
+   });
+
+   posting.fail(function (res) {
+     next(new Error('Could not complete xhr'))
+   });
+ }
+
+ function handleNewWorkItemSubmission(e) {
+   var newWorkItem = {}, error = false
+
+   $('input, textarea', e.target.parentNode).each(function(idx) {
+     if (this.value.length === 0 && this.name !== 'cost') {
+       $(this.parentNode).addClass('has-danger')
+       error = true
+     } else {
+       newWorkItem[this.name] = this.value
+       $(this.parentNode).removeClass('has-danger')
+     }
+   })
+
+   if (error === false) {
+     createNewWorkItem(newWorkItem, function(err) {
+       handleNewWorkItemClear()
+     })
+   }
+ }
+
+ function handleNewWorkItemClear(e, node) {
+   $('input, textarea', (e ? e.target.parentNode : node)).each(function(idx) {
+     $(this).val('')
+     $(this.parentNode).removeClass('has-danger')
+   })
+ }
+
+ function createNewWorkItem(w, next) {
+   var id = docs[0]._id
+   var rightNow = new Date()
+
+   w.date = rightNow
+   w.updated = rightNow
+   w.applicationId = id
+
+   xhr(w, 'POST', '/site/additem', function(err, data) {
+     // TODO: Handle error
+     if (err) { alert('There was an error saving your work item') }
+
+     w._id = data.itemId
+     workItems.push(w)
+     var newNode = addWorkItem(w)
+     handleNewWorkItemClear(null, $('[name="new"]'))
+
+   })
+ }
+
+ function addWorkItem(w) {
+   var cardContainer = $('#workItemCards')
+
+   var cardDiv = $('<div></div>').addClass('col-xs-12').addClass('col-sm-6')
+                                 .appendTo(cardContainer)
+
+   var card = $('<div></div>').addClass('card').addClass('work-item')
+                              .attr('name', w._id)
+                              .appendTo(cardDiv)
+
+   var cardBlock = $('<div></div>').addClass('card-block')
+                                   .appendTo(card)
+
+
+   $('<h4></h4>').addClass('card-title')
+                                   .attr('name', w._id + '.name')
+                                   .text(w.name)
+                                   .appendTo(cardBlock)
+
+   $('<p></p>').addClass('text-muted')
+                                   .text(w.date.toString())
+                                   .appendTo(cardBlock)
+
+   var cardText = $('<p></p>').addClass('card-text')
+                              .appendTo(cardBlock)
+
+   $('<strong>Description:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', w._id + '.description')
+                              .text(w.description)
+                              .appendTo(cardText)
+
+   $('<br></br>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Vetting Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(w.vettingComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Site Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(w.siteComments).attr('name', w._id + '.siteComments').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+  $('<strong>Project Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(w.projectComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Cost:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', w._id + '.cost')
+                              .text(w.cost)
+                              .appendTo(cardText)
+
+   $('<a></a>').addClass('btn').addClass('btn-primary')
+                              .addClass('card-link').addClass('work-item-edit')
+                              .text('Edit')
+                              .attr('href', '#')
+                              .on('click', showWorkItemEditForm)
+                              .appendTo(cardBlock)
+
+   return cardBlock
+ }
+
+ function saveAssessmentDocument() {
+   // Gather all of the details for the assessment.
+   var $ac = $('.assessment-checklist');
+   var materials = $ac.find('[name="materials"]').val();
+   var hazard_safety = {
+     has_lead: $ac.find('.has_lead:checked').val() || null,
+     has_asbestos: $ac.find('.has_asbestos:checked').val() || null,
+     safety_plan: $ac.find('.safety_plan').val()
+   };
+   var tool_rentals = $ac.find('.tool_rentals').val();
+   var subcontractors = $ac.find('.subcontractors').val();
+   var other_costs = {
+     permit: {
+       name: $ac.find('.permit_name').val(),
+       cost: $ac.find('.permit_cost').val()
+     },
+     porta_pottie: {
+       required: $ac.find('.porta_pottie_required').prop('checked'),
+       cost: $ac.find('.porta_pottie_cost').val()
+     },
+     waste_dumpster: {
+       required: $ac.find('.waste_dumpster_required').prop('checked'),
+       cost: $ac.find('.waste_dumpster_cost').val()
+     }
+   };
+   var estimates = {
+     total_cost: $ac.find('.estimates_total_cost').val(),
+     volunteers_needed: $ac.find('.estimates_volunteers_needed').val()
+   };
+   var proposed_dates = {
+     start_date: $ac.find('.proposed_dates_start').val(),
+     end_date: $ac.find('.proposed_dates_end').val()
+   };
+
+   var assessment = {
+     applicationId: docs[0]._id,
+     materials: materials,
+     hazard_safety: hazard_safety,
+     tool_rentals: tool_rentals,
+     subcontractors: subcontractors,
+     other_costs: other_costs,
+     estimates: estimates,
+     proposed_dates: proposed_dates
+   }
+
+   // Save the whole document.
+   $.ajax({
+     url: '/site/assessment',
+     method: 'POST',
+     dataType: 'json',
+     contentType: 'application/json; charset=utf8',
+     data: JSON.stringify(assessment),
+     success: function () {
+       console.log(arguments)
+     }
+   });
+ }
 
 
 </script>

@@ -51,39 +51,43 @@
                 <a class="nav-link" href="/application/add">Apply</a>
             </li>
 
-            {{#if_eq role "ADMIN"}}
+            
+            {{#if_in user_roles "VET"}}
             <li class="nav-item">
               <a class="nav-link" href="/view">Vetting</a>
             </li>
-            {{/if_eq}}
-            {{#if_eq role "VET"}}
+            {{/if_in}}
+            
+            {{#if_in user_roles "SITE"}}
             <li class="nav-item">
-              <a class="nav-link" href="/view">Vetting</a>
+              <a class="nav-link" href="/site">Site Assessment</a>
             </li>
-            {{/if_eq}}
-            {{#if_eq role "ADMIN"}}
+            {{/if_in}}
+
+            {{#if_in user_roles "PROJECT_MANAGEMENT"}}
+            <li class="nav-item">
+              <a class="nav-link" href="/projectsummary">Project Summary</a>
+            </li>
+            {{/if_in}}
+
+            {{#if assign_tasks}}
+            <li class="nav-item">
+              <a class="nav-link" href="/tasks">Tasks</a>
+            </li>
+            {{/if}}
+          
+            {{#if_in user_roles "ADMIN"}}
               <li class="nav-item">
                   <a class="nav-link" href="/user/userList">Users</a>
               </li>
-            {{/if_eq}}
+            {{/if_in}}
 
-            {{#if_eq role "ADMIN"}}
-            <li class="nav-item">
-              <a class="nav-link" href="/site">Site Assessment</a>
-            </li>
-            {{/if_eq}}
 
-            {{#if_eq role "VET"}}
-            <li class="nav-item">
-              <a class="nav-link" href="/site">Site Assessment</a>
-            </li>
-            {{/if_eq}}
+           
+  <!--    NEW CHANGES -->
+            
 
-            {{#if_eq role "SITE"}}
-            <li class="nav-item">
-              <a class="nav-link" href="/site">Site Assessment</a>
-            </li>
-            {{/if_eq}}
+
         </ul>
         <div class="navbar-right">
           <div id="noUserNav" style="display:none;">

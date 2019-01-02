@@ -390,6 +390,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
 	payload.user = req.user._id;
 	payload.user_email = res.locals.email;
 	payload.user_role = res.locals.role;
+	payload.user_roles = res.locals.user_roles;
 
 
 	res.render('vetting', payload);
@@ -423,6 +424,43 @@ router.post('/delNote', isLoggedInPost, api.removeVettingNote, function deleteNo
  * Route for updating notes
  **/
 router.post('/updateNote', isLoggedInPost, api.updateVettingNote, function(req, res, next) {
+    if(res.locals.status != '200'){
+        res.status(500).send("Could not update note");
+    }
+    else{
+        res.status(200).send({ status: '200'});
+    }
+});
+
+
+/**
+ * Route for adding notes
+**/
+router.post('/addProjectNote', isLoggedInPost, api.postProjectNote, function(req, res, next) {
+    if(res.locals.status != '200'){
+        res.status(500).send("Could not add note");
+    }
+    else{
+        res.status(200).send({ status: 'success' });
+    }
+});
+
+/**
+ * Route for deleting notes
+ **/
+router.post('/delProjectNote', isLoggedInPost, api.removeProjectNote, function deleteNote(req, res, next) {
+    if(res.locals.status != '200'){
+        res.status(500).send("Could not delete note");
+    }
+    else{
+        res.status(200).send({ status: '200'});
+    }
+});
+
+/**
+ * Route for updating project notes
+ **/
+router.post('/updateProjectNote', isLoggedInPost, api.updateProjectNote, function(req, res, next) {
     if(res.locals.status != '200'){
         res.status(500).send("Could not update note");
     }
@@ -589,13 +627,23 @@ function isLoggedIn(req, res, next) {
 					}
 					else {
 						if(results.user.user_status == "ACTIVE") {
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN") {
+              res.locals.assign_tasks = results.user.assign_tasks;
+              
+							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" ) {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
-
+								res.locals.user_roles = results.user.user_roles;
 								return next();
 
 							}
+							else if (results.user.user_roles !== undefined && (results.user.user_roles.indexOf('VET') >-1 || results.user.user_roles.indexOf('PROJECT_MANAGEMENT') >-1))
+							{
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+							}
+
 
 							else {
 								console.log("user is not vet");
@@ -635,17 +683,26 @@ function isLoggedInPost(req, res, next) {
 			})
 			.then(function (results) {
 					if (!results) {
+						console.log('this2')
 						//user not found in db.  Route to error handler
 						res.locals.status = 406;
 						return next('route');
 					}
 					else {
 
-						if(results.user.user_role == "VET" || results.user.user_role == "ADMIN") {
+						if(results.user.user_role == "PROJECT_MANAGEMENT" || results.user.user_role == "ADMIN") {
 							return next();
 
 						}
+						else if (results.user.user_roles !== undefined && (results.user.user_roles.indexOf('PROJECT_MANAGEMENT') >-1 || results.user.user_roles.indexOf('VET')  >-1))
+							{
+								
+								return next();
+							}
+
 						else {
+							console.log(results.user.user_roles);
+							console.log(results.user.user_roles.indexOf('PROJECT_MANAGEMENT'));
 							//user is not a vetting agent or admin, route to error handler
 							res.locals.status = 406;
 							return next('route');

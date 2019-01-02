@@ -26,53 +26,55 @@ Promise.promisifyAll(mongoose); // Convert mongoose API to always return promise
 var ObjectId = require('mongodb').ObjectID;
 module.exports = function(passport) {
 
-/* GET home page. */
-router.get('/', isLoggedIn, function(req, res, next) {
-	
-	var payload = {};
-	payload.title = '';
-	payload.body = '';
-	payload.user_email = res.locals.email;
-	payload.user_role = res.locals.role;
-	payload.user = res.locals.user;
+  /* GET home page. */
+  router.get('/', isLoggedIn, function(req, res, next) {
+	  
+	  var payload = {};
+	  payload.title = '';
+	  payload.body = '';
+	  payload.user_email = res.locals.email;
+	  payload.user_role = res.locals.role;
+	  payload.user = res.locals.user;
+	  payload.user_roles = res.locals.user_roles;
     res.render('index', payload);
-});
+  });
 
-return router
+  return router
 }
 //module.exports = router;
 function isLoggedIn(req, res, next) {
-		if(req.isAuthenticated()) {
-			var userID = req.user._id.toString();
+	if(req.isAuthenticated()) {
+		var userID = req.user._id.toString();
 
-			var ObjectId = require('mongodb').ObjectID;
-			Promise.props({
-				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
-			})
-			.then(function (results) {
-					if (!results) {
-						//res.redirect('/user/logout');
-						next();
-					}
-					else {
-							
-							//format user data to send to front end
-							res.locals.email = results.user.contact_info.user_email;
-							res.locals.role = results.user.user_role;
-							res.locals.user = results.user._id;
+		var ObjectId = require('mongodb').ObjectID;
+		Promise.props({
+			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
+		})
+			     .then(function (results) {
+					   if (!results) {
+						   //res.redirect('/user/logout');
+						   next();
+					   }
+					   else {
+							 
+							 //format user data to send to front end
+							 res.locals.email = results.user.contact_info.user_email;
+							 res.locals.role = results.user.user_role;
+							 res.locals.user = results.user._id;
+							 res.locals.user_roles = results.user.user_roles;
+               res.locals.assign_tasks = results.user.assign_tasks;
+							 return next();
+						   
+					   }
 
-							return next();
-						
-					}
 
 
+			     })
 
-			})
-
-		.catch(function(err) {
-                console.error(err);
-        })
-         .catch(next);
+		       .catch(function(err) {
+             console.error(err);
+           })
+           .catch(next);
 		}
 		else {
 			console.log("no user id");

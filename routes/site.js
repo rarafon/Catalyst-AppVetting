@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var db = require('../mongoose/connection');
 var DocumentPackage = require('../models/documentPackage');
+var AssessmentPackage = require('../models/assessmentPackage.js');
 
 var api = require('../controllers/api');
 var User = require('../models/userPackage');
@@ -11,7 +12,6 @@ var config = require('../config')
 var Promise = require('bluebird'); // Import promise engine
 mongoose.Promise = require('bluebird'); // Tell mongoose we are using the Bluebird promise library
 Promise.promisifyAll(mongoose); // Convert mongoose API to always return promises using Bluebird's promisifyAll
-
 
 
 //Need ObjectID to search by ObjectID
@@ -48,6 +48,7 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 	payload.user = req.user._id;
 	payload.user_email = res.locals.email;
 	payload.user_role = res.locals.role;
+	payload.user_roles = res.locals.user_roles;
 
 	console.log("payload");
 	console.log(payload);
@@ -67,8 +68,16 @@ router.get('/:id', isLoggedIn, api.getDocumentSite, function(req, res, next) {
 	payload.user = req.user._id;
 	payload.user_email = res.locals.email;
 	payload.user_role = res.locals.role;
+	payload.user_roles = res.locals.user_roles;
+  if (res.locals.results.assessment && res.locals.results.assessment.length > 0) {
+    console.log("Found assessment: ", res.locals.results.assessment);
+    payload.assessment = res.locals.results.assessment;
+  } else {
+    payload.assessment = [AssessmentPackage.empty];
+    console.log("No assessment found. Using empty: ", payload.assessment);
+  }
 	console.log("results");
-    console.log(payload);
+  console.log(payload);
  
 	res.render('siteassessmenttool', payload);
 
@@ -109,8 +118,20 @@ router.route('/updatesummary')
         res.json(res.locals);
     }
 	});	
-		
-	
+
+  // Handle saving the assessment checklist.
+router.route('/assessment')
+	    .post(isLoggedInPost, api.saveAssessmentDocument, function (req, res) {
+        console.log('from /site/assessment')
+        console.log(res.locals)
+        if (res.locals.status !== '200') {
+          res.status(500).send("Could not update assessment document");
+        } else {
+          res.json(res.locals.results);
+        }
+      });
+
+
 //route catches invalid post requests.
 router.use('*', function route2(req, res, next) {
 	if(res.locals.status == '406'){
@@ -200,12 +221,22 @@ function isLoggedIn(req, res, next) {
 					}
 					else {
 						if(results.user.user_status == "ACTIVE") {
+              res.locals.assign_tasks = results.user.assign_tasks;
+              
 							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
 								return next();
 
 							}
+							else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('SITE') >-1)
+						{
+							res.locals.email = results.user.contact_info.user_email;								
+							res.locals.role = results.user.user_role;
+							res.locals.user_roles = results.user.user_roles;
+							return next();
+						}
 
 							else {
 								console.log("user is not required role");
@@ -246,6 +277,7 @@ function isLoggedInPost(req, res, next) {
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
+				console.log('123');
 				console.log(results);
 
 					if (!results) {
@@ -254,16 +286,23 @@ function isLoggedInPost(req, res, next) {
 						return next('route');
 					}
 					else {
-						if(results.user.user_status == "ACTIVE") {
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
+						if(results.user.user_status == "ACTIVE") {							
+							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role=="PROJECT_MANAGEMENT") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
 								return next();
 
 							}
+							else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('SITE') >-1)
+							{
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+							}
 
 						}
 						else {
+							console.log('234');
 							//user is not active
 							res.locals.status = 406;
 							return next('route');

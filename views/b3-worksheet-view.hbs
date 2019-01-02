@@ -247,6 +247,10 @@
 							<br/> {{siteComments}}
 							<br/>
 							<br/>
+							<strong>Project comments:</strong>
+							<br/> {{projectComments}}
+							<br/>
+							<br/>
 							<strong>Cost:</strong>
 							<br/>
 							<span name="{{_id}}.cost">{{cost}}</span>
@@ -1607,6 +1611,14 @@
 		.text(data.siteComments).appendTo(cardText)
 		$('<br></br>').appendTo(cardText)
 
+		
+		$('<strong>Project Comments:</strong>').appendTo(cardText)
+		$('<br></br>').appendTo(cardText)
+
+		$('<p></p>')
+		.text(data.projectComments).appendTo(cardText)
+		$('<br></br>').appendTo(cardText)
+
 		$('<strong>Cost:</strong>').appendTo(cardText)
 		$('<br></br>').appendTo(cardText)
 
@@ -1642,7 +1654,7 @@
 		var xhrData = JSON.parse(JSON.stringify(data))
 		xhrData.id = id
 
-		xhr(xhrData, 'POST', '/site/updateitem', function(err) {
+		xhr(xhrData, 'POST', '/vettingworksheet/updateitem', function(err) {
 			if (err) {
 				// TODO: If error, flip the value back and show an error message to the user
 				// alert('Value did not save, please reload the page')
@@ -1703,7 +1715,7 @@
     w.updated = rightNow
     w.applicationId = id
 
-    xhr(w, 'POST', '/site/additem', function(err, data) {
+    xhr(w, 'POST', '/vettingworksheet/additem', function(err, data) {
       // TODO: Handle error
       if (err) { alert('There was an error saving your work item') }
       w._id = data.itemId
@@ -1754,13 +1766,19 @@
     $('<strong>Vetting Comments:</strong>').appendTo(cardText)
     // $('<br></br>').appendTo(cardText)
 
-    $('<p></p>').text(w.vettingComments).appendTo(cardText)
+    $('<p></p>').attr('name', w._id + '.vettingComments').text(w.vettingComments).appendTo(cardText)
     $('<br></br>').appendTo(cardText)
 
     $('<strong>Site Comments:</strong>').appendTo(cardText)
     // $('<br></br>').appendTo(cardText)
 
     $('<p></p>').text(w.siteComments).appendTo(cardText)
+    $('<br></br>').appendTo(cardText)
+
+	$('<strong>Project Comments:</strong>').appendTo(cardText)
+    // $('<br></br>').appendTo(cardText)
+
+    $('<p></p>').text(w.projectComments).appendTo(cardText)
     $('<br></br>').appendTo(cardText)
 
     $('<strong>Cost:</strong>').appendTo(cardText)

@@ -1,0 +1,201 @@
+<h3>Default Lead Times</h3>
+
+<h5>Set the default lead time (days) for planning tasks</h5>
+
+
+
+<table class="table table-sm table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Planning Task</th>
+      <th>Lead Time (days)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Project postal mailed to client</td>
+      <td>
+        <label>
+          <input name="contract" class="leadtime-default"
+                 type="number" value="{{ contract }}"/>
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Project activated</td>
+      <td>
+        <label>
+          <input name="activated" class="leadtime-default"
+                 type="number" value="{{ activated }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Planning visit completed</td>
+      <td>
+        <label>
+          <input name="planning_visit" class="leadtime-default"
+                 type="number" value="{{ planning_visit }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Rent porta-pottie</td>
+      <td>
+        <label>
+          <input name="rent_porta_pottie" class="leadtime-default"
+                 type="number" value="{{ rent_porta_pottie }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Rent waste bin</td>
+      <td>
+        <label>
+          <input name="rent_waste_dumpster" class="leadtime-default"
+                 type="number" value="{{ rent_waste_dumpster }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Create project webpage, calendar event, and volunteer schedule in Endis</td>
+      <td>
+        <label>
+          <input name="create_page_event_schedule" class="leadtime-default"
+                 type="number" value="{{ create_page_event_schedule }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Send out initial email requesting volunteers</td>
+      <td>
+        <label>
+          <input name="volunteer_request_initial" class="leadtime-default"
+                 type="number" value="{{ volunteer_request_initial }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Send follow-up emails requesting volunteers</td>
+      <td>
+        <label>
+          <input name="volunteer_request_followup" class="leadtime-default"
+                 type="number" value="{{ volunteer_request_followup }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Send final email to signed up volunteers 3-5 days before project</td>
+      <td>
+        <label>
+          <input name="volunteer_request_final" class="leadtime-default"
+                 type="number" value="{{ volunteer_request_final }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Report list of materials, rentals &amp; supplies needed</td>
+      <td>
+        <label>
+          <input name="report_materials_supplies" class="leadtime-default"
+                 type="number" value="{{ report_materials_supplies }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.</td>
+      <td>
+        <label>
+          <input name="arrange_purchase_delivery" class="leadtime-default"
+                 type="number" value="{{ arrange_purchase_delivery }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Check the weather forecast and make plans accordingly</td>
+      <td>
+        <label>
+          <input name="check_weather_forecast" class="leadtime-default"
+                 type="number" value="{{ check_weather_forecast }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Verify number of volunteers signed up</td>
+      <td>
+        <label>
+          <input name="verify_volunteer_count" class="leadtime-default"
+                 type="number" value="{{ verify_volunteer_count }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Verify site resources needed</td>
+      <td>
+        <label>
+          <input name="verify_site_resources" class="leadtime-default"
+                 type="number" value="{{ verify_site_resources }}" />
+          days
+        </label>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+<script>
+
+ function updateLeadtimeDefaults() {
+   var lt = {};
+   $('.leadtime-default').each(function () {
+     var $this = $(this);
+     var val = Number($this.val());
+     if (!isNaN(val)) {
+       lt[ $this.attr('name') ] = val;
+     }
+   });
+   console.log('Saving lt: ', lt);
+
+   $.ajax({
+     type: 'POST',
+     url: '/leadtime',
+     contentType: 'application/json; charset=utf8',
+     data: JSON.stringify(lt),
+     success: function (results) {
+       console.log('Saved LT: ', results)
+     }
+   });
+ }
+ 
+ $(document).ready(function () {
+   $('.leadtime-default').change(updateLeadtimeDefaults);
+ });
+
+</script>

@@ -45,13 +45,14 @@ var adminUser = {
   "password-confirm": config.password,
   "user_status": "ACTIVE",
   "user_documents": {
-    "ID_Date": "9999-03-04T00:00:00.000Z",
+    "ID_Date": true,
     "waiver_signed": true,
     "background_check": true,
     "ID_badge": true
   },
   "user_created": 1492547010917,
-  "user_role": "ADMIN"
+  "user_role": "ADMIN",
+  "user_roles": ["ADMIN"]
 }
 
 api.postUser({ body: adminUser }, { send: () => {} }, () => {})
