@@ -270,15 +270,30 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
     payload.new = res.locals.results.new;
 
-	//separate bucket for approved applications
+	//put approved applications and handle it - complete into same bucket
+	payload.project = [];
+
 	if (res.locals.results.project[0] == null) {
         console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'project\'');
     } else {
         res.locals.results.project.forEach(function (element) {
-            element = formatElement(element);
+			element = formatElement(element);
+			payload.project.push(element);
 		});
-    }
-    payload.project = res.locals.results.project;
+	}
+	console.log('handleComp array =', res.locals.results.handleComp);
+	if (res.locals.results.handleComp[0] == null) {
+		console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'handleComp\'');
+	} else {
+		console.log('handleComp array =', res.locals.results.handleComp);
+		res.locals.results.handleComp.forEach(function (element) {
+			element = formatElement(element);
+			payload.project.push(element);
+			console.log('This is the handleComp element array: ', payload.project);
+		});
+	}
+	
+	
 
     //put declined and withdrawn in the same bucket
     payload.unapproved = [];
@@ -534,7 +549,10 @@ function formatStatus(element) {
             break;
         case 'handle':
             status = 'Handle-It';
-            break;
+			break;
+		case 'handleComp':
+			status = 'Handle-It - Complete';
+			break;	
         case 'documents':
             status = 'Awaiting Documents';
             break;

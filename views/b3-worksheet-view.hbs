@@ -27,13 +27,13 @@
 	</div>
 </nav>
 
-<br><img src="/images/clear.png" height="35"><br>
+<br><br><br>
 
 <a href="#info"></a>
 <!-- spacer gets past the Vetting Notes Input -->
 <div class="container-fluid body-view">
-	<div class="row">
-		<div class="col-xs-12">
+	<div class="col-xs-12">
+		<div class="col-sm-12">
 			<h1>{{doc.application.name.first}} {{doc.application.name.last}} - Vetting Worksheet</h1>
 			<h3>Status:
 				<a href="#" id="status" data-type="select" data-pk="1" data-url="/edit/{{doc._id}}" data-name="status" data-title="Select status"></a>
@@ -44,7 +44,7 @@
 		<!-- ADDRESS AREA AND MAP IT LINK -->
 		<div class="container col-xs-12">
 			<h3>Address</h3>
-			<div class="col-xs-12">
+			<div class="col-sm-12">
 				<div class="row">
 					<div class="col-sm-5">
 						<a id="address" href="#" data-type="address" data-pk="1" data-url="/edit/address/{{doc._id}}" data-title="Enter Address"></a>
@@ -265,7 +265,7 @@
 					<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; How long has this condition existed?</i>
 			</p>
 <a href="#workitems"></a>
-			<div class="row" id="workItemCards">
+			<div class="container col-sm-12" id="workItemCards">
 				<div class="col-xs-12 col-sm-6 col-md-3">
 					<h3>Add a Work Item</h3>
 					<div class="panel panel-primary work-item" name="new">
@@ -330,7 +330,7 @@
 				</div>
 			</div>
 <a href="#clarification"></a>
-			<div class="container col-xs-12">
+			<div class="container col-sm-12">
 				<!-- Begin HUGE Application Clarification Section -->
 
 				<!--lone, hidden input for the Highlight Package Id-->
@@ -1084,6 +1084,7 @@
 						{ value: 'new', text: 'NEW' },
 						{ value: 'phone', text: 'Phone Call Needed' },
 						{ value: 'handle', text: 'Handle-It' },
+						{ value: 'handleComp', text: 'Handle-It - Complete' },
 						{ value: 'documents', text: 'Awaiting Documents' },
 						{ value: 'assess', text: 'Site Assessment - Pending' },
 						{ value: 'assessComp', text: 'Site Assessment - Complete' },
@@ -1892,3 +1893,4 @@ $('#csvExportButton').on('click', function(e) {
     })
 // Work items
 </script>
+

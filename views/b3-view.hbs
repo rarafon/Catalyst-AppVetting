@@ -21,7 +21,7 @@
 <br>
 
 <div class="container-fluid body-view">
-    <div class="row">
+    
         <div class="col-xs-12">
             <h1>{{doc.application.name.first}} {{doc.application.name.last}} - Application View</h1>
 
@@ -51,8 +51,8 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-12">
+            
+                <div class="col-sm-12">
                     <h3>Vetting Notes</h3>
                     <div class="form-group">
                         <form method="post">
@@ -61,10 +61,11 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="col-sm-2">Date</th>
+                                        <th class="col-sm-1">Date</th>
                                         <th class="col-sm-6">Note</th>
-                                        <th class="col-sm-3">Submitted By</th>
+                                        <th class="col-sm-2">Submitted By</th>
                                         <th class="col-sm-3"></th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody id="notes-body">
@@ -74,14 +75,14 @@
                                         <td class="note-descrip">{{this.description}}</td>
                                         <td class="note-vetAgent">{{this.vetAgent}}</td>
                                         <td>
-                                            <form>
+                                            <form><center>
                                                 <!--Hidden field contains the ID for the note in this row-->
-
                                                 <input type="hidden" value="{{this._id}}" name="noteId" />
                                                 <input type="submit" class="update-note btn btn-info" value="Update Note" />
                                                 <input type="submit" class="delete-button2 btn btn-danger" value="Delete Note" />
-                                            </form>
+                                            </center></form>
                                         </td>
+                                        
                                     </tr>
                                     {{/each}} {{else}}
                                     <!--if no notes for this application, display a row stating so-->
@@ -107,7 +108,7 @@
                     </div>
 
                 </div>
-            </div>
+            
 
 
             <!--lone, hidden input for the HighlightPackage Id-->
@@ -646,7 +647,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
 </div>
 
 <script>
@@ -696,6 +697,7 @@
                     { value: 'new', text: 'NEW' },
                     { value: 'phone', text: 'Phone Call Needed' },
                     { value: 'handle', text: 'Handle-It' },
+                    { value: 'handleComp', text: 'Handle-It - Complete' },
                     { value: 'documents', text: 'Awaiting Documents' },
                     { value: 'assess', text: 'Site Assessment - Pending' },
                     { value: 'assessComp', text: 'Site Assessment - Complete' },

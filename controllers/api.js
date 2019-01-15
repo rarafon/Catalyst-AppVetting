@@ -39,14 +39,15 @@ var VettingNotePackage = require('../models/vettingNotePackage');
 var WorkItemPackage = require('../models/workItemPackage');
 var UserPackage = require('../models/userPackage');
 var RolePackage = require('../models/rolePackage');
-
 var FinancialPackage = require('../models/finPackage');
+
 var crypto = require('crypto');
 var bluebird = require('bluebird');
 var Promise = require('bluebird'); // Import promise engine
 mongoose.Promise = require('bluebird'); // Tell mongoose to use bluebird
 Promise.promisifyAll(mongoose); // Convert all of mongoose to promises with bluebird
 var ObjectId = require('mongodb').ObjectId;
+
 module.exports = {
     /**
      * Description: retrieve all Document Packages from the database
@@ -116,7 +117,7 @@ module.exports = {
 			
         })
             .then(function(results) {
-				console.log("results");
+				console.log('document package results', results);
 				
 				
 				console.log(results);
@@ -369,6 +370,7 @@ module.exports = {
             withdrawnooa: DocumentPackage.find({ status: "withdrawnooa" }).lean().execAsync(),
             approval: DocumentPackage.find({status: "approval"}).lean().execAsync(),
             handle: DocumentPackage.find({status: "handle"}).lean().execAsync(),
+            handleComp: DocumentPackage.find({status: "handleComp", app_year : year}).lean().execAsync(),
             declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
             project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync()
         })
@@ -377,7 +379,7 @@ module.exports = {
                     console.log('[ API ] getDocumentByStatus :: Documents package found: FALSE');
                 }
                 else {
-                    console.log('[ API ] getDocumentByStatus :: Documents package found: TRUE');
+                    console.log('[ API ] getDocumentByStatus :: Documents package found: TRUE', results);
                 }
                 res.locals.results = results;
 
@@ -396,31 +398,47 @@ module.exports = {
 		
 		var year = req.body.year;
         if (req.body.doc_status == "project") {
-        Promise.props({
+            //handleComp and project
+            Promise.props({
+
+                project: DocumentPackage.find({
+                    $and: [
+                        { app_year: year },
+                        { $or: [{ status: "handleComp" }, { status: "project" }] }
+                    ]
+
+                }).lean().execAsync()
+            })
+
+        // Promise.props({
             
-            project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync()
-        })
+        //     project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync()
+        // })
+
             .then(function (results) {
                 if (!results) {
                     console.log('[ API ] getDocumentByStatus :: Documents package found: FALSE');
                 }
                 else {
                     console.log('[ API ] getDocumentByStatus :: Documents package found: TRUE');
-					for(var x=0; x<results.project.length; x++) {
-						var updateYear = results.project[x].updated.getFullYear();
-						//get month and day with padding since they are 0 indexed
-						var updateDay = ( "00" + results.project[x].updated.getDate()).slice(-2);
-						var updateMon = ("00" + (results.project[x].updated.getMonth()+1)).slice(-2);
-						results.project[x].updated = updateYear + "/" + updateMon + "/" + updateDay;
-						
-						var sigYear = results.project[x].signature.client_date.getFullYear();
-						//get month and day with padding since they are 0 indexed
-						var sigDay = ( "00" + results.project[x].signature.client_date.getDate()).slice(-2);
-						var sigMon = ("00" + (results.project[x].signature.client_date.getMonth()+1)).slice(-2);
-						results.project[x].signature.client_date = sigYear + "/" + sigMon + "/" + sigDay;
-						
-						results.project[x].status = "Approved Project";
-					}
+                    //if(results.project && results.project.length > 0) {
+                        for (var x = 0; x < results.project.length; x++) {
+                            var updateYear = results.project[x].updated.getFullYear();
+                            //get month and day with padding since they are 0 indexed
+                            var updateDay = ("00" + results.project[x].updated.getDate()).slice(-2);
+                            var updateMon = ("00" + (results.project[x].updated.getMonth() + 1)).slice(-2);
+                            results.project[x].updated = updateYear + "/" + updateMon + "/" + updateDay;
+
+                            var sigYear = results.project[x].signature.client_date.getFullYear();
+                            //get month and day with padding since they are 0 indexed
+                            var sigDay = ("00" + results.project[x].signature.client_date.getDate()).slice(-2);
+                            var sigMon = ("00" + (results.project[x].signature.client_date.getMonth() + 1)).slice(-2);
+                            results.project[x].signature.client_date = sigYear + "/" + sigMon + "/" + sigDay;
+
+                            //results.project[x].status = "Approved Project";
+                        }
+                    //}
+					
 					
                 }
                 res.locals.results = results;

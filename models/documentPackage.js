@@ -30,6 +30,7 @@
  new          - new document package, has yet to be reviewed
  phone        - document package has been seen, internal agent needs to contact client and verify document package information
  handle       - the document package is forwarded to the handle-it team to be completed
+ handleComp   - the handle-it team has completed the work
  documents    - additional documents are needed from the client before document package can proceed
  assess       - a member of catalyst must visit the property to determine the extent of repairs needed
  assessComp   - site assessment has been completed
