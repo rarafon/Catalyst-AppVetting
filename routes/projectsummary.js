@@ -39,222 +39,225 @@ module.exports = function(passport) {
      project - the project has been approved and the document package will be converted to a project package
  **/
 
+// router.post('/csvExport', isLoggedInPost, function(req, res){
+// 	var applicationID = req.body.application;
+// 	var firstname = req.body.firstname;
+// 	var lastname = req.body.lastname;
+// 	var query =  "{'_id' : ObjectId("+"'"+applicationID+"'"+")}";
+// 	var filename = lastname + '-' + firstname + '-' + applicationID;
+// 	const execFile = require('child_process').execFile;
+// 	const exec = require('child_process').exec;
+// 	const mongoexport_child = execFile('mongoexport', ['-d', 'catalyst',
+// 	'-c', 'documentpackages', '-q', query, '-o', 'public/exports/'+filename+'.json', '--port', config.mongo.port],
+// 	function(error, stdout, stderr) {
+// 		if(error){
+// 			console.error('stderr', stderr);
+// 			throw error;
+// 		}
+// 		else{
+// 			console.log('stdout', stdout);
+// 		}
+// 	});
+
+
+// 	var columns = [
+// 	  ["_id.$oid", "Object ID"],
+// 		["app_year", "Application Year"],
+// 	  ["app_name", "Application ID"],
+// 	  ["highlightPackage.$oid", "Highlight Package OID"],
+// 	  ["status", "Status"],
+// 	  ["signature.client_terms", "Signed?"],
+// 	  ["signature.client_sig", "Client Signature"],
+// 	  ["signature.client_date.$date", "Signature Date"],
+// 	  ["recruitment.fbo_help", "Involved with Faith Based Organization"],
+// 	  ["recruitment.fbo_name", "FBO Name"],
+// 	  ["property.home_type", "Property Type"],
+// 	  ["property.ownership_length", "Length of Property Ownership"],
+// 	  ["property.year_constructed", "Year Constructed"],
+// 	  ["property.requested_repairs", "Requested Repairs"],
+// 	  ["property.associates_can_contribute.value", "Associates can contribute?"],
+//     ["property.associates_can_contribute.description", "Associate Labor Contribution"],
+// 	  ["property.client_can_contribute.value", "Client can contribute?"],
+// 	  ["property.client_can_contribute.description", "Amount Client can contribute"],
+// 	  ["finance.requested_other_help.value", "Requested other help?"],
+// 	  ["finance.associates_can_contribute.value", "Associates can contribute?"],
+// 	  ["finance.associates_can_contribute.description", "Associate Financial Contribution"],
+// 	  ["finance.client_can_contribute.value", "Client can contribute?"],
+// 	  ["finance.client_can_contribute.amount", "Amount Client can contribute"],
+//     ["finance.client_can_contribute.description", "Client Financial Contribution"],
+// 	  ["finance.assets.value.0", "Asset Value"],
+// 	  ["finance.assets.value.1", "Asset Value"],
+// 	  ["finance.assets.value.2", "Asset Value"],
+// 	  ["finance.assets.value.3", "Asset Value"],
+// 	  ["finance.assets.value.4", "Asset Value"],
+// 	  ["finance.assets.name.0", "Asset Name"],
+// 	  ["finance.assets.name.1", "Asset Name"],
+// 	  ["finance.assets.name.2", "Asset Name"],
+// 	  ["finance.assets.name.3", "Asset Name"],
+// 	  ["finance.assets.name.4", "Asset Name"],
+// 	  ["finance.income.amount", "Income"],
+// 	  ["finance.mortgage.payment", "Mortgage Payment"],
+// 	  ["finance.mortgage.up_to_date", "Up to Date?"],
+// 	  ["application.owns_home", "Client Own Home"],
+// 	  ["application.email", "Client Email"],
+// 	  ["application.veteran", "Veteran?"],
+// 	  ["application.language", "Language Spoken"],
+// 	  ["application.heard_about", "How did you hear about us?"],
+// 	  ["application.special_circumstances.note", "Special Circumstances"],
+// 	  ["application.other_residents.relationship.0", "Other Resident"],
+// 	  ["application.other_residents.relationship.1", "Other Resident"],
+// 	  ["application.other_residents.relationship.2", "Other Resident"],
+// 	  ["application.other_residents.relationship.3", "Other Resident"],
+// 	  ["application.other_residents.relationship.4", "Other Resident"],
+// 	  ["application.other_residents.relationship.5", "Other Resident"],
+// 	  ["application.other_residents.relationship.6", "Other Resident"],
+// 	  ["application.other_residents.relationship.7", "Other Resident"],
+// 	  ["application.other_residents.age.0", "Other Resident Age"],
+// 	  ["application.other_residents.age.1", "Other Resident Age"],
+// 	  ["application.other_residents.age.2", "Other Resident Age"],
+// 	  ["application.other_residents.age.3", "Other Resident Age"],
+// 	  ["application.other_residents.age.4", "Other Resident Age"],
+// 	  ["application.other_residents.age.5", "Other Resident Age"],
+// 	  ["application.other_residents.age.6", "Other Resident Age"],
+// 	  ["application.other_residents.age.7", "Other Resident Age"],
+// 	  ["application.other_residents.name.0", "Other Resident Name"],
+// 	  ["application.other_residents.name.1", "Other Resident Name"],
+// 	  ["application.other_residents.name.2", "Other Resident Name"],
+// 	  ["application.other_residents.name.3", "Other Resident Name"],
+// 	  ["application.other_residents.name.4", "Other Resident Name"],
+// 	  ["application.other_residents.name.5", "Other Resident Name"],
+// 	  ["application.other_residents.name.6", "Other Resident Name"],
+// 	  ["application.other_residents.name.7", "Other Resident Name"],
+// 	  ["application.emergency_contact.name", "Emergency Contact Name"],
+// 	  ["application.emergency_contact.relationship", "Emergency Contact Relationship"],
+// 	  ["application.emergency_contact.phone", "Emergency Contact Phone"],
+// 	  ["application.address.line_1", "Address Line 1"],
+// 	  ["application.address.line_2", "Address Line 2"],
+// 	  ["application.address.city", "City"],
+// 	  ["application.address.state", "State"],
+// 	  ["application.address.zip", "Zip"],
+// 	  ["application.phone.preferred", "Preferred Phone"],
+// 	  ["application.phone.other", "Other Phone"],
+// 	  ["application.marital.status", "Marital Status"],
+// 	  ["application.marital.spouse", "Spouse name"],
+// 	  ["application.driver_license.number", "Driver's License Number"],
+// 	  ["application.dob.date.$date", "DOB"],
+// 	  ["application.name.first", "First"],
+// 	  ["application.name.middle", "Middle"],
+// 	  ["application.name.last", "Last"],
+// 	  ["application.name.preferred", "Preferred Name"],
+// 	  ["advocate.is_advocate", "Is Advocate"],
+// 	  ["advocate.individual", "Is Individual"],
+// 	  ["advocate.npo", "Is NPO"],
+// 	  ["advocate.gov", "Is Government Agency"],
+// 	  ["advocate.name", "Advocate Name"],
+// 	  ["advocate.phone", "Advocate Phone"],
+// 	  ["advocate.relationship", "Advocate Relationship"],
+// 	  ["advocate.organization_name", "Advocate Organization Name"],
+// 	  ["updated.$date", "Updated on"],
+// 	  ["service_area", "In Service Area"],
+// 		["notes.vet_summary", "Vetting Summary"],
+// 		["finance.total_income.value", "Total Income Value"],
+// 		["notes.site_summary", "Site Summary"],
+// 		["created.$date", "Date Created"]
+// 	]
+
+
+// 	mongoexport_child.on('exit', function(code, signal){
+
+// 		fs.readFile('public/exports/'+filename+'.json', 'utf8', function(err, data){
+// 			if(err) throw err;
+// 			var doc = JSON.parse(data);
+
+//       if(fs.existsSync('public/exports/'+filename+'.csv')){
+
+//         fs.unlinkSync('public/exports/'+filename+'.csv');
+
+//       }
+
+// 			//This function "unwraps" the JSON.
+
+// 			ObjectValues = function(v, k){
+
+// 					if(typeof v == 'object'){
+// 						for(var kp in v){
+// 							if(Object.hasOwnProperty.call(v, kp)){
+// 								ObjectValues(v[kp], k != undefined ? k + '.' + kp : kp);
+// 							}
+// 						}
+// 					}
+// 					else{
+// 						//Iterate through JSON, find match with "columns" array. Rename.
+// 						for(iter = 0; iter < columns.length; iter++){
+// 							if(columns[iter][0] == k){
+// 								k = columns[iter][1];
+// 							}
+// 						}
+// 						var data = k + "," + '"' + v + '"' + "\n";
+// 						//console.log(data);
+// 						//Write the data to file.
+// 						if(!k.includes("level") && !k.includes("__v")){
+// 							fs.appendFileSync('public/exports/'+filename+'.csv', data, 'utf8', function(err){
+// 								if(err){
+// 									return console.error(err);
+// 								}
+// 							});
+// 						}
+// 					}
+// 			}
+
+// 			ObjectValues(doc);
+
+// 			//Delete JSON once you're done with it.
+
+//       if(fs.existsSync('public/exports/'+filename+'.json')){
+
+//         fs.unlinkSync('public/exports/'+filename+'.json');
+
+//       }
+
+
+// 		});
+
+// 		if(code !== 0){
+// 			res.status(500).send("Export failed: Code 500");
+// 			debugger
+// 		}
+// 		else{
+// 			res.status(200).send({status: 'success'});
+// 		}
+
+// 	});
+
+
+// })
+
+// router.get('/file/:name', function(req, res, next){
+// var fileName = req.params.name;
+// 	var options = {
+// 		root: './public/exports',
+// 		dotfiles: 'deny',
+// 		headers: {
+// 			'x-sent': true,
+// 			'Content-Disposition':'attachment;filename=' + fileName
+// 		}
+// 	};
+
+
+// 	res.sendFile(fileName, options, function(err){
+// 		if(err){
+// 			next(err);
+// 		}
+// 		else{
+// 			console.log('Sent:', fileName);
+// 		}
+// 	});
+
+
+// });
 
 router.post('/csvExport', isLoggedInPost, function(req, res){
-	var applicationID = req.body.application;
-	var firstname = req.body.firstname;
-	var lastname = req.body.lastname;
-	var query =  "{'_id' : ObjectId("+"'"+applicationID+"'"+")}";
-	var filename = lastname + '-' + firstname + '-' + applicationID;
-	const execFile = require('child_process').execFile;
-	const exec = require('child_process').exec;
-	const mongoexport_child = execFile('mongoexport', ['-d', 'catalyst',
-	'-c', 'documentpackages', '-q', query, '-o', 'public/exports/'+filename+'.json', '--port', config.mongo.port],
-	function(error, stdout, stderr) {
-		if(error){
-			console.error('stderr', stderr);
-			throw error;
-		}
-		else{
-			console.log('stdout', stdout);
-		}
-	});
-
-
-	var columns = [
-	  ["_id.$oid", "Object ID"],
-		["app_year", "Application Year"],
-	  ["app_name", "Application ID"],
-	  ["highlightPackage.$oid", "Highlight Package OID"],
-	  ["status", "Status"],
-	  ["signature.client_terms", "Signed?"],
-	  ["signature.client_sig", "Client Signature"],
-	  ["signature.client_date.$date", "Signature Date"],
-	  ["recruitment.fbo_help", "Involved with Faith Based Organization"],
-	  ["recruitment.fbo_name", "FBO Name"],
-	  ["property.home_type", "Property Type"],
-	  ["property.ownership_length", "Length of Property Ownership"],
-	  ["property.year_constructed", "Year Constructed"],
-	  ["property.requested_repairs", "Requested Repairs"],
-	  ["property.associates_can_contribute.value", "Associates can contribute?"],
-    ["property.associates_can_contribute.description", "Associate Labor Contribution"],
-	  ["property.client_can_contribute.value", "Client can contribute?"],
-	  ["property.client_can_contribute.description", "Amount Client can contribute"],
-	  ["finance.requested_other_help.value", "Requested other help?"],
-	  ["finance.associates_can_contribute.value", "Associates can contribute?"],
-	  ["finance.associates_can_contribute.description", "Associate Financial Contribution"],
-	  ["finance.client_can_contribute.value", "Client can contribute?"],
-	  ["finance.client_can_contribute.amount", "Amount Client can contribute"],
-    ["finance.client_can_contribute.description", "Client Financial Contribution"],
-	  ["finance.assets.value.0", "Asset Value"],
-	  ["finance.assets.value.1", "Asset Value"],
-	  ["finance.assets.value.2", "Asset Value"],
-	  ["finance.assets.value.3", "Asset Value"],
-	  ["finance.assets.value.4", "Asset Value"],
-	  ["finance.assets.name.0", "Asset Name"],
-	  ["finance.assets.name.1", "Asset Name"],
-	  ["finance.assets.name.2", "Asset Name"],
-	  ["finance.assets.name.3", "Asset Name"],
-	  ["finance.assets.name.4", "Asset Name"],
-	  ["finance.income.amount", "Income"],
-	  ["finance.mortgage.payment", "Mortgage Payment"],
-	  ["finance.mortgage.up_to_date", "Up to Date?"],
-	  ["application.owns_home", "Client Own Home"],
-	  ["application.email", "Client Email"],
-	  ["application.veteran", "Veteran?"],
-	  ["application.language", "Language Spoken"],
-	  ["application.heard_about", "How did you hear about us?"],
-	  ["application.special_circumstances.note", "Special Circumstances"],
-	  ["application.other_residents.relationship.0", "Other Resident"],
-	  ["application.other_residents.relationship.1", "Other Resident"],
-	  ["application.other_residents.relationship.2", "Other Resident"],
-	  ["application.other_residents.relationship.3", "Other Resident"],
-	  ["application.other_residents.relationship.4", "Other Resident"],
-	  ["application.other_residents.relationship.5", "Other Resident"],
-	  ["application.other_residents.relationship.6", "Other Resident"],
-	  ["application.other_residents.relationship.7", "Other Resident"],
-	  ["application.other_residents.age.0", "Other Resident Age"],
-	  ["application.other_residents.age.1", "Other Resident Age"],
-	  ["application.other_residents.age.2", "Other Resident Age"],
-	  ["application.other_residents.age.3", "Other Resident Age"],
-	  ["application.other_residents.age.4", "Other Resident Age"],
-	  ["application.other_residents.age.5", "Other Resident Age"],
-	  ["application.other_residents.age.6", "Other Resident Age"],
-	  ["application.other_residents.age.7", "Other Resident Age"],
-	  ["application.other_residents.name.0", "Other Resident Name"],
-	  ["application.other_residents.name.1", "Other Resident Name"],
-	  ["application.other_residents.name.2", "Other Resident Name"],
-	  ["application.other_residents.name.3", "Other Resident Name"],
-	  ["application.other_residents.name.4", "Other Resident Name"],
-	  ["application.other_residents.name.5", "Other Resident Name"],
-	  ["application.other_residents.name.6", "Other Resident Name"],
-	  ["application.other_residents.name.7", "Other Resident Name"],
-	  ["application.emergency_contact.name", "Emergency Contact Name"],
-	  ["application.emergency_contact.relationship", "Emergency Contact Relationship"],
-	  ["application.emergency_contact.phone", "Emergency Contact Phone"],
-	  ["application.address.line_1", "Address Line 1"],
-	  ["application.address.line_2", "Address Line 2"],
-	  ["application.address.city", "City"],
-	  ["application.address.state", "State"],
-	  ["application.address.zip", "Zip"],
-	  ["application.phone.preferred", "Preferred Phone"],
-	  ["application.phone.other", "Other Phone"],
-	  ["application.marital.status", "Marital Status"],
-	  ["application.marital.spouse", "Spouse name"],
-	  ["application.driver_license.number", "Driver's License Number"],
-	  ["application.dob.date.$date", "DOB"],
-	  ["application.name.first", "First"],
-	  ["application.name.middle", "Middle"],
-	  ["application.name.last", "Last"],
-	  ["application.name.preferred", "Preferred Name"],
-	  ["advocate.is_advocate", "Is Advocate"],
-	  ["advocate.individual", "Is Individual"],
-	  ["advocate.npo", "Is NPO"],
-	  ["advocate.gov", "Is Government Agency"],
-	  ["advocate.name", "Advocate Name"],
-	  ["advocate.phone", "Advocate Phone"],
-	  ["advocate.relationship", "Advocate Relationship"],
-	  ["advocate.organization_name", "Advocate Organization Name"],
-	  ["updated.$date", "Updated on"],
-	  ["service_area", "In Service Area"],
-		["notes.vet_summary", "Vetting Summary"],
-		["finance.total_income.value", "Total Income Value"],
-		["notes.site_summary", "Site Summary"],
-		["created.$date", "Date Created"]
-	]
-
-
-	mongoexport_child.on('exit', function(code, signal){
-
-		fs.readFile('public/exports/'+filename+'.json', 'utf8', function(err, data){
-			if(err) throw err;
-			var doc = JSON.parse(data);
-
-      if(fs.existsSync('public/exports/'+filename+'.csv')){
-
-        fs.unlinkSync('public/exports/'+filename+'.csv');
-
-      }
-
-			//This function "unwraps" the JSON.
-
-			ObjectValues = function(v, k){
-
-					if(typeof v == 'object'){
-						for(var kp in v){
-							if(Object.hasOwnProperty.call(v, kp)){
-								ObjectValues(v[kp], k != undefined ? k + '.' + kp : kp);
-							}
-						}
-					}
-					else{
-						//Iterate through JSON, find match with "columns" array. Rename.
-						for(iter = 0; iter < columns.length; iter++){
-							if(columns[iter][0] == k){
-								k = columns[iter][1];
-							}
-						}
-						var data = k + "," + '"' + v + '"' + "\n";
-						//console.log(data);
-						//Write the data to file.
-						if(!k.includes("level") && !k.includes("__v")){
-							fs.appendFileSync('public/exports/'+filename+'.csv', data, 'utf8', function(err){
-								if(err){
-									return console.error(err);
-								}
-							});
-						}
-					}
-			}
-
-			ObjectValues(doc);
-
-			//Delete JSON once you're done with it.
-
-      if(fs.existsSync('public/exports/'+filename+'.json')){
-
-        fs.unlinkSync('public/exports/'+filename+'.json');
-
-      }
-
-
-		});
-
-		if(code !== 0){
-			res.status(500).send("Export failed: Code 500");
-			debugger
-		}
-		else{
-			res.status(200).send({status: 'success'});
-		}
-
-	});
-
-
-})
-
-router.get('/file/:name', function(req, res, next){
-var fileName = req.params.name;
-	var options = {
-		root: './public/exports',
-		dotfiles: 'deny',
-		headers: {
-			'x-sent': true,
-			'Content-Disposition':'attachment;filename=' + fileName
-		}
-	};
-
-
-	res.sendFile(fileName, options, function(err){
-		if(err){
-			next(err);
-		}
-		else{
-			console.log('Sent:', fileName);
-		}
-	});
-
-
+	console.log("** MONGOEXPORT CALLED FROM projectsummary.js **");
 });
 
 router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {

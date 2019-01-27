@@ -102,88 +102,92 @@ router.get('/:id', isLoggedIn, function(req, res) {
 });
 
 
-//Insert CSV export route here
+// //Insert CSV export route here
+// router.post('/csvExport', isLoggedInPost, function(req, res){
+
+
+//   var applicationID = req.body.application;
+//   var firstname = req.body.firstname;
+//   var lastname = req.body.lastname;
+//   var query =  "{'applicationId' : ObjectId("+"'"+applicationID+"'"+")}";
+//   var filename = lastname + '-' + firstname + '-' + applicationID;
+// 	const execFile = require('child_process').execFile;
+// 	const exec = require('child_process').exec;
+// 	const mongoexport_child = execFile('mongoexport', ['-d', 'catalyst',
+// 	'-c', 'workitempackages', '--type=csv', '--fields', 'name,description,cost,vettingComments', '-q', query, '-o', 'public/exports/'+filename+'-'+'VettingView'+'.csv', '--port', config.mongo.port],
+// 	function(error, stdout, stderr) {
+// 		if(error){
+// 			console.error('stderr', stderr);
+// 			throw error;
+// 		}
+// 		else{
+// 			console.log('stdout', stdout);
+// 		}
+// 	});
+
+// 	mongoexport_child.on('exit', function(code,signal){
+
+// 		const rename_child = exec('cd public/exports; var="Work Item,Description,Cost,Vetting Comments"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'VettingView' + '.csv' + "'",
+// 			function(error, stdout, stderr){
+// 					if(error){
+// 						console.error('stderr', stderr);
+// 						throw error;
+// 					}
+// 					else{
+// 						console.log('stdout', stdout);
+// 					}
+// 		})
+
+//     rename_child.on('exit', function(code,signal){
+//       const export_notes = execFile('mongoexport', ['-d', 'catalyst', '-c', 'notes', '--type=csv', '--fields', 'vetAgent,description', '-q', query, '-o', 'public/exports/'+filename+'-'+'notes'+'.csv', '--port', config.mongo.port],
+//       function(error,stdout,stderr){
+//         if(error){
+//           console.error('stderr', stderr);
+//           throw error;
+//         }
+//         else{
+//           console.log('stdout', stdout);
+//         }
+//       });
+
+//       export_notes.on('exit', function(code, signal){
+//         const edit_notes_header = exec('cd public/exports; var="Vetting Agent,Description"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'notes' + '.csv'  + "'" + ';cat ' + filename + '-' + 'VettingView' + '.csv' + ' ' + filename + '-'+'notes' + '.csv' + ' > ' + filename + '-' + 'VettingWorksheet' + '.csv',
+//         function(error, stdout, stderr){
+//           if(error){
+//             console.error('stderr', stderr);
+//           }
+//           else{
+//             console.log('stdout', stdout);
+//           }
+//         });
+//         edit_notes_header.on('exit', function(code,signal){
+
+//           if(fs.existsSync('public/exports/'+filename+'-VettingView'+'.csv') && fs.existsSync('public/exports/'+filename+'-notes'+'.csv')){
+
+//             fs.unlinkSync('public/exports/'+filename+'-VettingView'+'.csv');
+//             fs.unlinkSync('public/exports/'+filename+'-notes'+'.csv');
+
+//           }
+
+
+//       		if(code !== 0){
+//       			res.status(500).send("Export failed: Code 500");
+//       			debugger
+//       		}
+//       		else{
+//       			res.status(200).send({status: 'success'});
+
+
+
+//       		}
+//       	});
+//       });
+//     });
+// 	});
+// });
+
 router.post('/csvExport', isLoggedInPost, function(req, res){
-
-
-  var applicationID = req.body.application;
-  var firstname = req.body.firstname;
-  var lastname = req.body.lastname;
-  var query =  "{'applicationId' : ObjectId("+"'"+applicationID+"'"+")}";
-  var filename = lastname + '-' + firstname + '-' + applicationID;
-	const execFile = require('child_process').execFile;
-	const exec = require('child_process').exec;
-	const mongoexport_child = execFile('mongoexport', ['-d', 'catalyst',
-	'-c', 'workitempackages', '--type=csv', '--fields', 'name,description,cost,vettingComments', '-q', query, '-o', 'public/exports/'+filename+'-'+'VettingView'+'.csv', '--port', config.mongo.port],
-	function(error, stdout, stderr) {
-		if(error){
-			console.error('stderr', stderr);
-			throw error;
-		}
-		else{
-			console.log('stdout', stdout);
-		}
-	});
-
-	mongoexport_child.on('exit', function(code,signal){
-
-		const rename_child = exec('cd public/exports; var="Work Item,Description,Cost,Vetting Comments"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'VettingView' + '.csv' + "'",
-			function(error, stdout, stderr){
-					if(error){
-						console.error('stderr', stderr);
-						throw error;
-					}
-					else{
-						console.log('stdout', stdout);
-					}
-		})
-
-    rename_child.on('exit', function(code,signal){
-      const export_notes = execFile('mongoexport', ['-d', 'catalyst', '-c', 'notes', '--type=csv', '--fields', 'vetAgent,description', '-q', query, '-o', 'public/exports/'+filename+'-'+'notes'+'.csv', '--port', config.mongo.port],
-      function(error,stdout,stderr){
-        if(error){
-          console.error('stderr', stderr);
-          throw error;
-        }
-        else{
-          console.log('stdout', stdout);
-        }
-      });
-
-      export_notes.on('exit', function(code, signal){
-        const edit_notes_header = exec('cd public/exports; var="Vetting Agent,Description"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'notes' + '.csv'  + "'" + ';cat ' + filename + '-' + 'VettingView' + '.csv' + ' ' + filename + '-'+'notes' + '.csv' + ' > ' + filename + '-' + 'VettingWorksheet' + '.csv',
-        function(error, stdout, stderr){
-          if(error){
-            console.error('stderr', stderr);
-          }
-          else{
-            console.log('stdout', stdout);
-          }
-        });
-        edit_notes_header.on('exit', function(code,signal){
-
-          if(fs.existsSync('public/exports/'+filename+'-VettingView'+'.csv') && fs.existsSync('public/exports/'+filename+'-notes'+'.csv')){
-
-            fs.unlinkSync('public/exports/'+filename+'-VettingView'+'.csv');
-            fs.unlinkSync('public/exports/'+filename+'-notes'+'.csv');
-
-          }
-
-
-      		if(code !== 0){
-      			res.status(500).send("Export failed: Code 500");
-      			debugger
-      		}
-      		else{
-      			res.status(200).send({status: 'success'});
-
-
-
-      		}
-      	});
-      });
-    });
-	});
+	console.log("** MONGOEXPORT CALLED FROM vettingworksheet.js **");
 });
 
 router.get('/file/:name', function(req, res, next){
