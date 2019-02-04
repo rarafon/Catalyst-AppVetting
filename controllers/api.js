@@ -2339,6 +2339,8 @@ getDocumentPlanning: function (req, res, next) {
        //     + ' | description: ' + req.body.description);
 		console.log("role in function");
 		console.log(res.locals.role);
+        console.log("all locals");
+        console.log(res.locals);
 		//res.locals.status = 200;
 		//next();
         var updates = {};
@@ -2356,9 +2358,10 @@ getDocumentPlanning: function (req, res, next) {
                 updates.siteComments = req.body.siteComments;
             }
         }
-        else
-        {
-		if(res.locals.role == "ADMIN") {
+        // else
+        // {
+		if(res.locals.user_roles == "ADMIN") {
+            console.log("Yes, User has an ADMIN Role");
 			if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
 			}
@@ -2370,13 +2373,47 @@ getDocumentPlanning: function (req, res, next) {
                 updates.projectComments = req.body.projectComments;
             }
 		}
-		
-		else if(res.locals.role == "SITE") {
+        else if(res.locals.role == "ADMIN") {
+            if(req.body.siteComments != null) {
+                updates.siteComments = req.body.siteComments;
+            }
+            if(req.body.vettingComments != null) {
+                updates.vettingComments = req.body.vettingComments;
+            }
+            if(req.body.projectComments != null)
+            {
+                updates.projectComments = req.body.projectComments;
+            }
+        }
+        if(res.locals.user_roles == "PROJECT_MANAGEMENT") {
+            console.log("Yes, User has a PROJECT_MANAGEMENT Role");
+            if(req.body.projectComments != null) {
+                updates.projectComments = req.body.projectComments;
+            }
+        }
+        else if(res.locals.role == "PROJECT_MANAGEMENT") {
+            if(req.body.projectComments != null) {
+                updates.projectComments = req.body.projectComments;
+            }
+           
+        }
+		if(res.locals.user_roles == "SITE") {
+            console.log("Yes, User has a SITE Role");
             if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
 			}
-           
+
+            // if(req.body.projectComments != null)
+            // {
+            //     updates.projectComments = req.body.projectComments;
+            // }
 		}
+        if(res.locals.user_roles == "VET") {
+            if(req.body.vettingComments != null) {
+                updates.vettingComments = req.body.vettingComments;
+            }
+        }
+
         else {
 			if(req.body.vettingComments != null) {
                 updates.vettingComments = req.body.vettingComments;
@@ -2388,7 +2425,7 @@ getDocumentPlanning: function (req, res, next) {
         if(req.body.siteComments != null) {
             updates.siteComments = req.body.siteComments;
         }
-    }
+ //   }
         //filters
         var conditions = {};
         conditions['_id'] = req.body.id;
