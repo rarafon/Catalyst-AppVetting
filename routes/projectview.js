@@ -240,7 +240,14 @@ function isLoggedIn(req, res, next) {
 						if(results.user.user_status == "ACTIVE") {
               res.locals.assign_tasks = results.user.assign_tasks;
 
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
+							if(results.user.user_roles.includes("ADMIN") || results.user.user_roles.includes("PROJECT_MANAGMENT") || results.user.user_roles.includes("VET") || results.user.user_roles.includes("SITE")) {
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+
+							}
+							else if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role == "PROJECT_MANAGEMENT") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
 								res.locals.user_roles = results.user.user_roles;
@@ -303,9 +310,17 @@ function isLoggedInPost(req, res, next) {
 					}
 					else {
 						if(results.user.user_status == "ACTIVE") {
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
+							if(results.user.user_roles.includes("ADMIN") || results.user.user_roles.includes("PROJECT_MANAGMENT") || results.user.user_roles.includes("VET") || results.user.user_roles.includes("SITE")) {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+
+							}
+							else if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role == "PROJECT_MANAGEMENT") {
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
 								return next();
 
 							}
