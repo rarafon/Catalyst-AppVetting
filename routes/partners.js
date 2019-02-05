@@ -433,19 +433,19 @@ function isLoggedInPostMultiRoles(req, res, next) {
 					}
 					else {
 						if(results.user.user_status == "ACTIVE") {
-							if(results.user.user_roles == "ADMIN" || results.user.user_roles == "PROJECT_MANAGMENT" || results.user.user_roles == "VET" || results.user.user_roles == "SITE") {
+							//if(results.user.user_roles == "ADMIN" || results.user.user_roles == "PROJECT_MANAGMENT" || results.user.user_roles == "VET" || results.user.user_roles == "SITE") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
 								res.locals.user_roles = results.user.user_roles;
 								return next();
 
-							}
-							else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('PROJECT_MANAGMENT') >-1)
-							{
-								res.locals.role = results.user.user_role;
-								res.locals.user_roles = results.user.user_roles;
-								return next();
-							}
+							//}
+							// else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('PROJECT_MANAGMENT') >-1)
+							// {
+							// 	res.locals.role = results.user.user_role;
+							// 	res.locals.user_roles = results.user.user_roles;
+							// 	return next();
+							// }
 
 						}
 						else {
