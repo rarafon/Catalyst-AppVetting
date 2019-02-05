@@ -2360,7 +2360,7 @@ getDocumentPlanning: function (req, res, next) {
         }
         // else
         // {
-		if(res.locals.user_roles == "ADMIN") {
+		if(res.locals.user_roles.includes("ADMIN")) {
             console.log("Yes, User has an ADMIN Role");
 			if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
@@ -2385,7 +2385,7 @@ getDocumentPlanning: function (req, res, next) {
                 updates.projectComments = req.body.projectComments;
             }
         }
-        if(res.locals.user_roles == "PROJECT_MANAGEMENT") {
+        if(res.locals.user_roles.includes("PROJECT_MANAGEMENT")) {
             console.log("Yes, User has a PROJECT_MANAGEMENT Role");
             if(req.body.projectComments != null) {
                 updates.projectComments = req.body.projectComments;
@@ -2397,7 +2397,7 @@ getDocumentPlanning: function (req, res, next) {
             }
            
         }
-		if(res.locals.user_roles == "SITE") {
+		if(res.locals.user_roles.includes("SITE")) {
             console.log("Yes, User has a SITE Role");
             if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
@@ -2408,7 +2408,7 @@ getDocumentPlanning: function (req, res, next) {
             //     updates.projectComments = req.body.projectComments;
             // }
 		}
-        if(res.locals.user_roles == "VET") {
+        if(res.locals.user_roles.includes("VET")) {
             if(req.body.vettingComments != null) {
                 updates.vettingComments = req.body.vettingComments;
             }
