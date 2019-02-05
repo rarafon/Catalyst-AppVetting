@@ -19,7 +19,7 @@ var ObjectId = require('mongodb').ObjectID;
 
 module.exports = function(passport) {
 
-router.get('/', isLoggedIn, api.getProjPartnersLeaders, function(req, res, next) {
+router.get('/', isLoggedInMultiRoles, api.getProjPartnersLeaders, function(req, res, next) {
 	var results = {};
 
 	console.log("Getting Partners");
@@ -40,7 +40,7 @@ router.get('/', isLoggedIn, api.getProjPartnersLeaders, function(req, res, next)
 
 
 //isLoggedInPost, 
-router.route('/getPartnerAssoc', isLoggedIn)									// FOR getProjPartnersLeaders
+router.route('/getPartnerAssoc', isLoggedInMultiRoles)									// FOR getProjPartnersLeaders
 	.post(api.getProjPartnersLeaders, function(req, res) {
 
 	console.log("\n/partners/getPartnerAssoc POST TRIGGERED...\nreq:\n" + req);
@@ -54,8 +54,8 @@ router.route('/getPartnerAssoc', isLoggedIn)									// FOR getProjPartnersLeade
 });
 
 
-router.route('/createPartnerAssoc', isLoggedIn)
-	.post(isLoggedInPost, api.setProjPartnersLeaders, function(req, res) {
+router.route('/createPartnerAssoc', isLoggedInMultiRoles)
+	.post(isLoggedInPostMultiRoles, api.setProjPartnersLeaders, function(req, res) {
 	
 	console.log("\n/partners/createPartnerAssoc POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -69,8 +69,8 @@ router.route('/createPartnerAssoc', isLoggedIn)
 
 
 //Create Partners  
-router.route('/createPartner', isLoggedIn)
-	.post(isLoggedInPost, api.createPartner, function(req, res) {
+router.route('/createPartner', isLoggedInMultiRoles)
+	.post(isLoggedInPostMultiRoles, api.createPartner, function(req, res) {
 	
 	console.log("\n/partners/createPartner POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -85,7 +85,7 @@ router.route('/createPartner', isLoggedIn)
 
 
 router.route('/deletePartner')
-	.post(isLoggedInPost, api.deletePartner, function(req, res) {
+	.post(isLoggedInPostMultiRoles, api.deletePartner, function(req, res) {
 
 	console.log("\n/partners/deletePartner AFTER POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -97,7 +97,7 @@ router.route('/deletePartner')
 });
 
 router.route('/getPartner')
-	.post(isLoggedInPost, api.getPartner, function(req, res) {
+	.post(isLoggedInPostMultiRoles, api.getPartner, function(req, res) {
 
 	console.log("\n/partners/getPartner AFTER POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -290,8 +290,130 @@ function isLoggedIn(req, res, next) {
 		}
 }
 
+//check to see if user is logged in (*NEW* - supports multiple roles) 
+function isLoggedInMultiRoles(req, res, next) {
+
+		if(req.isAuthenticated()) {
+			console.log(req.user._id);
+			var userID = req.user._id.toString();
+
+			console.log("userID");
+			console.log(userID);
+			var ObjectId = require('mongodb').ObjectID;
+			Promise.props({
+				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
+			})
+			.then(function (results) {
+				console.log(results);
+
+					if (!results) {
+						res.redirect('/user/logout');
+					}
+					else {
+						if(results.user.user_status == "ACTIVE") {
+              res.locals.assign_tasks = results.user.assign_tasks;
+              
+							if(results.user.user_roles == "ADMIN" || results.user.user_roles == "PROJECT_MANAGMENT" || results.user.user_roles == "VET" || results.user.user_roles == "SITE") {
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+
+							}
+							else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('PROJECT_MANAGMENT') >-1)
+							{
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+							}
+
+							else {
+								console.log("user is not required role");
+								res.redirect('/user/logout');
+							}
+						}
+						else {
+							//user not active
+							console.log("user not active");
+							res.redirect('/user/logout');
+						}
+					}
+
+
+
+			})
+
+		.catch(function(err) {
+                console.error(err);
+        })
+         .catch(next);
+		}
+		else {
+			console.log("no user id");
+			res.redirect('/user/login');
+		}
+}
+
 //post request authenticator.  Checks if user is an admin or vetting or site agent
 function isLoggedInPost(req, res, next) {
+		if(req.isAuthenticated()) {
+			console.log(req.user._id);
+			var userID = req.user._id.toString();
+
+			var ObjectId = require('mongodb').ObjectID;
+
+			Promise.props({
+				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
+			})
+			.then(function (results) {
+				console.log(results);
+
+					if (!results) {
+						//user not found in db.  Route to error handler
+						res.locals.status = 406;
+						return next('route');
+					}
+					else {
+						if(results.user.user_status == "ACTIVE") {
+							if(results.user.user_roles == "ADMIN" || results.user.user_roles == "PROJECT_MANAGMENT" || results.user.user_roles == "VET" || results.user.user_roles == "SITE") {
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+
+							}
+							else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('PROJECT_MANAGMENT') >-1)
+							{
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+							}
+
+						}
+						else {
+							//user is not active
+							res.locals.status = 406;
+							return next('route');
+						}
+					}
+
+			})
+
+		.catch(function(err) {
+                console.error(err);
+        })
+         .catch(next);
+		}
+		else {
+			//user is not logged in
+			console.log("no user id");
+			res.locals.status = 406;
+			return next('route');
+		}
+}
+
+//post request authenticator.  (*NEW* - Supports Multiple roles)
+function isLoggedInPostMultiRoles(req, res, next) {
 		if(req.isAuthenticated()) {
 			console.log(req.user._id);
 			var userID = req.user._id.toString();
