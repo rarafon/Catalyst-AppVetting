@@ -55,7 +55,7 @@ router.route('/getPartnerAssoc', isLoggedInMultiRoles)									// FOR getProjPar
 
 
 router.route('/createPartnerAssoc', isLoggedInMultiRoles)
-	.post(isLoggedInPostMultiRoles, api.setProjPartnersLeaders, function(req, res) {
+	.post(api.setProjPartnersLeaders, function(req, res) {
 	
 	console.log("\n/partners/createPartnerAssoc POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -70,7 +70,7 @@ router.route('/createPartnerAssoc', isLoggedInMultiRoles)
 
 //Create Partners  
 router.route('/createPartner', isLoggedInMultiRoles)
-	.post(isLoggedInPostMultiRoles, api.createPartner, function(req, res) {
+	.post(api.createPartner, function(req, res) {
 	
 	console.log("\n/partners/createPartner POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -84,8 +84,8 @@ router.route('/createPartner', isLoggedInMultiRoles)
 });
 
 
-router.route('/deletePartner')
-	.post(isLoggedInPostMultiRoles, api.deletePartner, function(req, res) {
+router.route('/deletePartner', isLoggedInMultiRoles)
+	.post(api.deletePartner, function(req, res) {
 
 	console.log("\n/partners/deletePartner AFTER POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -97,7 +97,7 @@ router.route('/deletePartner')
 });
 
 router.route('/getPartner')
-	.post(isLoggedInPostMultiRoles, api.getPartner, function(req, res) {
+	.post(api.getPartner, function(req, res) {
 
 	console.log("\n/partners/getPartner AFTER POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
@@ -433,9 +433,10 @@ function isLoggedInPostMultiRoles(req, res, next) {
 					}
 					else {
 						if(results.user.user_status == "ACTIVE") {
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
+							if(results.user.user_roles == "ADMIN" || results.user.user_roles == "PROJECT_MANAGMENT" || results.user.user_roles == "VET" || results.user.user_roles == "SITE") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
 								return next();
 
 							}
