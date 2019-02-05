@@ -1832,7 +1832,7 @@ getDocumentPlanning: function (req, res, next) {
 
 
         Promise.props({
-            allPartners: PartnerPackage.find().execAsync(),
+            allPartners: PartnerPackage.find().sort({ "org_name": 1 }).execAsync(),
             pCount: PartnerPackage.count().execAsync(),
             assocPartners: ProjectSummaryPackage.find({"projectId": projectId }).execAsync()
             // assocPartners: ProjectSummaryPackage.findAllAndUpdate(
