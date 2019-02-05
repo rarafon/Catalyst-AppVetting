@@ -2337,8 +2337,10 @@ getDocumentPlanning: function (req, res, next) {
         // Log the _id, name, and value that are passed to the function
         //console.log('[ API ] WorkItem :: Call invoked with item _id: ' + req.body.id
        //     + ' | description: ' + req.body.description);
-		console.log("role in function");
+		console.log("role in old function");
 		console.log(res.locals.role);
+        console.log("role in new function")
+        console.log(res.locals.user_roles);
         console.log("all locals");
         console.log(res.locals);
 		//res.locals.status = 200;
@@ -2373,18 +2375,18 @@ getDocumentPlanning: function (req, res, next) {
                 updates.projectComments = req.body.projectComments;
             }
 		}
-        else if(res.locals.role == "ADMIN") {
-            if(req.body.siteComments != null) {
-                updates.siteComments = req.body.siteComments;
-            }
-            if(req.body.vettingComments != null) {
-                updates.vettingComments = req.body.vettingComments;
-            }
-            if(req.body.projectComments != null)
-            {
-                updates.projectComments = req.body.projectComments;
-            }
-        }
+        // else if(res.locals.role == "ADMIN") {
+        //     if(req.body.siteComments != null) {
+        //         updates.siteComments = req.body.siteComments;
+        //     }
+        //     if(req.body.vettingComments != null) {
+        //         updates.vettingComments = req.body.vettingComments;
+        //     }
+        //     if(req.body.projectComments != null)
+        //     {
+        //         updates.projectComments = req.body.projectComments;
+        //     }
+        // }
         if(res.locals.user_roles.includes("PROJECT_MANAGEMENT")) {
             console.log("Yes, User has a PROJECT_MANAGEMENT Role");
             if(req.body.projectComments != null) {
@@ -2392,6 +2394,7 @@ getDocumentPlanning: function (req, res, next) {
             }
         }
         else if(res.locals.role == "PROJECT_MANAGEMENT") {
+            console.log("Yes, User has a PROJECT_MANAGEMENT (older) Role");
             if(req.body.projectComments != null) {
                 updates.projectComments = req.body.projectComments;
             }
