@@ -2361,8 +2361,8 @@ getDocumentPlanning: function (req, res, next) {
                 updates.siteComments = req.body.siteComments;
             }
         }
-        else
-        {
+       // else
+       // {
 		if(res.locals.user_roles.indexOf("ADMIN") !== -1) {
             console.log("Yes, User has an ADMIN Role");
 			if(req.body.siteComments != null) {
@@ -2429,7 +2429,7 @@ getDocumentPlanning: function (req, res, next) {
         if(req.body.siteComments != null) {
             updates.siteComments = req.body.siteComments;
         }
-   }
+  // }
         //filters
         var conditions = {};
         conditions['_id'] = req.body.id;
