@@ -2340,7 +2340,7 @@ getDocumentPlanning: function (req, res, next) {
 		console.log("role in old function");
 		console.log(res.locals.role);
         console.log("role in new function")
-        console.log(res.locals.user_roles.includes('PROJECT_MANAGEMENT'));
+        console.log(res.locals.user_roles.indexOf('PROJECT_MANAGEMENT') !== -1);
         console.log(res.locals.user_roles == 'PROJECT_MANAGEMENT');
         console.log("all locals");
         console.log(res.locals);
@@ -2363,7 +2363,7 @@ getDocumentPlanning: function (req, res, next) {
         }
         else
         {
-		if(res.locals.user_roles.includes("ADMIN")) {
+		if(res.locals.user_roles.indexOf("ADMIN") !== -1) {
             console.log("Yes, User has an ADMIN Role");
 			if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
@@ -2388,7 +2388,7 @@ getDocumentPlanning: function (req, res, next) {
         //         updates.projectComments = req.body.projectComments;
         //     }
         // }
-        if(res.locals.user_roles.includes("PROJECT_MANAGEMENT")) {
+        if(res.locals.user_roles.indexOf("PROJECT_MANAGEMENT") !== -1) {
             console.log("Yes, User has a PROJECT_MANAGEMENT Role");
             if(req.body.projectComments != null) {
                 updates.projectComments = req.body.projectComments;
@@ -2401,7 +2401,7 @@ getDocumentPlanning: function (req, res, next) {
             }
            
         }
-		if(res.locals.user_roles.includes("SITE")) {
+		if(res.locals.user_roles.indexOf("SITE") !== -1) {
             console.log("Yes, User has a SITE Role");
             if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
@@ -2412,7 +2412,7 @@ getDocumentPlanning: function (req, res, next) {
             //     updates.projectComments = req.body.projectComments;
             // }
 		}
-        if(res.locals.user_roles.includes("VET")) {
+        if(res.locals.user_roles.indexOf("VET") !== -1) {
             if(req.body.vettingComments != null) {
                 updates.vettingComments = req.body.vettingComments;
             }
