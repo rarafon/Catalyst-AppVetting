@@ -2340,7 +2340,8 @@ getDocumentPlanning: function (req, res, next) {
 		console.log("role in old function");
 		console.log(res.locals.role);
         console.log("role in new function")
-        console.log(res.locals.user_roles);
+        console.log(res.locals.user_roles.includes('PROJECT_MANAGEMENT'));
+        console.log(res.locals.user_roles == 'PROJECT_MANAGEMENT');
         console.log("all locals");
         console.log(res.locals);
 		//res.locals.status = 200;
