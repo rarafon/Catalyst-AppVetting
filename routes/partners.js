@@ -69,7 +69,7 @@ router.route('/createPartnerAssoc', isLoggedInMultiRoles)
 
 
 //Create Partners  
-router.route('/createPartner', isLoggedInMultiRoles)
+router.route('/createPartner')
 	.post(api.createPartner, function(req, res) {
 	
 	console.log("\n/partners/createPartner POST TRIGGERED...\nreq:\n" + req);
@@ -84,7 +84,7 @@ router.route('/createPartner', isLoggedInMultiRoles)
 });
 
 
-router.route('/deletePartner', isLoggedInMultiRoles)
+router.route('/deletePartner')
 	.post(api.deletePartner, function(req, res) {
 
 	console.log("\n/partners/deletePartner AFTER POST TRIGGERED...\nreq:\n" + req);
