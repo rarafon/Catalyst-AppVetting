@@ -191,25 +191,26 @@ router.post('/csvExport', isLoggedInPost, function(req, res){
 });
 
 router.get('/file/:name', function(req, res, next){
-var fileName = req.params.name;
-	var options = {
-		root: './public/exports',
-		dotfiles: 'deny',
-		headers: {
-			'x-sent': true,
-			'Content-Disposition':'attachment;filename=' + fileName
-		}
-	};
+	console.log("** MONGOEXPORT CALLED FROM vettingworksheet.js **");
+// var fileName = req.params.name;
+// 	var options = {
+// 		root: './public/exports',
+// 		dotfiles: 'deny',
+// 		headers: {
+// 			'x-sent': true,
+// 			'Content-Disposition':'attachment;filename=' + fileName
+// 		}
+// 	};
 
 
-	res.sendFile(fileName, options, function(err){
-		if(err){
-			next(err);
-		}
-		else{
-			console.log('Sent:', fileName);
-		}
-	});
+// 	res.sendFile(fileName, options, function(err){
+// 		if(err){
+// 			next(err);
+// 		}
+// 		else{
+// 			console.log('Sent:', fileName);
+// 		}
+// 	});
 
 
 });
