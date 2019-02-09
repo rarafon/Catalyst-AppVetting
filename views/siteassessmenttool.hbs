@@ -75,6 +75,9 @@
         <a class="nav-link" data-toggle="tab" href="#work" role="tab">Work Items</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#partners" role="tab">Partners</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#checklist" role="tab">Checklist</a>
       </li>
     </ul>
@@ -323,6 +326,14 @@
           {{/each}}
         </div>
       </div><!-- end #work -->
+
+
+      <!-- Partners (needs new data base fields for Org Name, Org Address, Contact Name, Contact Phone, Contact email)  -->
+      <div class="tab-pane" id="partners" role="tabpanel"><!-- start #partners -->
+      <h5></h5>
+        {{> partners}}
+      </div><!-- end #partners -->
+
 
       <!-- Assessment Checklist -->
       <div class="tab-pane" id="checklist" role="tabpanel">

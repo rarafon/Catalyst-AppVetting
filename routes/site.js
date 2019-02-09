@@ -57,7 +57,7 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 	res.render('siteassessment', payload);
 });
 
-router.get('/:id', isLoggedIn, api.getDocumentSite, function(req, res, next) {
+router.get('/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders, function(req, res, next) {
     //Checking what's in params
     //console.log("Rendering application " + ObjectId(req.params.id));
 	//TEST
@@ -76,6 +76,10 @@ router.get('/:id', isLoggedIn, api.getDocumentSite, function(req, res, next) {
     payload.assessment = [AssessmentPackage.empty];
     console.log("No assessment found. Using empty: ", payload.assessment);
   }
+
+	payload.part = res.locals.results.part||req.partnerTime;			//Data for Partners Tab Partial
+
+
 	console.log("results");
   console.log(payload);
  
