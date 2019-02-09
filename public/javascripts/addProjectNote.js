@@ -1,6 +1,5 @@
 /**
- * This script handles adding and removing of vetting notes
- * It works in both the application view and the phone call script
+ * This script handles adding and removing of project Notes
 **/
 
 $(document).ready(init);
@@ -56,7 +55,7 @@ function getDate() {
     var Year = date.getFullYear();
     var Day = ( "00" + date.getDate()).slice(-2);
     var Mon = ("00" + (date.getMonth()+1)).slice(-2);
-    return Mon + "/" + Day + "/" + Year;
+    return Year + "-" + Mon + "-" + Day;
 }
 
 /**
@@ -115,8 +114,8 @@ function addNote(e) {
                         var deleteButton = '<button type="submit" class="delete-button2 btn btn-danger">Delete Note</button>';
                         //assemble all parts to build the new note row
                         if($(this).hasClass('note-editor-container'))
-                        {
-                            var newRow = '<tr class="success">' + newNote + newUser + date + '<td><form>' + hiddenNoteId + deleteButton + '</form></td></tr>';
+                        {       //Future Update: Incorporate + updateButton + deleteButton for the newly created row.
+                            var newRow = '<tr class="success">' + newNote + newUser + date + '<td><form>' + hiddenNoteId + '</form></td></tr>';
                   
                         }
                         else{

@@ -699,7 +699,7 @@ info: {
                       <tr>
                         <td class="note-descrip">{{this.description}}</td>
                         <td class="note-vetAgent">{{this.projectPlanner}}</td>
-                        <td>{{this.date}}</td>                       
+                        <td>{{dateToLocaleDate this.date}}</td>                       
                       </tr>
                     {{/each}}
                   {{else}}
@@ -836,7 +836,7 @@ info: {
                       <tr>
                         <td class="note-descrip">{{this.description}}</td>
                         <td class="note-vetAgent">{{this.projectPlanner}}</td>  
-                        <td>{{this.date}}</td>                     
+                        <td>{{dateToLocaleDate this.date}}</td>                     
                       </tr>
                     {{/each}}
                   {{else}}
@@ -874,7 +874,7 @@ info: {
         </tr>
 
         <tr>
-          <th class="col-xs-12 col-sm-6">Project postal mailed to client</th>
+          <th class="col-xs-12 col-sm-6">Contract postal mailed to client</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
                    title="{{getCompletedDate plan 'contract' }}">
@@ -891,7 +891,43 @@ info: {
         </tr>
 
         <tr>
-          <th class="col-xs-12 col-sm-6">Project activated</th>
+          <th class="col-xs-12 col-sm-6">Create project webpage, calendar event, and volunteer schedule in Endis</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'create_page_event_schedule' }}">
+              <input type="checkbox" name="create_page_event_schedule" value=""
+                     {{#if plan.create_page_event_schedule.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="create_page_event_schedule"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Send out initial email requesting volunteers. Register into Website/DB.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'volunteer_request_initial' }}">
+              <input type="checkbox" name="volunteer_request_initial" value=""
+                     {{#if plan.volunteer_request_initial.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="volunteer_request_initial"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Project activation call to client</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
                    title="{{getCompletedDate plan 'activated' }}">
@@ -921,6 +957,57 @@ info: {
           <td class="col-xs-6 col-sm-4">
             Owner
             <select class="task-owner plan" data-owner-of="planning_visit"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Create list of materials, rentals &amp; supplies needed. Send to Darrell.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'report_materials_supplies' }}">
+              <input type="checkbox" name="report_materials_supplies" value=""
+                     {{#if plan.report_materials_supplies.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="report_materials_supplies"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Verify site resources needed</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'verify_site_resources' }}">
+              <input type="checkbox" name="verify_site_resources" value=""
+                     {{#if plan.verify_site_resources.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="verify_site_resources"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'arrange_purchase_delivery' }}">
+              <input type="checkbox" name="arrange_purchase_delivery" value=""
+                     {{#if plan.arrange_purchase_delivery.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="arrange_purchase_delivery"></select>
           </td>
         </tr>
 
@@ -958,56 +1045,44 @@ info: {
           </td>
         </tr>
 
+
         <tr>
-          <th class="col-xs-12 col-sm-6">Create project webpage, calendar event, and volunteer schedule in Endis</th>
+          <th class="col-xs-12 col-sm-6">Check the weather forecast and make plans accordingly</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'create_page_event_schedule' }}">
-              <input type="checkbox" name="create_page_event_schedule" value=""
-                     {{#if plan.create_page_event_schedule.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'check_weather_forecast' }}">
+              <input type="checkbox" name="check_weather_forecast" value=""
+                     {{#if plan.check_weather_forecast.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="create_page_event_schedule"></select>
+            <select class="task-owner plan" data-owner-of="check_weather_forecast"></select>
           </td>
         </tr>
 
+
+
+
         <tr>
-          <th class="col-xs-12 col-sm-6">Send out initial email requesting volunteers</th>
+          <th class="col-xs-12 col-sm-6">Verify number of volunteers signed up</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'volunteer_request_initial' }}">
-              <input type="checkbox" name="volunteer_request_initial" value=""
-                     {{#if plan.volunteer_request_initial.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'verify_volunteer_count' }}">
+              <input type="checkbox" name="verify_volunteer_count" value=""
+                     {{#if plan.verify_volunteer_count.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="volunteer_request_initial"></select>
+            <select class="task-owner plan" data-owner-of="verify_volunteer_count"></select>
           </td>
         </tr>
 
-        <tr>
-          <th class="col-xs-12 col-sm-6">Send follow-up emails requesting volunteers</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'volunteer_request_followup' }}">
-              <input type="checkbox" name="volunteer_request_followup" value=""
-                     {{#if plan.volunteer_request_followup.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="volunteer_request_followup"></select>
-          </td>
-        </tr>
 
         <tr>
           <th class="col-xs-12 col-sm-6">Send final email to signed up volunteers 3-5 days before project</th>
@@ -1027,89 +1102,23 @@ info: {
         </tr>
 
         <tr>
-          <th class="col-xs-12 col-sm-6">Report list of materials, rentals &amp; supplies needed</th>
+          <!-- <th class="col-xs-12 col-sm-6">Send follow-up emails requesting volunteers</th> -->
+          <th class="col-xs-12 col-sm-6">Send follow-up emails to volunteers via Endis as needed</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'report_materials_supplies' }}">
-              <input type="checkbox" name="report_materials_supplies" value=""
-                     {{#if plan.report_materials_supplies.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'volunteer_request_followup' }}">
+              <input type="checkbox" name="volunteer_request_followup" value=""
+                     {{#if plan.volunteer_request_followup.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="report_materials_supplies"></select>
+            <select class="task-owner plan" data-owner-of="volunteer_request_followup"></select>
           </td>
         </tr>
 
-        <tr>
-          <th class="col-xs-12 col-sm-6">Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'arrange_purchase_delivery' }}">
-              <input type="checkbox" name="arrange_purchase_delivery" value=""
-                     {{#if plan.arrange_purchase_delivery.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="arrange_purchase_delivery"></select>
-          </td>
-        </tr>
-
-        <tr>
-          <th class="col-xs-12 col-sm-6">Check the weather forecast and make plans accordingly</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'check_weather_forecast' }}">
-              <input type="checkbox" name="check_weather_forecast" value=""
-                     {{#if plan.check_weather_forecast.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="check_weather_forecast"></select>
-          </td>
-        </tr>
-
-        <tr>
-          <th class="col-xs-12 col-sm-6">Verify number of volunteers signed up</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'verify_volunteer_count' }}">
-              <input type="checkbox" name="verify_volunteer_count" value=""
-                     {{#if plan.verify_volunteer_count.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="verify_volunteer_count"></select>
-          </td>
-        </tr>
-
-        <tr>
-          <th class="col-xs-12 col-sm-6">Verify site resources needed</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'verify_site_resources' }}">
-              <input type="checkbox" name="verify_site_resources" value=""
-                     {{#if plan.verify_site_resources.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="verify_site_resources"></select>
-          </td>
-        </tr>
       </table>
         
       </div><!-- end #planning -->
@@ -1165,7 +1174,7 @@ info: {
                       <tr>
                         <td class="note-descrip">{{this.description}}</td>
                         <td class="note-vetAgent">{{this.projectPlanner}}</td>
-                        <td>{{this.date}}</td>                       
+                        <td>{{dateToLocaleDate this.date}}</td>                       
                       </tr>
                     {{/each}}
                   {{else}}
@@ -1572,7 +1581,7 @@ info: {
                       <tr>
                         <td class="note-descrip">{{this.description}}</td>
                         <td class="note-vetAgent">{{this.projectPlanner}}</td>
-                        <td>{{this.date}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>
                         <td>
                           <form>
                             <input type="hidden" value="{{this._id}}" name="noteId" />
