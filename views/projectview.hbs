@@ -18,16 +18,29 @@ function shorten(str, maxLen, separator = ' ') {
   return str.substr(0, str.lastIndexOf(separator, maxLen));
 }
 
+//helper function to get current date in a nice format
+function getCurrentDate() {
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Day = ( "00" + date.getDate()).slice(-2);
+    var Mon = ("00" + (date.getMonth()+1)).slice(-2);
+    return Mon + "/" + Day + "/" + Year;
+}
+
 // START PDF EXPORT WRITEUP ------------------------------------------------------------------------
 
  var dataPAF = {};
  {{#if results.doc}}
+
+dataPAF.currentDate = getCurrentDate();
+
  {{#each results.doc}}
  dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
  dataPAF.addr1 = "{{{escape application.address.line_1}}}, ";
  dataPAF.addr2 = "{{{escape application.address.line_2}}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}";
  dataPAF.addr3 = "{{{escape application.address.city}}}, {{{escape application.address.state}}}  {{{escape application.address.zip}}}";
  dataPAF.summ = "{{{escape notes.site_summary}}}";
+ dataPAF.vettSumm = "{{{escape notes.vet_summary}}}";
  {{/each}}
  {{/if}}
 
@@ -164,7 +177,7 @@ partnerItems.push("-     " + "Phone:     {{{escape contact_phone}}}\n\n");
  {{/if}}
 
 
-// ***  PROJECT ASSESSMENT FORM - Using Node pdfmake Module - MIT License. - MIT License.
+// ***  PROJECT ASSESSMENT FORM - Using Node pdfmake Module - MIT License.
 // ***  BELOW CODE BY ROHIN ADALJA (github.com/rohinadalja), USING SERVER-SIDE PDF TOOL (pdfmake).
 // ***     Use Dependant on the following: (1) Node PDFmake module
 // ***     TESTED IN: Safari 12.0, Chrome 70.0.3538.102
@@ -175,7 +188,9 @@ function exportPAFtoPDF() {
 }
 
 var pafDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
-{ text: 'CATALYST PARTNERSHIPS                                PROJECT ASSESSMENT FORM', style: 'h2b' },
+{ text: 'CATALYST PARTNERSHIPS                                 PROJECT ASSESSMENT FORM', style: 'h2b' },
+
+{ text: dataPAF.currentDate, style:'rightAlign' },
 
 { text: [ "\n\nRECIPIENT NAME: ", {text: dataPAF.fullName, style:'inText' } ], style:'eachLine'},
 
@@ -183,7 +198,7 @@ var pafDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
 {text: dataPAF.addr2, margin:[98,-10,0,0], style:'reg'},   //margin:58
 {text: dataPAF.addr3, margin:[98,0,0,5], style:'reg' },
 
-{ text: [ "BIO/Project Summary: ", {text: dataPAF.summ, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
+{ text: [ "BIO/Project Summary: ", {text: dataPAF.vettSumm, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
 
 "WORK ITEMS / MATERIALS OVERVIEWS / COST ESTIMATES:",           //WORK ITEM AND COST
     { text: [ {text: workItems, style:'inText' } ], style:'eachWorkItem'},
@@ -200,28 +215,30 @@ var pafDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
       style: 'list'
     },
 
-"\nPARTNERS: ",                   //<name, in-kind materials description>
+"\nPotential Partners: ",                   //<name, in-kind materials description>
     { text: [ {text: partnerItems, style:'inText' } ], style:'eachWorkItem'},
 
 { text: [ "SUBCONTRACTOR(S): ", {text: dataPAF.subcontractors, style:'inText' }], style:'eachLine'},
 
 "OTHER COSTS:",
     { ul: [
-            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inText' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
-            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inText' } ], style:'eachBullet'},     //<y/n, description & cost if “yes”>
-            { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inText' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
-            { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inText' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
+            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inTextBullet' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
+            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inTextBullet' } ], style:'eachBullet'},     //<y/n, description & cost if “yes”>
+            { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inTextBullet' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
+            { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inTextBullet' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
           ],
       style: 'list'
     },
 
-{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inText' } ], style:'eachLine'},   //<sum of cost fields> 
+{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inTextBullet' } ], style:'eachLine'},   //<sum of cost fields> 
 
-{ text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},      //< # >
+{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inTextBullet' } ], style:'eachLine'},         //<start date, end date>
 
-{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inText' } ], style:'eachLine'},         //<start date, end date>
+{ text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inTextBullet' } ], style:'eachLine'},      //< # >
 
-{ text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'}                    //<text field>
+{ text: [ "Site Notes: ", {text: dataPAF.summ, style:'inTextBullet' } ], style:'eachLine'},                    //<text field>
+
+// { text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'}                    //<text field>
 
 
 ], //END CONTENT ***************************************************
@@ -237,6 +254,11 @@ styles: {
         },
     inText: { 
             //decorationStyle: 'dashed',
+            decoration: 'underline',
+            bold: false,
+        },
+    inTextBullet: { 
+            decorationStyle: 'dashed',
             decoration: 'underline',
             bold: false,
         },
@@ -277,6 +299,11 @@ styles: {
         // bold: true,
         alignment: 'right'
     },
+    rightAlign: {
+        // fontSize: 14,
+        // bold: true,
+        alignment: 'right'
+    },
     list: {
         // bold: false,
         margin: [12, 0, 0, 0],
@@ -305,7 +332,9 @@ function exportHandletoPDF() {
 }
 
 var handleDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
-{ text: 'CATALYST PARTNERSHIPS                                                    HANDLE-IT REPORT', style: 'h2b' },
+{ text: 'CATALYST PARTNERSHIPS                                                         HANDLE-IT FORM', style: 'h2b' },
+
+{ text: dataPAF.currentDate, style:'rightAlign' },
 
 { text: [ "\n\n\nRECIPIENT NAME: ", {text: dataPAF.fullName, style:'inText' } ], style:'eachLine'},
 
@@ -313,7 +342,7 @@ var handleDefinition = {  content: [           // BEGIN PRINT LAYOUT! **********
 {text: dataPAF.addr2, margin:[98,-10,0,0], style:'reg'},   //margin:58
 {text: dataPAF.addr3, margin:[98,0,0,5], style:'reg' },
 
-{ text: [ "BIO/Project Summary: ", {text: dataPAF.summ, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
+{ text: [ "BIO/Project Summary: ", {text: dataPAF.vettSumm, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
 
 "WORK ITEMS / MATERIALS OVERVIEWS / COST ESTIMATES:",           //WORK ITEM AND COST
     { text: [ {text: workItems, style:'inText' } ], style:'eachWorkItem'},
@@ -337,21 +366,25 @@ var handleDefinition = {  content: [           // BEGIN PRINT LAYOUT! **********
 
 "OTHER COSTS:",
     { ul: [
-            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inText' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
-            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inText' } ], style:'eachBullet'},     //<y/n, description & cost if “yes”>
-            { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inText' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
-            { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inText' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
+            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inTextBullet' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
+            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inTextBullet' } ], style:'eachBullet'}     //<y/n, description & cost if “yes”>
+            // { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inText' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
+            // { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inText' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
           ],
       style: 'list'
     },
 
-{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inText' } ], style:'eachLine'},   //<sum of cost fields> 
+{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inTextBullet' } ], style:'eachLine'},   //<sum of cost fields> 
 
 // { text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},      //< # >
 
-{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inText' } ], style:'eachLine'},         //<start date, end date>
+{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inTextBullet' } ], style:'eachLine'},         //<start date, end date>
 
-{ text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'},                    //<text field>
+{ text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inTextBullet' } ], style:'eachLine'},      //< # >
+
+{ text: [ "Site Notes: ", {text: dataPAF.summ, style:'inTextBullet' } ], style:'eachLine'},                    //<text field>
+
+// { text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'},                    //<text field>
 
 
 { text: '\n\n*****', style: 'center' }
@@ -367,6 +400,11 @@ styles: {
         margin:[0,0,0,8]
         },
     inText: { 
+            // decorationStyle: 'dashed',
+            decoration: 'underline',
+            bold: false,
+        },
+    inTextBullet: { 
             decorationStyle: 'dashed',
             decoration: 'underline',
             bold: false,
@@ -403,6 +441,11 @@ styles: {
     },
     right: {
         fontSize: 14,
+        // bold: true,
+        alignment: 'right'
+    },
+    rightAlign: {
+        // fontSize: 14,
         // bold: true,
         alignment: 'right'
     },
