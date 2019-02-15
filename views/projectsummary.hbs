@@ -37,17 +37,17 @@
                 </div>
                 <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover" id="project_table">
+                        <table class="table table-sm table-bordered table-hover orderTable0" id="project_table">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable0', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable0', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Appl. Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                 <th class="col-md-2">Start Date</th>
+                                <th onclick="orderTable('orderTable0', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable0', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable0', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable0', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable0', 6)" class="col-md-2">Start Date</th>
                <!--  <th class="col-md-1">#</th>  -->             
                             </tr>
                             </thead>
@@ -84,17 +84,17 @@
                 </div>
                 <div id="collapseTwo" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable1">
                             <thead>
                                     <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable1', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable1', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Appl. Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                <th class="col-md-2">Start Date</th>
+                                <th onclick="orderTable('orderTable1', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable1', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable1', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable1', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable1', 6)" class="col-md-2">Start Date</th>
                 <!-- <th class="col-md-1">#</th>  -->            
                      </tr>
                             </thead>
@@ -178,17 +178,17 @@
                 </div>
                 <div id="collapseFive" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable2">
                             <thead>
                                       <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable2', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable2', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Appl. Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                 <th class="col-md-2">Start Date</th>
+                                <th onclick="orderTable('orderTable2', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable2', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable2', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable2', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable2', 6)" class="col-md-2">Start Date</th>
                 <!-- <th class="col-md-1">#</th>   -->           
                  
                             </tr>
@@ -523,6 +523,50 @@
         }
     }
 
+
+// SORT TABLE CODE --------------------------------------------------
+function orderTable(inTableClass, colmn) {
+    var switchCnt = 0, rows, reverse;
+
+    var curr = "ascending";
+    var thisTable = document.getElementsByClassName(inTableClass)[0];
+    var switching = true;
+    
+    var i, x, y;
+    while (switching) {
+        switching = false;
+        rows = thisTable.getElementsByTagName("tr");
+        
+        for (i = 1; i < (rows.length - 1); i++) {
+            reverse = false;
+            x = rows[i].getElementsByTagName("td")[colmn];
+            y = rows[i + 1].getElementsByTagName("td")[colmn];
+            if (curr == "ascending") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    reverse = true;
+                    break;
+                }
+            } else if (curr == "descending") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    reverse = true;
+                    break;
+                }
+            }
+        }
+
+        if (reverse) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchCnt++;      
+        } else {
+            if (switchCnt == 0 && curr == "ascending") {
+            curr = "descending";
+            switching = true;
+            }
+        }
+    }
+}
+// -------------------------------------------------- END SORT TABLE CODE 
 
 </script>
 
