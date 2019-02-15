@@ -542,12 +542,12 @@ function orderTable(inTableClass, colmn) {
             x = rows[i].getElementsByTagName("td")[colmn];
             y = rows[i + 1].getElementsByTagName("td")[colmn];
             if (curr == "ascending") {
-                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                if (x.innerText.toLowerCase() > y.innerText.toLowerCase()) {
                     reverse = true;
                     break;
                 }
             } else if (curr == "descending") {
-                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                if (x.innerText.toLowerCase() < y.innerText.toLowerCase()) {
                     reverse = true;
                     break;
                 }
