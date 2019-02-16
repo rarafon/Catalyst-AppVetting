@@ -57,7 +57,7 @@
     {{#each results.doc}}
       <div class="row">
         <div class="col-xs-12">
-          <h1 style="display:inline-block;">{{application.name.first}} {{application.name.middle}} {{application.name.last}}</h1>
+          <h1 style="display:inline-block;">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.middle}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.middle}} {{application.name.last}}{{/if}}</h1>
           <h3 style="float:right;display:inline-block;" class="text-muted">#{{app_name}}</h4>
         </div>
       </div>

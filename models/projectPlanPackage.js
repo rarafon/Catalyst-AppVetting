@@ -276,16 +276,16 @@ ProjectPlanPackageSchema.statics.filterOpenTasks = function () {
 
 // Mapping of db names to UI presentation names
 var labels = {
-  contract: "Project postal mailed to client",
-  activated: "Project activated",
+  contract: "Contract postal mailed to client",
+  activated: "Project activation call to client",
   planning_visit: "Planning visit completed",
   rent_porta_pottie: "Rent porta-pottie",
   rent_waste_dumpster: "Rent waste bin",
   create_page_event_schedule: "Create project webpage, calendar event, and volunteer schedule in Endis",
-  volunteer_request_initial: "Send out initial email requesting volunteers",
-  volunteer_request_followup: "Send follow-up emails requesting volunteers",
+  volunteer_request_initial: "Send out initial email requesting volunteers. Register into Website/DB.",
+  volunteer_request_followup: "Send follow-up emails to volunteers via Endis as needed",
   volunteer_request_final: "Send final email to signed up volunteers 3-5 days before project",
-  report_materials_supplies: "Report list of materials, rentals &amp; supplies needed",
+  report_materials_supplies: "Create list of materials, rentals &amp; supplies needed. Send to Darrell.",
   arrange_purchase_delivery: "Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.",
   check_weather_forecast: "Check the weather forecast and make plans accordingly",
   verify_volunteer_count: "Verify number of volunteers signed up",

@@ -31,7 +31,8 @@
           <thead>
             <tr>
               <th class="col-md-3">Application</th>
-              <th class="col-md-2">Start Date</th>
+              <th class="col-md-1">Start Date</th>
+              <th class="col-md-1">Due Date</th>
               <th class="col-md-7">Task</th>
             </tr>
           </thead>
@@ -45,7 +46,8 @@
                     }}</a>
                   {{getPreferredName ../applications applicationId}}
                 </td>
-                <td class="col-md-2" style="height: 120px; overflow: hidden">{{getApplicationStartTime ../applications applicationId}}</td>
+                <td class="col-md-1" style="height: 120px; overflow: hidden">{{getApplicationStartTime ../applications applicationId}}</td>
+                <td class="col-md-1" style="height: 120px; overflow: hidden">{{getApplicationDueDate ../applications applicationId}}</td>
                 <td class="col-md-7">{{
                   getPlanTaskAssignments this ../userId ../applications applicationId
                   }}</td>
@@ -72,6 +74,7 @@
             <tr>
               <th class="col-md-3">Application</th>
               <th class="col-md-2">Start Date</th>
+              <!-- <th class="col-md-1">Due Date</th> -->
               <th class="col-md-7">Hot Tasks</th>
             </tr>
           </thead>
@@ -88,6 +91,7 @@
                   <br/>&nbsp; <br/>&nbsp;
                 </td>
                 <td class="col-md-2">{{getApplicationStartTime ../openApplications applicationId}}<br/>&nbsp; <br/>&nbsp;</td>
+                <!-- <td class="col-md-1">{{getApplicationDueDate ../openApplications applicationId}}<br/>&nbsp; <br/>&nbsp;</td> -->
                 <td class="col-md-7">{{
                   getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 
                   }}</td>

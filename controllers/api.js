@@ -411,16 +411,26 @@ getDocumentPlanning: function (req, res, next) {
             withdrawn: DocumentPackage.find({status: "withdrawn"}).lean().execAsync(),
             withdrawnooa: DocumentPackage.find({ status: "withdrawnooa" }).lean().execAsync(),
             approval: DocumentPackage.find({status: "approval"}).lean().execAsync(),
-            handle: DocumentPackage.find({status: "handle", app_year: year}).lean().execAsync(),
-            declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
-            project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
-            handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned", app_year : year}).lean().execAsync(),
-            handleAssigned: DocumentPackage.find({status: "handleAssigned", app_year : year}).lean().execAsync(),
-            handleCompleted: DocumentPackage.find({status: "handleCompleted", app_year : year}).lean().execAsync(),
-            projectUpcoming: DocumentPackage.find({status: "projectUpcoming", app_year : year}).lean().execAsync(),
-            projectInProgress: DocumentPackage.find({status: "projectInProgress", app_year : year}).lean().execAsync(),
-            projectGoBacks: DocumentPackage.find({status: "projectGoBacks", app_year : year}).lean().execAsync(),
-            projectCompleted: DocumentPackage.find({status: "projectCompleted", app_year : year}).lean().execAsync()
+            handle: DocumentPackage.find({status: "handle"}).lean().execAsync(),
+            // declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
+            // project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
+            // handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned", app_year : year}).lean().execAsync(),
+            // handleAssigned: DocumentPackage.find({status: "handleAssigned", app_year : year}).lean().execAsync(),
+            // handleCompleted: DocumentPackage.find({status: "handleCompleted", app_year : year}).lean().execAsync(),
+            // projectUpcoming: DocumentPackage.find({status: "projectUpcoming", app_year : year}).lean().execAsync(),
+            // projectInProgress: DocumentPackage.find({status: "projectInProgress", app_year : year}).lean().execAsync(),
+            // projectGoBacks: DocumentPackage.find({status: "projectGoBacks", app_year : year}).lean().execAsync(),
+            // projectCompleted: DocumentPackage.find({status: "projectCompleted", app_year : year}).lean().execAsync()
+
+            declined: DocumentPackage.find({status: "declined"}).lean().execAsync(),
+            project: DocumentPackage.find({status: "project"}).lean().execAsync(),
+            handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned"}).lean().execAsync(),
+            handleAssigned: DocumentPackage.find({status: "handleAssigned"}).lean().execAsync(),
+            handleCompleted: DocumentPackage.find({status: "handleCompleted"}).lean().execAsync(),
+            projectUpcoming: DocumentPackage.find({status: "projectUpcoming"}).lean().execAsync(),
+            projectInProgress: DocumentPackage.find({status: "projectInProgress"}).lean().execAsync(),
+            projectGoBacks: DocumentPackage.find({status: "projectGoBacks"}).lean().execAsync(),
+            projectCompleted: DocumentPackage.find({status: "projectCompleted"}).lean().execAsync()
         })
             .then(function (results) {
                 if (!results) {

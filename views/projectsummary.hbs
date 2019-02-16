@@ -54,7 +54,7 @@
                             <tbody>
                             {{#each handle}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -101,7 +101,7 @@
                             <tbody>
                             {{#each handleAssigned}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -150,7 +150,7 @@
                             <tbody>
                             {{#each completed}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                   <td class="col-md-2">{{project.project_start}}</td>
@@ -196,7 +196,7 @@
                             <tbody>
                             {{#each projectInProgress}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -245,7 +245,7 @@
                             <tbody>
                             {{#each projectGoBacks}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -294,7 +294,7 @@
                             <tbody>
                             {{#each project}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -354,7 +354,7 @@
                 <div class="compAll" style="display: none;">
                         {{#each completed}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -369,7 +369,7 @@
 <!--                 <div class="compH" style="display: none;">
                         {{#each handleCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -381,7 +381,7 @@
                 <div class="compP" style="display: none;">
                         {{#each projectCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -393,7 +393,7 @@
                 <div class="compStacked" style="display: none !important;">
                         {{#each projectCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -402,7 +402,7 @@
                         {{/each}}
                         {{#each handleCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -459,7 +459,7 @@
                             <tbody>
                             {{#each nostatus}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger cell-overflow">{{status}}</span></td>

@@ -207,6 +207,19 @@ hbs.registerHelper('getApplicationStartTime', function (apps, appid) {
     return 'Not set'
   }
 });
+
+hbs.registerHelper('getApplicationDueDate', function (apps, appid) {
+  if (apps[appid].project && apps[appid].project.project_start) {
+      var myNewDate = new Date(apps[appid].project.project_start);
+      
+      myNewDate.setDate(myNewDate.getDate() + parseInt(20));
+
+      return myNewDate.toLocaleDateString();
+  } else {
+      return 'Not set'
+  }
+});
+
 hbs.registerHelper('dateToLocaleDate', function (date) {
   console.log('dateToLocaleDate', arguments);
   var d = new Date(date)

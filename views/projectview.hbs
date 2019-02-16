@@ -34,8 +34,17 @@ function getCurrentDate() {
 
 dataPAF.currentDate = getCurrentDate();
 
+//dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+ 
  {{#each results.doc}}
- dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+
+    {{#if application.name.preferred}}
+        dataPAF.fullName = "{{{escape application.name.preferred}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+    {{else}}
+        dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+    {{/if}}
+
+
  dataPAF.addr1 = "{{{escape application.address.line_1}}}, ";
  dataPAF.addr2 = "{{{escape application.address.line_2}}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}";
  dataPAF.addr3 = "{{{escape application.address.city}}}, {{{escape application.address.state}}}  {{{escape application.address.zip}}}";
@@ -519,7 +528,7 @@ info: {
     {{#each results.doc}}
       <div class="row">
         <div class="col-xs-12">
-          <h1 style="display:inline-block;">{{application.name.first}} {{application.name.middle}} {{application.name.last}}</h1>
+          <h1 style="display:inline-block;">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.middle}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.middle}} {{application.name.last}}{{/if}}</h1>
           <h4 style="float:center;margin-left:50px;display:inline-block;">{{application.address.line_1}}{{#if_not_eq application.address.line_2 ''}}, {{application.address.line_2}}{{/if_not_eq}}, {{application.address.city}}, {{application.address.state}} {{application.address.zip}}</h4> 
           <h3 style="float:right;display:inline-block;" class="text-muted">#{{app_name}}</h3>
         </div>
