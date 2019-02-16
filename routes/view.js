@@ -277,6 +277,9 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     payload.new = res.locals.results.new;
 
 	//separate bucket for approved applications
+
+    payload.project = [];
+
 	if (res.locals.results.project[0] == null) {
         console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'project\'');
     } else {
