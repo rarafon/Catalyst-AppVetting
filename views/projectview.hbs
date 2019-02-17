@@ -508,6 +508,14 @@ info: {
  select.task-owner.unassigned {
    
  }
+
+
+.btnEditDrive {
+  font-size: 14px;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  margin-top: -3px;
+}
 </style>
 
 
@@ -695,8 +703,28 @@ info: {
 
             <div class="col-xs-12 col-sm-6" style="float:left;">
 
-               <h4>Summary</h4>
+            <!-- HBS - IF NO DRIVE LINK  - then show this. -->
+               <span id="noDrive" style="display: inline-flex;">
+                  <h4>Drive URL:&nbsp;&nbsp;</h4>
+                  <a href="#" onclick="showDriveDone()" id="drive_url" data-type="text" data-pk="{{_id}}" data-url="/edit/project/{{_id}}" data-name="drive_url" data-title="Drive Link">{{drive.drive_url}}</a>&nbsp;&nbsp; 
+                  <button class="btn btn-success" id="driveDoneBtn" style="display: none;" onclick="window.location.reload(true)">Collapse</button>
+                 
+               </span>
+                 </br>
+
+
+            <!-- HBS - IF LINK EXISTS - then show this. -->
+
+
+               <span id="yesDrive" style="display: inline-flex;">
+                  <a id="driveHref" href="//{{drive.drive_url}}"><h4>Google Drive</h4></a>
+                  <button class="btn btnEditDrive" onclick="editDriveURL()">Edit</button>
+               </span>
+
                <br/>
+               
+           <!--     <h4>Summary</h4>
+               <br/> -->
               {{#if notes.vet_summary}}
               <h4>Vetting Summary</h4>
               <p>
@@ -1682,6 +1710,7 @@ info: {
      $('.work-item-new').on('click', handleNewWorkItemSubmission)
      $('.work-item-clear').on('click', handleNewWorkItemClear)
      
+     $('#drive_url').editable();
 
      $('#crew_chief').editable();
      $('#project_advocate').editable();
@@ -1689,6 +1718,8 @@ info: {
 
      $('#actual_volunteer_count').editable();
      $('#actual_labor_count').editable();
+
+     yesDriveLoaded();
 
      $('#status').editable({
        value: docs[0].project.status,     //POST to /edit/project will update this status in project.status field.
@@ -1764,6 +1795,28 @@ info: {
    $(this).on('click', showWorkItemEditForm)
  }
 
+ function editDriveURL() {
+    //Toggle = show edit span, and hide current span
+    document.getElementById("yesDrive").style.display = "none";
+    document.getElementById("noDrive").style.display = "inline-flex";
+
+ }
+
+ function showDriveDone() {
+    document.getElementById("driveDoneBtn").style.display = "inline-flex";
+ }
+
+ function yesDriveLoaded() {
+    //alert(document.getElementById("driveHref").href);
+
+    if (document.getElementById("driveHref").href == "//") {
+        document.getElementById("yesDrive").style.display = "none";
+        document.getElementById("noDrive").style.display = "inline-flex";
+    } else {
+        document.getElementById("yesDrive").style.display = "inline-flex";
+        document.getElementById("noDrive").style.display = "none";
+    }
+ }
 
  function showWorkItemEditForm(e) {
    e.preventDefault()

@@ -984,6 +984,22 @@ getDocumentPlanning: function (req, res, next) {
                     id = req.body.id;
                 }
             }
+        // else if (req.body.name == "drive_url") {
+        //         console.log("[ API ] putUpdateDocument :: Save Google drive URL Called");
+                
+        //         if (req.body.value) {
+        //             var inStatus = { drive_url: req.body.value };
+        //             updates.drive = inStatus;
+        //         }
+        //        // updates['status'] = req.body.value;
+
+        //         if(req.params.id != null) {
+        //             id = req.params.id;
+        //         }
+        //         else {
+        //             id = req.body.id;
+        //         }
+        // }
 		else {
 		
 			if(req.params.id != null) {
@@ -1106,7 +1122,9 @@ getDocumentPlanning: function (req, res, next) {
                 updates = {"project.project_start":req.body.value };
         } else if (req.body.name == "project.project_end") {
                 updates = {"project.project_end":req.body.value };
-        }    
+        } else if (req.body.name == "drive_url") {
+                updates = {"drive.drive_url":req.body.value };
+        }   
 
         // else {
         
