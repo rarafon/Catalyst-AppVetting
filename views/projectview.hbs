@@ -40,8 +40,10 @@ dataPAF.currentDate = getCurrentDate();
 
     {{#if application.name.preferred}}
         dataPAF.fullName = "{{{escape application.name.preferred}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+        dataPAF.bothNames = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}} (Preferred name: {{{escape application.name.preferred}}})";
     {{else}}
         dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+        dataPAF.bothNames = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
     {{/if}}
 
 
@@ -201,7 +203,7 @@ var pafDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
 
 { text: dataPAF.currentDate, style:'rightAlign' },
 
-{ text: [ "\n\nRECIPIENT NAME: ", {text: dataPAF.fullName, style:'inText' } ], style:'eachLine'},
+{ text: [ "\n\nRECIPIENT NAME: ", {text: dataPAF.bothNames, style:'inText' } ], style:'eachLine'},
 
 { text: [ "RECP. ADDRESS:   ", {text: dataPAF.addr1, style:'reg' }], style:'eachLine'},
 {text: dataPAF.addr2, margin:[98,-10,0,0], style:'reg'},   //margin:58
@@ -717,7 +719,7 @@ info: {
 
 
                <span id="yesDrive" style="display: inline-flex;">
-                  <a id="driveHref" href="//{{drive.drive_url}}"><h4>Google Drive</h4></a>
+                  <a id="driveHref" href="{{drive.drive_url}}"><h4>Google Drive</h4></a>
                   <button class="btn btnEditDrive" onclick="editDriveURL()">Edit</button>
                </span>
 
@@ -1808,8 +1810,9 @@ info: {
 
  function yesDriveLoaded() {
     //alert(document.getElementById("driveHref").href);
+     //alert(window.location);
 
-    if (document.getElementById("driveHref").href == "//") {
+    if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location) {
         document.getElementById("yesDrive").style.display = "none";
         document.getElementById("noDrive").style.display = "inline-flex";
     } else {
