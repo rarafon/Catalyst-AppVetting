@@ -2304,9 +2304,18 @@ info: {
    
    $('#planning input:checkbox').each(function () {
      var $this = $(this);
-     var name = $this.attr('name')
+     var name = $this.attr('name');
 
+     //alert(name);
      console.log(name, plan[name]);
+
+     if (! plan[name]) {
+        plan[name] = {};
+        plan[name].complete = null;
+        plan[name].completed_on = null;
+        plan[name].note = null;
+     }
+
      plan[name].complete = $this.prop('checked');
      if (plan[name].complete && !plan[name].completed_on) {
        plan[name].completed_on = Date.now();
