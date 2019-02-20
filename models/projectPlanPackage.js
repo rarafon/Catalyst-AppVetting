@@ -307,7 +307,7 @@ var labels = {
   check_weather_forecast: "Check the weather forecast and make plans accordingly",
   verify_volunteer_count: "Verify number of volunteers signed up",
   verify_site_resources: "Verify site resources needed",
-  custom: "Custom Note #1"
+  custom: "Custom Task"
 };
 
 ProjectPlanPackageSchema.statics.labels = labels;
@@ -319,13 +319,29 @@ ProjectPlanPackageSchema.statics.getOnlyAssigned = function (plan, userId) {
 
   for (var i = 0; i < taskNames.length; i++) {
     var name = taskNames[i]
+
+    // if (plan[name].note) {
+    //     plan[name].note.toString()
+    // }
+
     if (plan[name].owner
         && plan[name].owner.toString() === userId.toString()
         // && plan[name].complete === false
     ) {
 
       if (plan[name].complete === false) {
-        assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
+        // if (plan[name].note && plan[name].note != '') {
+        //     assigned.push(Object.assign({}, plan[name], { label: plan[name].note }));
+        // } else {
+        //     assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
+        // }
+        if (plan[name].note) {
+                assigned.push(Object.assign({}, plan[name], { label: plan[name].note }));
+        } else {
+            if (labels[name] !== "Custom Task") {
+                assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
+            }
+        }
       }
     }
   }
@@ -337,12 +353,18 @@ ProjectPlanPackageSchema.statics.getTopXOpen = function (plan, taskCount) {
   var taskNames = Object.keys(labels);
   var open = [];
 var count = 0;
-  for (var i = 0; i < taskNames.length-1; i++) {
+  for (var i = 0; i < taskNames.length; i++) {
     var name = taskNames[i]
     
 
       if (plan[name].complete === false) {
-        open.push(Object.assign({}, plan[name], { label: labels[name] }));
+        if (plan[name].note) {
+                open.push(Object.assign({}, plan[name], { label: plan[name].note }));
+        } else {
+            if (labels[name] !== "Custom Task") {
+                open.push(Object.assign({}, plan[name], { label: labels[name] }));
+            }
+        }
         count++;
         if(count === taskCount)
         {

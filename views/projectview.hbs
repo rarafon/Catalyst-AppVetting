@@ -1203,7 +1203,9 @@ info: {
 
 
         <tr>
-          <th class="col-xs-12 col-sm-6">New Note</th>
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom" data-title="custom">{{plan.custom.note}}</a>
+          </th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
                    title="{{getCompletedDate plan 'custom' }}">
@@ -1735,6 +1737,8 @@ info: {
      
      $('#drive_url').editable();
 
+     $('#custom').editable();
+
      $('#crew_chief').editable();
      $('#project_advocate').editable();
      $('#site_host').editable();
@@ -1830,13 +1834,28 @@ info: {
  }
 
  function yesDriveLoaded() {
-    //alert(document.getElementById("driveHref").href);
-     //alert(window.location);
+     //alert(document.getElementById("driveHref").href);
+     //alert(window.location.hostname);
 
+     var webUrl = "{{{escape doc.drive.drive_url}}}";
+
+     //alert(webUrl);
     if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location) {
         document.getElementById("yesDrive").style.display = "none";
         document.getElementById("noDrive").style.display = "inline-flex";
     } else {
+        if (document.getElementById("driveHref") && document.getElementById("driveHref").href) {
+          //var sWith = document.getElementById("driveHref").href;
+          //alert(sWith);
+
+          var webUrl = "{{{escape doc.drive.drive_url}}}";
+          //alert(webUrl);
+          //alert(! webUrl.startsWith('http'));
+          if (! webUrl.startsWith('http')) {
+              document.getElementById("driveHref").href = 'http://' + webUrl;
+          }
+        }
+
         document.getElementById("yesDrive").style.display = "inline-flex";
         document.getElementById("noDrive").style.display = "none";
     }

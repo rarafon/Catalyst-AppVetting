@@ -67,6 +67,18 @@ module.exports = function(passport) {
 
   });
 
+
+router.post('/customnote/:id', isLoggedInProjectRole, api.saveCustomChecklist, function(req, res) {
+        console.log("customnote triggered --> Calling api.saveProjectPlan");
+        if(res.locals.status != '200'){
+          res.status(500).send("Could not update customnote plan");
+        }
+        else{
+          res.status(200).send({ status: 'success' });
+        }
+      });
+
+
  /**
    * POST Updated Field data
    * Only handles single line updates (e.g., phone number, Date of birth)

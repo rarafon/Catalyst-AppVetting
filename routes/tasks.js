@@ -135,6 +135,7 @@ function isLoggedIn(req, res, next) {
 								   res.locals.email = results.user.contact_info.user_email;
 								   res.locals.role = results.user.user_role;
 								   res.locals.user_roles = results.user.user_roles;
+								   res.locals.assign_tasks = results.user.assign_tasks;
 								   return next();
 
 							   }

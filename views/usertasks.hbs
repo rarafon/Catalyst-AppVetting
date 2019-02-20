@@ -31,8 +31,8 @@
           <thead>
             <tr>
               <th class="col-md-3">Application</th>
-              <th class="col-md-1">Start Date</th>
-              <th class="col-md-1">Due Date</th>
+              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Due Date</th>
+              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Project Start</th>
               <th class="col-md-7">Task</th>
             </tr>
           </thead>
@@ -46,9 +46,9 @@
                     }}</a>
                   {{getPreferredName ../applications applicationId}}
                 </td>
-                <td class="col-md-1" style="height: 120px; overflow: hidden">{{getApplicationStartTime ../applications applicationId}}</td>
-                <td class="col-md-1" style="height: 120px; overflow: hidden">{{getApplicationDueDate ../applications applicationId}}</td>
-                <td class="col-md-7">{{
+                <td class="col-md-1" style="height: 120px; overflow: hidden">{{dateToLocaleDate (getApplicationDueDate ../applications applicationId)}}</td>
+                <td class="col-md-1" style="height: 120px; overflow: hidden">{{dateToLocaleDate (getApplicationStartTime ../applications applicationId)}}</td>
+                <td class="col-md-7" style="min-height: 120px;">{{
                   getPlanTaskAssignments this ../userId ../applications applicationId
                   }}</td>
               </tr>
@@ -73,8 +73,8 @@
           <thead>
             <tr>
               <th class="col-md-3">Application</th>
-              <th class="col-md-2">Start Date</th>
-              <!-- <th class="col-md-1">Due Date</th> -->
+              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Due Date</th>
+              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Project Start</th>
               <th class="col-md-7">Hot Tasks</th>
             </tr>
           </thead>
@@ -90,8 +90,8 @@
                   {{getPreferredName ../openApplications applicationId}}
                   <br/>&nbsp; <br/>&nbsp;
                 </td>
-                <td class="col-md-2">{{getApplicationStartTime ../openApplications applicationId}}<br/>&nbsp; <br/>&nbsp;</td>
-                <!-- <td class="col-md-1">{{getApplicationDueDate ../openApplications applicationId}}<br/>&nbsp; <br/>&nbsp;</td> -->
+                <td class="col-md-1">{{dateToLocaleDate (getApplicationDueDate ../openApplications applicationId)}}<br/>&nbsp; <br/>&nbsp;</td>
+                <td class="col-md-1">{{dateToLocaleDate (getApplicationStartTime ../openApplications applicationId)}}<br/>&nbsp; <br/>&nbsp;</td>
                 <td class="col-md-7">{{
                   getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 
                   }}</td>
@@ -108,3 +108,9 @@
 </div>
 </div>
 
+<style>
+.taskTable {
+  border-bottom: 0px !important;
+}
+
+</style>

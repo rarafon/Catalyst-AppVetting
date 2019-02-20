@@ -212,7 +212,7 @@ hbs.registerHelper('getApplicationDueDate', function (apps, appid) {
   if (apps[appid].project && apps[appid].project.project_start) {
       var myNewDate = new Date(apps[appid].project.project_start);
       
-      myNewDate.setDate(myNewDate.getDate() + parseInt(20));
+      myNewDate.setDate(myNewDate.getDate() - parseInt(20));
 
       return myNewDate.toLocaleDateString();
   } else {
@@ -222,16 +222,22 @@ hbs.registerHelper('getApplicationDueDate', function (apps, appid) {
 
 hbs.registerHelper('dateToLocaleDate', function (date) {
   console.log('dateToLocaleDate', arguments);
-  var d = new Date(date)
-  var month = (d.getMonth() + 1).toString();
-  if (month.length !== 2) {
-    month = '0' + month;
+  
+  if (date === "Not set") {
+    return 'Not set'
+  } else {
+      var d = new Date(date)
+      var month = (d.getMonth() + 1).toString();
+      if (month.length !== 2) {
+        month = '0' + month;
+      }
+      var day = d.getDate().toString()
+      if (day.length !== 2) {
+        day = '0' + day;
+      }
+      return d.getFullYear() + '-' + month + '-' + day
   }
-  var day = d.getDate().toString()
-  if (day.length !== 2) {
-    day = '0' + day;
-  }
-  return d.getFullYear() + '-' + month + '-' + day
+
 });
 hbs.registerHelper('getPlanTaskAssignments', function(plan, userId, apps, appid) {
   var assigned = ProjectPlanPackage.getOnlyAssigned(plan, userId);

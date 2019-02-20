@@ -2547,8 +2547,8 @@ getDocumentPlanning: function (req, res, next) {
 
   // Create / Update Project Plan record
   saveProjectPlanDocument: function(req, res, next) {
-    console.log('saving project plan')
-
+    console.log('saving project plan');
+    console.log(req.body);
     Promise.props({
       projectPlan: ProjectPlanPackage.findOneAndUpdate(
         { applicationId: req.body.applicationId },
@@ -2577,6 +2577,52 @@ getDocumentPlanning: function (req, res, next) {
       
     }).catch(next);
   },
+
+  // Save Custom Checklist Note
+  saveCustomChecklist: function(req, res, next) {
+    console.log('saving custom checklist note');
+    console.log(req.body);
+
+    var n = req.body.name || "custom";
+
+    var updates = {};
+    updates[n] = {"note": req.body.value};
+    //updates[n].note = req.body.value;
+
+    console.log(updates);
+    //var applId = req.body.applicationId || 
+    //req.body.applicationId = 
+
+    Promise.props({
+      plan: ProjectPlanPackage.findOneAndUpdate(
+        { applicationId: req.params.id },
+        { $set: { "custom.note": req.body.value} },
+        { new: true,
+          upsert: true,
+          runValidators: false,
+          setDefaultsOnInsert: false
+        }
+      ).execAsync()
+    }).then(function (results) {
+      console.log("Returned results: ");
+      console.log(results);
+      if (results.plan !== null) {
+        console.log('[ API ] saveCustomChecklist :: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveCustomChecklist :: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
 
 
 	//update financial package
@@ -3289,7 +3335,7 @@ getDocumentPlanning: function (req, res, next) {
   // Create / Update Project Plan record
   saveProjectPlan: function(req, res, next) {
     console.log('Saving Project Plan Status for: ' + req.body.applicationId);
-
+    console.log(req.body);
     Promise.props({
       plan: ProjectPlanPackage.findOneAndUpdate(
         { applicationId: req.body.applicationId },
