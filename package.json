@@ -6,6 +6,7 @@
     "start": "node ./bin/www",
     "stop": "pkill --signal SIGINT node",
     "disown": "nohup npm start &",
+    "pull": "git pull --no-edit",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
