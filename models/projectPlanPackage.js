@@ -124,6 +124,15 @@ var ProjectPlanPackageSchema = new Schema({
     lead_time: Number,
 
     ipad: Boolean
+  },
+
+  custom: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
   }
 });
 
@@ -215,6 +224,11 @@ ProjectPlanPackageSchema.statics.filterOwnedTasks = function (userId) {
         "verify_site_resources.owner": { $ne: null },
         "verify_site_resources.owner": userId,
         "verify_site_resources.complete": false
+       },
+       {        
+        "custom.owner": { $ne: null },
+        "custom.owner": userId,
+        "custom.complete": false
        }      
     ]
   }
@@ -269,6 +283,9 @@ ProjectPlanPackageSchema.statics.filterOpenTasks = function () {
        },      
        {        
         "verify_site_resources.complete": false
+       },
+       {        
+        "custom.complete": false
        }      
     ]
   }
@@ -289,7 +306,8 @@ var labels = {
   arrange_purchase_delivery: "Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.",
   check_weather_forecast: "Check the weather forecast and make plans accordingly",
   verify_volunteer_count: "Verify number of volunteers signed up",
-  verify_site_resources: "Verify site resources needed"
+  verify_site_resources: "Verify site resources needed",
+  custom: "Custom Note #1"
 };
 
 ProjectPlanPackageSchema.statics.labels = labels;
@@ -368,6 +386,7 @@ ProjectPlanPackage.empty = function(applicationId) {
     check_weather_forecast: { complete: false, owner: null, completed_on: null, lead_time: null },
     verify_volunteer_count: { complete: false, owner: null, completed_on: null, lead_time: null },
     verify_site_resources: { complete: false, owner: null, completed_on: null, lead_time: null, ipad: false },
+    custom: { complete: false, owner: null, completed_on: null, lead_time: null, note: null }
   }
 };
 

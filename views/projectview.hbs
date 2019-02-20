@@ -1201,6 +1201,27 @@ info: {
           </td>
         </tr>
 
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">New Note</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom' }}">
+              <input type="checkbox" name="custom" value=""
+                     {{#if plan.custom.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom"></select>
+          </td>
+        </tr>
+
+
+
+
       </table>
         
       </div><!-- end #planning -->
