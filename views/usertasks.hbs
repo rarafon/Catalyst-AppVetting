@@ -90,7 +90,7 @@
                   {{getPreferredName ../openApplications applicationId}}
                   <br/>&nbsp; <br/>&nbsp;
                 </td>
-                <td class="col-md-1">{{dateToLocaleDate (getApplicationDueDate ../openApplications applicationId)}}<br/>&nbsp; <br/>&nbsp;</td>
+                <td class="col-md-1">{{dateToLocaleDate (getApplicationDueDate ../openApplications applicationId ../ldTime)}}<br/>&nbsp; <br/>&nbsp;</td>
                 <td class="col-md-1">{{dateToLocaleDate (getApplicationStartTime ../openApplications applicationId)}}<br/>&nbsp; <br/>&nbsp;</td>
                 <td class="col-md-7">{{
                   getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 

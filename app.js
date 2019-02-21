@@ -208,7 +208,9 @@ hbs.registerHelper('getApplicationStartTime', function (apps, appid) {
   }
 });
 
-hbs.registerHelper('getApplicationDueDate', function (apps, appid) {
+hbs.registerHelper('getApplicationDueDate', function (apps, appid, ldTime) {
+  console.log("Handlebars Helper: getApplicationDueDate called");
+  console.log(ldTime);
   if (apps[appid].project && apps[appid].project.project_start) {
       var myNewDate = new Date(apps[appid].project.project_start);
       
@@ -244,6 +246,8 @@ hbs.registerHelper('getPlanTaskAssignments', function(plan, userId, apps, appid)
   var labels = [];
   for (var i = 0; i < assigned.length; i++) {
     if (!assigned[i].complete) {
+      console.log("apple");
+      console.log(assigned[i]);
       labels.push(assigned[i].label);
     }
   }

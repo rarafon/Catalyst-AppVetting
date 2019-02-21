@@ -18,7 +18,7 @@ var ProjectPlanPackageSchema = new Schema({
   applicationId: ObjectId,
 
   /* assigned: {
-   *   crew_cheif: { type: String, default: '' },
+   *   crew_chief: { type: String, default: '' },
    *   project_advocate: { type: String, default: '' },
    *   site_host: { type: String, default: '' }
    * },
@@ -336,10 +336,10 @@ ProjectPlanPackageSchema.statics.getOnlyAssigned = function (plan, userId) {
         //     assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
         // }
         if (plan[name].note) {
-                assigned.push(Object.assign({}, plan[name], { label: plan[name].note }));
+                assigned.push(Object.assign({}, plan[name], { label: plan[name].note }, {labelKey: name}));
         } else {
             if (labels[name] !== "Custom Task") {
-                assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
+                assigned.push(Object.assign({}, plan[name], { label: labels[name] }, {labelKey: name}));
             }
         }
       }
@@ -359,10 +359,10 @@ var count = 0;
 
       if (plan[name].complete === false) {
         if (plan[name].note) {
-                open.push(Object.assign({}, plan[name], { label: plan[name].note }));
+                open.push(Object.assign({}, plan[name], { label: plan[name].note }, {labelKey: name}));
         } else {
             if (labels[name] !== "Custom Task") {
-                open.push(Object.assign({}, plan[name], { label: labels[name] }));
+                open.push(Object.assign({}, plan[name], { label: labels[name] }, {labelKey: name}));
             }
         }
         count++;

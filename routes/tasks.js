@@ -15,16 +15,15 @@ var ProjectWrapUpPackage = require('../models/projectWrapUpPackage.js');
 module.exports = function(passport) {
   var router = express.Router();
   
-  router.get('/', isLoggedIn, api.getAssignableUsers,  function (req, res, next ) {
-		
+  router.get('/', isLoggedIn, api.getAssignableUsers, api.getLeadtimeDefaults, function (req, res, next ) {
+		console.log("Leadtime Log");
+		console.log(res.locals.leadtime);
     Promise.props({
 			plan: ProjectPlanPackage.find(ProjectPlanPackage.filterOwnedTasks(req.user.id)).execAsync(),
 			open: ProjectPlanPackage.find(ProjectPlanPackage.filterOpenTasks()).execAsync()
     }).then(function(results) {
 			var plans = results.plan;
 			var open = results.open;
-			console.log(plans);
-			console.log(open);
 			userappids = [];
 			openappIds = [];
       for (var i = 0; i < results.plan.length; i++) {
@@ -53,6 +52,11 @@ module.exports = function(passport) {
 						for (var i = 0; i < openApplications.length; i++) {
 							openApps[ openApplications[i]._id ] = openApplications[i]
 						}
+
+						// console.log("1P");
+						// console.log(apps);
+						// console.log("1O");
+						// console.log(openApps);
 						
 						res.render('usertasks', {
 							userId: req.user._id,
@@ -62,7 +66,8 @@ module.exports = function(passport) {
 							applications: apps,
 							open: open,						
 							openApplications: openApps,
-							assignableUsers: res.locals.assignableUsers
+							assignableUsers: res.locals.assignableUsers,
+							ldTime: res.locals.leadtime
 						});
 
 
