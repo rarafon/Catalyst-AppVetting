@@ -448,36 +448,40 @@ var handleDefinition = {  content: [           // BEGIN PRINT LAYOUT! **********
   bold: false
 },
 
-{ text: '\n\n\nDate .................................................	   	           X................................................................................................', 
-  fontSize: 11,
-  bold: false
-},
+{ 
+  stack: [ 
+    { text: '\n\n\nDate .................................................	   	           X................................................................................................', 
+      fontSize: 11,
+      bold: false
+    },
 
 
-{ text: 'Property Owner', 
-  fontSize: 11,
-  bold: false,
-  margin: [226, 0, 0, 0]
-},
+    { text: 'Property Owner', 
+      fontSize: 11,
+      bold: false,
+      margin: [226, 0, 0, 0]
+    },
 
-{ text: '\n\n\n\nDate .................................................	   	           X................................................................................................', 
-  fontSize: 11,
-  bold: false
-},
+    { text: '\n\n\nDate .................................................	   	           X................................................................................................', 
+      fontSize: 11,
+      bold: false
+    },
 
-{ text: 'Catalyst Handle-It Volunteer', 
-  fontSize: 11,
-  bold: false,
-  margin: [226, 0, 0, 0]
-},
+    { text: 'Catalyst Handle-It Volunteer', 
+      fontSize: 11,
+      bold: false,
+      margin: [226, 0, 0, 0]
+    },
 
-{ text: '\n\nPlease sign two copies – one for the homeowner, the other for the Catalyst office', 
-  alignment: 'center', 
-  italics: true, 
-  bold: false,
-  fontsize: 9
-},
-
+    { text: '\n\nPlease sign two copies – one for the homeowner, the other for the Catalyst office', 
+      alignment: 'center', 
+      italics: true, 
+      bold: false,
+      fontsize: 9
+    }
+  ],
+  unbreakable: true
+}
 
 //{ text: '\n\n*****', style: 'center' }
 ], //END CONTENT ***************************************************
