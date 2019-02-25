@@ -790,6 +790,8 @@
 	
 </div>
 
+
+
 <div>
 	<button class="btn btn-success" style="margin-left: 25%; position: relative;" onclick="exportPAFtoPDF()">Export PAF Report</button>
 	<button class="btn btn-success" style="margin-left: 5%; position: absolute;" onclick="exportHandletoPDF()">Export Handle-It Report</button>
@@ -1810,11 +1812,11 @@
   }
 
   	function exportPAFtoPDF() {
-  		alert("Not implemened yet. Please use the Export PDF Button in Project View");
+  		window.location.href = '/vettingworksheet/exportPAF/{{doc._id}}';
   	}
 
   	function exportHandletoPDF() {
-  		alert("Not implemened yet. Please use the Export PDF Button in Project View");
+  		window.location.href = '/vettingworksheet/exportHandle/{{doc._id}}';
   	}
 
 	function showWorkItemDeleteConfirm(e) {

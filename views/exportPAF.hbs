@@ -1,0 +1,391 @@
+<!-- Project View (once clicked on it)  
+   -- Should have Client Name and address at the top (as in the mock up)
+   -- The following Tabs:
+     * Project Assessment Form 
+     * Work Items  
+     * Partners (needs new data base fields for Org Name, Org Address, Contact Name, Contact Phone, Contact email) 
+     * Wrap Up (using the Wrap Up Form for contents)  -->
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<!-- Scripts for loading export PDF functions -->
+<script src='//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.39/pdfmake.min.js'></script>
+<script src='//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.39/vfs_fonts.js'></script>
+<script>
+// Shorten a string to less than maxLen characters without truncating words.
+function shorten(str, maxLen, separator = ' ') {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, str.lastIndexOf(separator, maxLen));
+}
+
+//helper function to get current date in a nice format
+function getCurrentDate() {
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Day = ( "00" + date.getDate()).slice(-2);
+    var Mon = ("00" + (date.getMonth()+1)).slice(-2);
+    return Mon + "/" + Day + "/" + Year;
+}
+
+// START PDF EXPORT WRITEUP ------------------------------------------------------------------------
+
+ var dataPAF = {};
+ {{#if results.doc}}
+
+dataPAF.currentDate = getCurrentDate();
+
+//dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+ 
+ {{#each results.doc}}
+
+    {{#if application.name.preferred}}
+        dataPAF.fullName = "{{{escape application.name.preferred}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+        dataPAF.bothNames = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}} (Preferred name: {{{escape application.name.preferred}}})";
+    {{else}}
+        dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+        dataPAF.bothNames = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
+    {{/if}}
+
+
+ dataPAF.addr1 = "{{{escape application.address.line_1}}}, ";
+ dataPAF.addr2 = "{{{escape application.address.line_2}}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}";
+ dataPAF.addr3 = "{{{escape application.address.city}}}, {{{escape application.address.state}}}  {{{escape application.address.zip}}}";
+ dataPAF.summ = "{{{escape notes.site_summary}}}";
+ dataPAF.vettSumm = "{{{escape notes.vet_summary}}}";
+ {{/each}}
+ {{/if}}
+
+var workItems = [];
+
+ {{#if results.work}}
+   {{#each results.work}}
+workItems.push("-     " + "Name:  {{{escape name}}}\n");
+workItems.push("-     " + "Description:  {{{escape description}}}\n");
+workItems.push("-     " + "Site Comments:  {{{escape siteComments}}}\n");
+workItems.push("-     " + "COST:  {{{escape cost}}}\n\n");
+   {{/each}}
+ {{/if}}
+
+var partnerItems = [];
+
+ {{#if results.part}}
+   {{#each results.part.pAssoc}}
+partnerItems.push("-     " + "Org Name:  {{{escape org_name}}}\n");
+partnerItems.push("-     " + "Address:   {{{escape org_address}}}\n");
+partnerItems.push("-     " + "Contact:   {{{escape contact_name}}}\n");
+partnerItems.push("-     " + "Email:     {{{escape contact_email}}}\n");
+partnerItems.push("-     " + "Phone:     {{{escape contact_phone}}}\n\n");
+   {{/each}}
+ {{/if}}
+
+  dataPAF.phone = "{{{escape results.doc.0.application.phone.preferred}}}";
+
+ {{#if results.assessment}}
+ {{#each results.assessment}}
+  dataPAF.hasAsbestos = "{{{escape hazard_safety.has_asbestos}}}";
+  dataPAF.hasLead = "{{{escape hazard_safety.has_lead}}}";
+  dataPAF.safety = "{{{escape escape hazard_safety.safety_plan}}}";
+
+  dataPAF.subcontractors = "{{{escape subcontractors}}}";
+
+  dataPAF.materials = "{{{escape materials}}}";
+  dataPAF.volunteers = "{{{escape estimates.volunteers_needed}}}";
+  dataPAF.estimates = "{{{escape estimates.total_cost}}}";
+
+
+  dataPAF.dumpsterRequired = "{{{escape other_costs.waste_dumpster.required}}}";
+  dataPAF.dumpsterCost = "{{{escape other_costs.waste_dumpster.cost}}}";
+
+
+  dataPAF.portaPottieRequired = "{{{escape other_costs.porta_pottie.required}}}";
+  dataPAF.portaPottieCost = "{{{escape other_costs.porta_pottie.cost}}}";
+  dataPAF.portaAggregated = dataPAF.portaPottieRequired + "   " +dataPAF.portaPottieCost;
+  
+  dataPAF.permitName = "{{{escape other_costs.permit.name}}}";
+  dataPAF.permitCost = "{{{escape other_costs.permit.cost}}}";
+
+
+  dataPAF.toolrentals = "{{{escape tool_rentals}}}";
+
+  dataPAF.getEndDate = "{{{escape proposed_dates.end_date}}}";
+  dataPAF.getStartDate = "{{{escape proposed_dates.start_date}}}";
+
+
+
+ {{/each}}
+
+  dataPAF.notes = '';
+  {{#each projectNotes}}
+    dataPAF.notes = dataPAF.notes + "{{escape description}}.\n";
+  {{/each}}
+
+  if(dataPAF.dumpsterRequired) {
+     if (dataPAF.dumpsterRequired == 'true' && (dataPAF.dumpsterCost)){
+        dataPAF.dumpsterAggregated = 'Yes' + "   $" +dataPAF.dumpsterCost;
+     }
+    else if (dataPAF.dumpsterRequired == 'false') {
+        dataPAF.dumpsterAggregated = 'Not Required';
+
+        if (dataPAF.dumpsterCost !== '') {
+            dataPAF.dumpsterAggregated = 'Not Required' + "   $" +dataPAF.dumpsterCost;
+        }
+    }
+  } else {
+      var dollarVal;
+      if (dataPAF.dumpsterCost !== '') {
+        dollarVal = "$" + dataPAF.dumpsterCost;
+      }
+      dataPAF.dumpsterAggregated = dataPAF.dumpsterRequired + "   " +dollarVal;
+  }
+
+
+
+  if(dataPAF.portaPottieRequired) {
+     if (dataPAF.portaPottieRequired == 'true' && (dataPAF.portaPottieCost)){
+        dataPAF.portaAggregated = 'Yes' + "   $" +dataPAF.portaPottieCost;
+     }
+    else if (dataPAF.portaPottieRequired == 'false') {
+        dataPAF.portaAggregated = 'Not Required';
+
+        if (dataPAF.portaPottieCost !== '') {
+            dataPAF.portaAggregated = 'Not Required' + "   $" +dataPAF.portaPottieCost;
+        }
+    }
+  } else {
+      var dollarVal;
+      if (dataPAF.portaPottieCost !== '') {
+        dollarVal = "$" + dataPAF.portaPottieCost;
+      }
+      dataPAF.portaAggregated = dataPAF.portaPottieRequired + "   " +dollarVal;
+  }
+
+
+
+  if (dataPAF.permitCost !== '') {
+    dataPAF.permitAggregated = dataPAF.permitName + "   $" +dataPAF.permitCost;
+  } else {
+    dataPAF.permitAggregated = dataPAF.permitName + "   " +dataPAF.permitCost;
+  }
+
+
+    var startD;
+    var endD;
+
+  if (dataPAF.getStartDate !== '') {
+    startD = shorten(dataPAF.getStartDate, 21);
+    dataPAF.dateAggregated = startD;
+
+    if (dataPAF.getEndDate !== '') {
+        endD = shorten(dataPAF.getEndDate, 21);
+        dataPAF.dateAggregated = startD + " to " + endD;
+    }
+  } else if (dataPAF.getEndDate !== '') {
+      endD = shorten(dataPAF.getEndDate, 21);
+      dataPAF.dateAggregated = "Proposed End Date: " + endD;
+  } 
+
+
+
+ {{/if}}
+
+
+// ***  PROJECT ASSESSMENT FORM - Using Node pdfmake Module - MIT License.
+// ***  BELOW CODE BY ROHIN ADALJA (github.com/rohinadalja), USING SERVER-SIDE PDF TOOL (pdfmake).
+// ***     Use Dependant on the following: (1) Node PDFmake module
+// ***     TESTED IN: Safari 12.0, Chrome 70.0.3538.102
+
+
+function exportPAFtoPDF() {
+     pdfMake.createPdf(pafDefinition).open();
+}
+
+var pafDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
+{ text: 'CATALYST PARTNERSHIPS                                 PROJECT ASSESSMENT FORM', style: 'h2b' },
+
+{ text: dataPAF.currentDate, style:'rightAlign' },
+
+{ text: [ "\n\nRECIPIENT NAME: ", {text: dataPAF.bothNames, style:'inText' } ], style:'eachLine'},
+
+{ text: [ "RECP. ADDRESS:   ", {text: dataPAF.addr1, style:'reg' }], style:'eachLine'},
+{text: dataPAF.addr2, margin:[98,-10,0,0], style:'reg'},   //margin:58
+{text: dataPAF.addr3, margin:[98,0,0,5], style:'reg' },
+
+{ text: [ "BIO/Project Summary: ", {text: dataPAF.vettSumm, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
+
+"WORK ITEMS / MATERIALS OVERVIEWS / COST ESTIMATES:",           //WORK ITEM AND COST
+    { text: [ {text: workItems, style:'inText' } ], style:'eachWorkItem'},
+    { text: [ "Materials: ", {text: dataPAF.materials, style:'inText' } ], style:'eachLine'},
+    // { text: [ "Volunteers Needed: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},
+    
+
+"HAZARD / SAFETY TESTING:",
+    { ul: [
+            { text: [ "LEAD?: ", {text: dataPAF.hasLead, style:'inText' } ], style:'eachBullet'},         //yes or no
+            { text: [ "ASBESTOS?: ", {text: dataPAF.hasAsbestos, style:'inText' } ], style:'eachBullet'},     //yes or no
+            { text: [ "   If Yes on either, plan & cost estimate: ", {text: dataPAF.safety, style:'inText' } ], style:'eachBullet'}
+          ],
+      style: 'list'
+    },
+
+"\nPotential Partners: ",                   //<name, in-kind materials description>
+    { text: [ {text: partnerItems, style:'inText' } ], style:'eachWorkItem'},
+
+{ text: [ "SUBCONTRACTOR(S): ", {text: dataPAF.subcontractors, style:'inText' }], style:'eachLine'},
+
+"OTHER COSTS:",
+    { ul: [
+            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inTextBullet' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
+            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inTextBullet' } ], style:'eachBullet'},     //<y/n, description & cost if “yes”>
+            { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inTextBullet' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
+            { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inTextBullet' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
+          ],
+      style: 'list'
+    },
+
+{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inTextBullet' } ], style:'eachLine'},   //<sum of cost fields> 
+
+{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inTextBullet' } ], style:'eachLine'},         //<start date, end date>
+
+{ text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inTextBullet' } ], style:'eachLine'},      //< # >
+
+{ text: [ "Site Notes: ", {text: dataPAF.summ, style:'inTextBullet' } ], style:'eachLine'},                    //<text field>
+
+// { text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'}                    //<text field>
+
+
+], //END CONTENT ***************************************************
+defaultStyle: { //START STYLES
+        fontSize: 12,
+        bold: true,
+        underline: true
+                                    // decorationStyle: 'dashed' decorationType: 'underline'
+    },
+styles: {      
+    eachLine: { 
+        margin:[0,0,0,8]
+        },
+    inText: { 
+            //decorationStyle: 'dashed',
+            decoration: 'underline',
+            bold: false,
+        },
+    inTextBullet: { 
+            decorationStyle: 'dashed',
+            decoration: 'underline',
+            bold: false,
+        },
+    question: { 
+            fontSize: 12,
+            bold: true,
+            underline: true
+                                    // decorationStyle: 'dashed' decorationType: 'underline'
+    },
+    h2b: {
+        fontSize: 15,
+        // bold: true,
+        alignment: 'center'
+
+    },
+    reg: {
+        bold: false
+    },
+    eachWorkItem: {
+        margin: [12, 0, 0, 0],
+        bold: false
+    },
+    b: {
+        fontSize: 12,
+        // bold: true
+    },
+    center: {
+        fontSize: 14,
+        alignment: 'center'
+    },
+    left: {
+        fontSize: 14,
+        // bold: true,
+        alignment: 'left'
+    },
+    right: {
+        fontSize: 14,
+        // bold: true,
+        alignment: 'right'
+    },
+    rightAlign: {
+        // fontSize: 14,
+        // bold: true,
+        alignment: 'right'
+    },
+    list: {
+        // bold: false,
+        margin: [12, 0, 0, 0],
+    }
+}, //END STYLES
+
+// pageSize: 'LETTER',
+info: {
+    title: 'PAF Form Catalyst',
+    author: 'Catalyst',
+    subject: 'Project Assessment Form',
+    keywords: 'PAF Catalyst Corvus',
+      }
+// pageMargins: [ 40, 60, 40, 60 ],
+};        // END PRINT LAYOUT
+
+
+exportPAFtoPDF();
+
+
+</script>
+
+
+
+<script src="/javascript/xedit.js" type="text/javascript"></script>
+<script src="/javascript/addProjectNote.js" type="text/javascript"></script>
+<style>
+ button.btn.btn-primary.btn-sm.editable-submit {
+   width: 35px;
+   height: 35px;
+ }
+
+ button.btn.btn-primary.btn-sm.editable-submit:after {
+   content:  "\2713 ";
+   font-size: 24px;
+ }
+
+ button.btn.btn-default.btn-sm.editable-cancel {
+   width: 35px;
+   height: 35px;
+ }
+ button.btn.btn-default.btn-sm.editable-cancel:after {
+   content:  "\2190 ";
+   font-size: 24px;
+ }
+
+ select.task-owner {
+   min-width: 12em;
+ }
+
+ select.task-owner.unassigned {
+   
+ }
+
+
+.btnEditDrive {
+  font-size: 14px;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  margin-top: -3px;
+}
+</style>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <h5 style="padding-left: 21px;">Export PDF:
+      <button id="pafB" class="btn btn-success" style="margin-left: 5%" onclick="exportPAFtoPDF()">Export PAF Report (Click here if popup blocked)</button>
+      <!-- <button id="hanB" class="btn btn-success" style="margin-left: 3%" onclick="exportHandletoPDF()">Export Handle-It Report</button> -->
+    </h5>
+  </div>
+</div>
+
