@@ -3,7 +3,7 @@
 </div>
 
 <script>
-  if (window.location.pathname.startsWith('/vettingworksheet/exportPDF/')) {
+  if (window.location.pathname.startsWith('/vettingworksheet/exportPDF/') || window.location.pathname.startsWith('/projectview/exportPDF/')  ) {
     //alert("startswith");
     $('#footerID').css('display', 'none')
   }

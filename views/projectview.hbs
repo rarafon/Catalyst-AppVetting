@@ -613,9 +613,13 @@ info: {
 <div class="row">
   <div class="col-sm-12">
     <h5 style="padding-left: 21px;">Project View
-      <button id="pafB" class="btn btn-success" style="margin-left: 5%" onclick="exportPAFtoPDF()">Export PAF Report</button>
-      <button id="hanB" class="btn btn-success" style="margin-left: 3%" onclick="exportHandletoPDF()">Export Handle-It Report</button>
-    </h5>
+      <!-- <button id="pafB" class="btn btn-success" style="margin-left: 5%" onclick="exportPAFtoPDF()">Export PAF Report</button>
+      <button id="hanB" class="btn btn-success" style="margin-left: 3%" onclick="exportHandletoPDF()">Export Handle-It Report</button> -->
+      <!-- <div> -->
+        <button class="btn btn-info" id="exportBtn" style="margin-left: 5%;">Export PDFs</button>
+      <!-- </div> -->
+    </h5><div id="iframeHolder"></div>
+    
     <nav class="navbar">
       <div class="input-group">
         <input type="text" id="note" class="form-control" placeholder="Enter Project Planning Note Here...">
@@ -1817,6 +1821,16 @@ info: {
  var wrapUp = {{{ stringify wrapUp }}};
  var plan = {{{ stringify plan }}};
  var leadtime = {{{ stringify leadtime }}}
+
+$(function(){
+    $('#exportBtn').click(function(){
+        if(!$('#iframe').length) {
+                $('#iframeHolder').html('<iframe id="iframe" src="/projectview/exportPDF/{{doc._id}}" frameborder="0" width="100%" height="75"></iframe>');
+				$('#exportBtn').hide();
+        }
+    });   
+});
+
 
    $(document).ready(function() {
      $('.work-item-comment').each(watchEditButton)   
