@@ -37,7 +37,7 @@
 </style>
 
 <!-- Begin navigation bar -->
-<nav class="navbar navbar-fixed-top navbar-dark bg-inverse" style="padding-top: 0; padding-bottom: 0">
+<nav id="navID"  class="navbar navbar-fixed-top navbar-dark bg-inverse" style="padding-top: 0; padding-bottom: 0">
     <a class="navbar-brand" href="/"><img src="../images/cBlock-nav.png" class="rounded-circle" width="30" height="30"></a>
 
     <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"></button>
@@ -133,5 +133,21 @@
   } else {
     $('#noUserNav').css('display', 'inline-block')
   }
+
+  if (window.location.pathname == "/user/login") {
+    $('#noUserNav').css('display', 'none')
+   
+  }
+  //alert(window.location.pathname);
+  if (window.location.pathname.startsWith('/vettingworksheet/exportPDF/') || window.location.pathname.startsWith('/projectview/exportPDF/') ) {
+    //alert("startswith");
+    $('#navID').css('paddingTop', '0px')
+    $('body').css('paddingTop', '0px')
+    $('#navID').css('display', 'none')
+    $('#userNav').css('display', 'none')
+    $('#noUserNav').css('display', 'none')
+    $('#imageBar').css('display', 'none')
+  }
+// $('#noUserNav').css('display', 'none')
 
 </script>

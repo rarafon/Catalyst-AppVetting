@@ -411,16 +411,26 @@ getDocumentPlanning: function (req, res, next) {
             withdrawn: DocumentPackage.find({status: "withdrawn"}).lean().execAsync(),
             withdrawnooa: DocumentPackage.find({ status: "withdrawnooa" }).lean().execAsync(),
             approval: DocumentPackage.find({status: "approval"}).lean().execAsync(),
-            handle: DocumentPackage.find({status: "handle", app_year: year}).lean().execAsync(),
-            declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
-            project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
-            handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned", app_year : year}).lean().execAsync(),
-            handleAssigned: DocumentPackage.find({status: "handleAssigned", app_year : year}).lean().execAsync(),
-            handleCompleted: DocumentPackage.find({status: "handleCompleted", app_year : year}).lean().execAsync(),
-            projectUpcoming: DocumentPackage.find({status: "projectUpcoming", app_year : year}).lean().execAsync(),
-            projectInProgress: DocumentPackage.find({status: "projectInProgress", app_year : year}).lean().execAsync(),
-            projectGoBacks: DocumentPackage.find({status: "projectGoBacks", app_year : year}).lean().execAsync(),
-            projectCompleted: DocumentPackage.find({status: "projectCompleted", app_year : year}).lean().execAsync()
+            handle: DocumentPackage.find({status: "handle"}).lean().execAsync(),
+            // declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
+            // project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
+            // handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned", app_year : year}).lean().execAsync(),
+            // handleAssigned: DocumentPackage.find({status: "handleAssigned", app_year : year}).lean().execAsync(),
+            // handleCompleted: DocumentPackage.find({status: "handleCompleted", app_year : year}).lean().execAsync(),
+            // projectUpcoming: DocumentPackage.find({status: "projectUpcoming", app_year : year}).lean().execAsync(),
+            // projectInProgress: DocumentPackage.find({status: "projectInProgress", app_year : year}).lean().execAsync(),
+            // projectGoBacks: DocumentPackage.find({status: "projectGoBacks", app_year : year}).lean().execAsync(),
+            // projectCompleted: DocumentPackage.find({status: "projectCompleted", app_year : year}).lean().execAsync()
+
+            declined: DocumentPackage.find({status: "declined"}).lean().execAsync(),
+            project: DocumentPackage.find({status: "project"}).lean().execAsync(),
+            handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned"}).lean().execAsync(),
+            handleAssigned: DocumentPackage.find({status: "handleAssigned"}).lean().execAsync(),
+            handleCompleted: DocumentPackage.find({status: "handleCompleted"}).lean().execAsync(),
+            projectUpcoming: DocumentPackage.find({status: "projectUpcoming"}).lean().execAsync(),
+            projectInProgress: DocumentPackage.find({status: "projectInProgress"}).lean().execAsync(),
+            projectGoBacks: DocumentPackage.find({status: "projectGoBacks"}).lean().execAsync(),
+            projectCompleted: DocumentPackage.find({status: "projectCompleted"}).lean().execAsync()
         })
             .then(function (results) {
                 if (!results) {
@@ -974,6 +984,22 @@ getDocumentPlanning: function (req, res, next) {
                     id = req.body.id;
                 }
             }
+        // else if (req.body.name == "drive_url") {
+        //         console.log("[ API ] putUpdateDocument :: Save Google drive URL Called");
+                
+        //         if (req.body.value) {
+        //             var inStatus = { drive_url: req.body.value };
+        //             updates.drive = inStatus;
+        //         }
+        //        // updates['status'] = req.body.value;
+
+        //         if(req.params.id != null) {
+        //             id = req.params.id;
+        //         }
+        //         else {
+        //             id = req.body.id;
+        //         }
+        // }
 		else {
 		
 			if(req.params.id != null) {
@@ -1096,7 +1122,9 @@ getDocumentPlanning: function (req, res, next) {
                 updates = {"project.project_start":req.body.value };
         } else if (req.body.name == "project.project_end") {
                 updates = {"project.project_end":req.body.value };
-        }    
+        } else if (req.body.name == "drive_url") {
+                updates = {"drive.drive_url":req.body.value };
+        }   
 
         // else {
         
@@ -1832,7 +1860,7 @@ getDocumentPlanning: function (req, res, next) {
 
 
         Promise.props({
-            allPartners: PartnerPackage.find().execAsync(),
+            allPartners: PartnerPackage.find().sort({ "org_name": 1 }).execAsync(),
             pCount: PartnerPackage.count().execAsync(),
             assocPartners: ProjectSummaryPackage.find({"projectId": projectId }).execAsync()
             // assocPartners: ProjectSummaryPackage.findAllAndUpdate(
@@ -2337,8 +2365,13 @@ getDocumentPlanning: function (req, res, next) {
         // Log the _id, name, and value that are passed to the function
         //console.log('[ API ] WorkItem :: Call invoked with item _id: ' + req.body.id
        //     + ' | description: ' + req.body.description);
-		console.log("role in function");
+		console.log("role in old function");
 		console.log(res.locals.role);
+        console.log("role in new function")
+        console.log(res.locals.user_roles.indexOf('PROJECT_MANAGEMENT') !== -1);
+        console.log(res.locals.user_roles == 'PROJECT_MANAGEMENT');
+        console.log("all locals");
+        console.log(res.locals);
 		//res.locals.status = 200;
 		//next();
         var updates = {};
@@ -2356,9 +2389,10 @@ getDocumentPlanning: function (req, res, next) {
                 updates.siteComments = req.body.siteComments;
             }
         }
-        else
-        {
-		if(res.locals.role == "ADMIN") {
+       // else
+       // {
+		if(res.locals.user_roles.indexOf("ADMIN") !== -1) {
+            console.log("Yes, User has an ADMIN Role");
 			if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
 			}
@@ -2370,13 +2404,48 @@ getDocumentPlanning: function (req, res, next) {
                 updates.projectComments = req.body.projectComments;
             }
 		}
-		
-		else if(res.locals.role == "SITE") {
+        // else if(res.locals.role == "ADMIN") {
+        //     if(req.body.siteComments != null) {
+        //         updates.siteComments = req.body.siteComments;
+        //     }
+        //     if(req.body.vettingComments != null) {
+        //         updates.vettingComments = req.body.vettingComments;
+        //     }
+        //     if(req.body.projectComments != null)
+        //     {
+        //         updates.projectComments = req.body.projectComments;
+        //     }
+        // }
+        if(res.locals.user_roles.indexOf("PROJECT_MANAGEMENT") !== -1) {
+            console.log("Yes, User has a PROJECT_MANAGEMENT Role");
+            if(req.body.projectComments != null) {
+                updates.projectComments = req.body.projectComments;
+            }
+        }
+        else if(res.locals.role == "PROJECT_MANAGEMENT") {
+            console.log("Yes, User has a PROJECT_MANAGEMENT (older) Role");
+            if(req.body.projectComments != null) {
+                updates.projectComments = req.body.projectComments;
+            }
+           
+        }
+		if(res.locals.user_roles.indexOf("SITE") !== -1) {
+            console.log("Yes, User has a SITE Role");
             if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
 			}
-           
+
+            // if(req.body.projectComments != null)
+            // {
+            //     updates.projectComments = req.body.projectComments;
+            // }
 		}
+        if(res.locals.user_roles.indexOf("VET") !== -1) {
+            if(req.body.vettingComments != null) {
+                updates.vettingComments = req.body.vettingComments;
+            }
+        }
+
         else {
 			if(req.body.vettingComments != null) {
                 updates.vettingComments = req.body.vettingComments;
@@ -2388,7 +2457,7 @@ getDocumentPlanning: function (req, res, next) {
         if(req.body.siteComments != null) {
             updates.siteComments = req.body.siteComments;
         }
-    }
+  // }
         //filters
         var conditions = {};
         conditions['_id'] = req.body.id;
@@ -2478,8 +2547,8 @@ getDocumentPlanning: function (req, res, next) {
 
   // Create / Update Project Plan record
   saveProjectPlanDocument: function(req, res, next) {
-    console.log('saving project plan')
-
+    console.log('saving project plan');
+    console.log(req.body);
     Promise.props({
       projectPlan: ProjectPlanPackage.findOneAndUpdate(
         { applicationId: req.body.applicationId },
@@ -2508,6 +2577,52 @@ getDocumentPlanning: function (req, res, next) {
       
     }).catch(next);
   },
+
+  // Save Custom Checklist Note
+  saveCustomChecklist: function(req, res, next) {
+    console.log('saving custom checklist note');
+    console.log(req.body);
+
+    var n = req.body.name || "custom";
+
+    var updates = {};
+    updates[n] = {"note": req.body.value};
+    //updates[n].note = req.body.value;
+
+    console.log(updates);
+    //var applId = req.body.applicationId || 
+    //req.body.applicationId = 
+
+    Promise.props({
+      plan: ProjectPlanPackage.findOneAndUpdate(
+        { applicationId: req.params.id },
+        { $set: { "custom.note": req.body.value} },
+        { new: true,
+          upsert: true,
+          runValidators: false,
+          setDefaultsOnInsert: false
+        }
+      ).execAsync()
+    }).then(function (results) {
+      console.log("Returned results: ");
+      console.log(results);
+      if (results.plan !== null) {
+        console.log('[ API ] saveCustomChecklist :: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveCustomChecklist :: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
 
 
 	//update financial package
@@ -3220,7 +3335,7 @@ getDocumentPlanning: function (req, res, next) {
   // Create / Update Project Plan record
   saveProjectPlan: function(req, res, next) {
     console.log('Saving Project Plan Status for: ' + req.body.applicationId);
-
+    console.log(req.body);
     Promise.props({
       plan: ProjectPlanPackage.findOneAndUpdate(
         { applicationId: req.body.applicationId },

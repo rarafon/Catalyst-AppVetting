@@ -30,7 +30,7 @@
                             <tbody>
                             {{#each new}}
                                 <tr class="clickable-row" data-href="/view/{{_id}}">
-                                    <td class="col-md-2"><a href="/view/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/view/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
 									<td class="col-md-2">{{signature.client_date}}</td>
@@ -70,7 +70,7 @@
                             <tbody>
                             {{#each processing}}
                                 <tr class="clickable-row" data-href="/view/{{_id}}">
-                                    <td class="col-md-2"><a href="/view/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/view/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
 									<td class="col-md-2">{{signature.client_date}}</td>
@@ -118,7 +118,7 @@
                             <tbody>
                             {{#each unapproved}}
                                 <tr class="clickable-row" data-href="/view/{{_id}}">
-                                    <td class="col-md-2"><a href="/view/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/view/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
 									<td class="col-md-2">{{signature.client_date}}</td>
@@ -167,7 +167,7 @@
                             <tbody>
                             {{#each project}}
                                 <tr class="clickable-row" data-href="/view/{{_id}}">
-                                    <td class="col-md-2"><a href="/view/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/view/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
 									<td class="col-md-2">{{signature.client_date}}</td>

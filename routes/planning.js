@@ -249,7 +249,7 @@ function isLoggedInPost(req, res, next) {
 						return next('route');
 					}
 					else {
-						console.log('exitingijsdflhj');
+						console.log('exitingLast');
 						if(results.user.user_status === 'ACTIVE') {
 							if(results.user.user_role!== undefined && (results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role=="PROJECT_MANAGEMENT")) {
 								console.log('exiting2');

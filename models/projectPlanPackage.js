@@ -18,7 +18,7 @@ var ProjectPlanPackageSchema = new Schema({
   applicationId: ObjectId,
 
   /* assigned: {
-   *   crew_cheif: { type: String, default: '' },
+   *   crew_chief: { type: String, default: '' },
    *   project_advocate: { type: String, default: '' },
    *   site_host: { type: String, default: '' }
    * },
@@ -124,6 +124,15 @@ var ProjectPlanPackageSchema = new Schema({
     lead_time: Number,
 
     ipad: Boolean
+  },
+
+  custom: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
   }
 });
 
@@ -215,6 +224,11 @@ ProjectPlanPackageSchema.statics.filterOwnedTasks = function (userId) {
         "verify_site_resources.owner": { $ne: null },
         "verify_site_resources.owner": userId,
         "verify_site_resources.complete": false
+       },
+       {        
+        "custom.owner": { $ne: null },
+        "custom.owner": userId,
+        "custom.complete": false
        }      
     ]
   }
@@ -269,6 +283,9 @@ ProjectPlanPackageSchema.statics.filterOpenTasks = function () {
        },      
        {        
         "verify_site_resources.complete": false
+       },
+       {        
+        "custom.complete": false
        }      
     ]
   }
@@ -276,20 +293,21 @@ ProjectPlanPackageSchema.statics.filterOpenTasks = function () {
 
 // Mapping of db names to UI presentation names
 var labels = {
-  contract: "Project postal mailed to client",
-  activated: "Project activated",
+  contract: "Contract postal mailed to client",
+  activated: "Project activation call to client",
   planning_visit: "Planning visit completed",
   rent_porta_pottie: "Rent porta-pottie",
   rent_waste_dumpster: "Rent waste bin",
   create_page_event_schedule: "Create project webpage, calendar event, and volunteer schedule in Endis",
-  volunteer_request_initial: "Send out initial email requesting volunteers",
-  volunteer_request_followup: "Send follow-up emails requesting volunteers",
+  volunteer_request_initial: "Send out initial email requesting volunteers. Register into Website/DB.",
+  volunteer_request_followup: "Send follow-up emails to volunteers via Endis as needed",
   volunteer_request_final: "Send final email to signed up volunteers 3-5 days before project",
-  report_materials_supplies: "Report list of materials, rentals &amp; supplies needed",
+  report_materials_supplies: "Create list of materials, rentals &amp; supplies needed. Send to Darrell.",
   arrange_purchase_delivery: "Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.",
   check_weather_forecast: "Check the weather forecast and make plans accordingly",
   verify_volunteer_count: "Verify number of volunteers signed up",
-  verify_site_resources: "Verify site resources needed"
+  verify_site_resources: "Verify site resources needed",
+  custom: "Custom Task"
 };
 
 ProjectPlanPackageSchema.statics.labels = labels;
@@ -301,13 +319,29 @@ ProjectPlanPackageSchema.statics.getOnlyAssigned = function (plan, userId) {
 
   for (var i = 0; i < taskNames.length; i++) {
     var name = taskNames[i]
+
+    // if (plan[name].note) {
+    //     plan[name].note.toString()
+    // }
+
     if (plan[name].owner
         && plan[name].owner.toString() === userId.toString()
         // && plan[name].complete === false
     ) {
 
       if (plan[name].complete === false) {
-        assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
+        // if (plan[name].note && plan[name].note != '') {
+        //     assigned.push(Object.assign({}, plan[name], { label: plan[name].note }));
+        // } else {
+        //     assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
+        // }
+        if (plan[name].note) {
+                assigned.push(Object.assign({}, plan[name], { label: plan[name].note }, {labelKey: name}));
+        } else {
+            if (labels[name] !== "Custom Task") {
+                assigned.push(Object.assign({}, plan[name], { label: labels[name] }, {labelKey: name}));
+            }
+        }
       }
     }
   }
@@ -319,12 +353,18 @@ ProjectPlanPackageSchema.statics.getTopXOpen = function (plan, taskCount) {
   var taskNames = Object.keys(labels);
   var open = [];
 var count = 0;
-  for (var i = 0; i < taskNames.length-1; i++) {
+  for (var i = 0; i < taskNames.length; i++) {
     var name = taskNames[i]
     
 
       if (plan[name].complete === false) {
-        open.push(Object.assign({}, plan[name], { label: labels[name] }));
+        if (plan[name].note) {
+                open.push(Object.assign({}, plan[name], { label: plan[name].note }, {labelKey: name}));
+        } else {
+            if (labels[name] !== "Custom Task") {
+                open.push(Object.assign({}, plan[name], { label: labels[name] }, {labelKey: name}));
+            }
+        }
         count++;
         if(count === taskCount)
         {
@@ -368,6 +408,7 @@ ProjectPlanPackage.empty = function(applicationId) {
     check_weather_forecast: { complete: false, owner: null, completed_on: null, lead_time: null },
     verify_volunteer_count: { complete: false, owner: null, completed_on: null, lead_time: null },
     verify_site_resources: { complete: false, owner: null, completed_on: null, lead_time: null, ipad: false },
+    custom: { complete: false, owner: null, completed_on: null, lead_time: null, note: null }
   }
 };
 

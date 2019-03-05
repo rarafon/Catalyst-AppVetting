@@ -8,9 +8,6 @@
 
 <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-<!-- Scripts for loading export PDF functions -->
-<script src='//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.39/pdfmake.min.js'></script>
-<script src='//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.39/vfs_fonts.js'></script>
 <script>
 // Shorten a string to less than maxLen characters without truncating words.
 function shorten(str, maxLen, separator = ' ') {
@@ -18,415 +15,15 @@ function shorten(str, maxLen, separator = ' ') {
   return str.substr(0, str.lastIndexOf(separator, maxLen));
 }
 
-// START PDF EXPORT WRITEUP ------------------------------------------------------------------------
-
- var dataPAF = {};
- {{#if results.doc}}
- {{#each results.doc}}
- dataPAF.fullName = "{{{escape application.name.first}}} {{{escape application.name.middle}}} {{{escape application.name.last}}}";
- dataPAF.addr1 = "{{{escape application.address.line_1}}}, ";
- dataPAF.addr2 = "{{{escape application.address.line_2}}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}";
- dataPAF.addr3 = "{{{escape application.address.city}}}, {{{escape application.address.state}}}  {{{escape application.address.zip}}}";
- dataPAF.summ = "{{{escape notes.site_summary}}}";
- {{/each}}
- {{/if}}
-
-var workItems = [];
-
- {{#if results.work}}
-   {{#each results.work}}
-workItems.push("-     " + "Name:  {{{escape name}}}\n");
-workItems.push("-     " + "Description:  {{{escape description}}}\n");
-workItems.push("-     " + "Site Comments:  {{{escape siteComments}}}\n");
-workItems.push("-     " + "COST:  {{{escape cost}}}\n\n");
-   {{/each}}
- {{/if}}
-
-var partnerItems = [];
-
- {{#if results.part}}
-   {{#each results.part.pAssoc}}
-partnerItems.push("-     " + "Org Name:  {{{escape org_name}}}\n");
-partnerItems.push("-     " + "Address:   {{{escape org_address}}}\n");
-partnerItems.push("-     " + "Contact:   {{{escape contact_name}}}\n");
-partnerItems.push("-     " + "Email:     {{{escape contact_email}}}\n");
-partnerItems.push("-     " + "Phone:     {{{escape contact_phone}}}\n\n");
-   {{/each}}
- {{/if}}
-
-
- {{#if results.assessment}}
- {{#each results.assessment}}
-  dataPAF.hasAsbestos = "{{{escape hazard_safety.has_asbestos}}}";
-  dataPAF.hasLead = "{{{escape hazard_safety.has_lead}}}";
-  dataPAF.safety = "{{{escape escape hazard_safety.safety_plan}}}";
-
-  dataPAF.subcontractors = "{{{escape subcontractors}}}";
-
-  dataPAF.materials = "{{{escape materials}}}";
-  dataPAF.volunteers = "{{{escape estimates.volunteers_needed}}}";
-  dataPAF.estimates = "{{{escape estimates.total_cost}}}";
-
-
-  dataPAF.dumpsterRequired = "{{{escape other_costs.waste_dumpster.required}}}";
-  dataPAF.dumpsterCost = "{{{escape other_costs.waste_dumpster.cost}}}";
-
-
-  dataPAF.portaPottieRequired = "{{{escape other_costs.porta_pottie.required}}}";
-  dataPAF.portaPottieCost = "{{{escape other_costs.porta_pottie.cost}}}";
-  dataPAF.portaAggregated = dataPAF.portaPottieRequired + "   " +dataPAF.portaPottieCost;
-  
-  dataPAF.permitName = "{{{escape other_costs.permit.name}}}";
-  dataPAF.permitCost = "{{{escape other_costs.permit.cost}}}";
-
-
-  dataPAF.toolrentals = "{{{escape tool_rentals}}}";
-
-  dataPAF.getEndDate = "{{{escape proposed_dates.end_date}}}";
-  dataPAF.getStartDate = "{{{escape proposed_dates.start_date}}}";
-
-
-
- {{/each}}
-
-  dataPAF.notes = '';
-  {{#each projectNotes}}
-    dataPAF.notes = dataPAF.notes + "{{escape description}}.\n";
-  {{/each}}
-
-  if(dataPAF.dumpsterRequired) {
-     if (dataPAF.dumpsterRequired == 'true' && (dataPAF.dumpsterCost)){
-        dataPAF.dumpsterAggregated = 'Yes' + "   $" +dataPAF.dumpsterCost;
-     }
-    else if (dataPAF.dumpsterRequired == 'false') {
-        dataPAF.dumpsterAggregated = 'Not Required';
-
-        if (dataPAF.dumpsterCost !== '') {
-            dataPAF.dumpsterAggregated = 'Not Required' + "   $" +dataPAF.dumpsterCost;
-        }
-    }
-  } else {
-      var dollarVal;
-      if (dataPAF.dumpsterCost !== '') {
-        dollarVal = "$" + dataPAF.dumpsterCost;
-      }
-      dataPAF.dumpsterAggregated = dataPAF.dumpsterRequired + "   " +dollarVal;
-  }
-
-
-
-  if(dataPAF.portaPottieRequired) {
-     if (dataPAF.portaPottieRequired == 'true' && (dataPAF.portaPottieCost)){
-        dataPAF.portaAggregated = 'Yes' + "   $" +dataPAF.portaPottieCost;
-     }
-    else if (dataPAF.portaPottieRequired == 'false') {
-        dataPAF.portaAggregated = 'Not Required';
-
-        if (dataPAF.portaPottieCost !== '') {
-            dataPAF.portaAggregated = 'Not Required' + "   $" +dataPAF.portaPottieCost;
-        }
-    }
-  } else {
-      var dollarVal;
-      if (dataPAF.portaPottieCost !== '') {
-        dollarVal = "$" + dataPAF.portaPottieCost;
-      }
-      dataPAF.portaAggregated = dataPAF.portaPottieRequired + "   " +dollarVal;
-  }
-
-
-
-  if (dataPAF.permitCost !== '') {
-    dataPAF.permitAggregated = dataPAF.permitName + "   $" +dataPAF.permitCost;
-  } else {
-    dataPAF.permitAggregated = dataPAF.permitName + "   " +dataPAF.permitCost;
-  }
-
-
-    var startD;
-    var endD;
-
-  if (dataPAF.getStartDate !== '') {
-    startD = shorten(dataPAF.getStartDate, 21);
-    dataPAF.dateAggregated = startD;
-
-    if (dataPAF.getEndDate !== '') {
-        endD = shorten(dataPAF.getEndDate, 21);
-        dataPAF.dateAggregated = startD + " to " + endD;
-    }
-  } else if (dataPAF.getEndDate !== '') {
-      endD = shorten(dataPAF.getEndDate, 21);
-      dataPAF.dateAggregated = "Proposed End Date: " + endD;
-  } 
-
-
-
- {{/if}}
-
-
-// ***  PROJECT ASSESSMENT FORM - Using Node pdfmake Module - MIT License. - MIT License.
-// ***  BELOW CODE BY ROHIN ADALJA (github.com/rohinadalja), USING SERVER-SIDE PDF TOOL (pdfmake).
-// ***     Use Dependant on the following: (1) Node PDFmake module
-// ***     TESTED IN: Safari 12.0, Chrome 70.0.3538.102
-
-
-function exportPAFtoPDF() {
-     pdfMake.createPdf(pafDefinition).open();
+//helper function to get current date in a nice format
+function getCurrentDate() {
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Day = ( "00" + date.getDate()).slice(-2);
+    var Mon = ("00" + (date.getMonth()+1)).slice(-2);
+    return Mon + "/" + Day + "/" + Year;
 }
-
-var pafDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
-{ text: 'CATALYST PARTNERSHIPS                                PROJECT ASSESSMENT FORM', style: 'h2b' },
-
-{ text: [ "\n\nRECIPIENT NAME: ", {text: dataPAF.fullName, style:'inText' } ], style:'eachLine'},
-
-{ text: [ "RECP. ADDRESS:   ", {text: dataPAF.addr1, style:'reg' }], style:'eachLine'},
-{text: dataPAF.addr2, margin:[98,-10,0,0], style:'reg'},   //margin:58
-{text: dataPAF.addr3, margin:[98,0,0,5], style:'reg' },
-
-{ text: [ "BIO/Project Summary: ", {text: dataPAF.summ, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
-
-"WORK ITEMS / MATERIALS OVERVIEWS / COST ESTIMATES:",           //WORK ITEM AND COST
-    { text: [ {text: workItems, style:'inText' } ], style:'eachWorkItem'},
-    { text: [ "Materials: ", {text: dataPAF.materials, style:'inText' } ], style:'eachLine'},
-    // { text: [ "Volunteers Needed: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},
-    
-
-"HAZARD / SAFETY TESTING:",
-    { ul: [
-            { text: [ "LEAD?: ", {text: dataPAF.hasLead, style:'inText' } ], style:'eachBullet'},         //yes or no
-            { text: [ "ASBESTOS?: ", {text: dataPAF.hasAsbestos, style:'inText' } ], style:'eachBullet'},     //yes or no
-            { text: [ "   If Yes on either, plan & cost estimate: ", {text: dataPAF.safety, style:'inText' } ], style:'eachBullet'}
-          ],
-      style: 'list'
-    },
-
-"\nPARTNERS: ",                   //<name, in-kind materials description>
-    { text: [ {text: partnerItems, style:'inText' } ], style:'eachWorkItem'},
-
-{ text: [ "SUBCONTRACTOR(S): ", {text: dataPAF.subcontractors, style:'inText' }], style:'eachLine'},
-
-"OTHER COSTS:",
-    { ul: [
-            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inText' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
-            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inText' } ], style:'eachBullet'},     //<y/n, description & cost if “yes”>
-            { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inText' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
-            { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inText' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
-          ],
-      style: 'list'
-    },
-
-{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inText' } ], style:'eachLine'},   //<sum of cost fields> 
-
-{ text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},      //< # >
-
-{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inText' } ], style:'eachLine'},         //<start date, end date>
-
-{ text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'}                    //<text field>
-
-
-], //END CONTENT ***************************************************
-defaultStyle: { //START STYLES
-        fontSize: 12,
-        bold: true,
-        underline: true
-                                    // decorationStyle: 'dashed' decorationType: 'underline'
-    },
-styles: {      
-    eachLine: { 
-        margin:[0,0,0,8]
-        },
-    inText: { 
-            //decorationStyle: 'dashed',
-            decoration: 'underline',
-            bold: false,
-        },
-    question: { 
-            fontSize: 12,
-            bold: true,
-            underline: true
-                                    // decorationStyle: 'dashed' decorationType: 'underline'
-    },
-    h2b: {
-        fontSize: 15,
-        // bold: true,
-        alignment: 'center'
-
-    },
-    reg: {
-        bold: false
-    },
-    eachWorkItem: {
-        margin: [12, 0, 0, 0],
-        bold: false
-    },
-    b: {
-        fontSize: 12,
-        // bold: true
-    },
-    center: {
-        fontSize: 14,
-        alignment: 'center'
-    },
-    left: {
-        fontSize: 14,
-        // bold: true,
-        alignment: 'left'
-    },
-    right: {
-        fontSize: 14,
-        // bold: true,
-        alignment: 'right'
-    },
-    list: {
-        // bold: false,
-        margin: [12, 0, 0, 0],
-    }
-}, //END STYLES
-
-// pageSize: 'LETTER',
-info: {
-    title: 'PAF Form Catalyst',
-    author: 'Catalyst',
-    subject: 'Project Assessment Form',
-    keywords: 'PAF Catalyst Corvus',
-      }
-// pageMargins: [ 40, 60, 40, 60 ],
-};        // END PRINT LAYOUT
-
-
-
-// ***  HANDLE-IT FORM - Using Node pdfmake Module - MIT License.
-// ***  BELOW CODE BY ROHIN ADALJA (github.com/rohinadalja), USING SERVER-SIDE PDF TOOL (pdfmake).
-// ***     Use Dependant on the following: (1) Node PDFmake module
-// ***     TESTED IN: Safari 12.0, Chrome 70.0.3538.102
-
-function exportHandletoPDF() {
-     pdfMake.createPdf(handleDefinition).open();
-}
-
-var handleDefinition = {  content: [           // BEGIN PRINT LAYOUT! ***********
-{ text: 'CATALYST PARTNERSHIPS                                                    HANDLE-IT REPORT', style: 'h2b' },
-
-{ text: [ "\n\n\nRECIPIENT NAME: ", {text: dataPAF.fullName, style:'inText' } ], style:'eachLine'},
-
-{ text: [ "RECP. ADDRESS:   ", {text: dataPAF.addr1, style:'reg' }], style:'eachLine'},
-{text: dataPAF.addr2, margin:[98,-10,0,0], style:'reg'},   //margin:58
-{text: dataPAF.addr3, margin:[98,0,0,5], style:'reg' },
-
-{ text: [ "BIO/Project Summary: ", {text: dataPAF.summ, style:'inText' } ], style:'eachLine'},  // <new text field to be added>
-
-"WORK ITEMS / MATERIALS OVERVIEWS / COST ESTIMATES:",           //WORK ITEM AND COST
-    { text: [ {text: workItems, style:'inText' } ], style:'eachWorkItem'},
-    { text: [ "Materials: ", {text: dataPAF.materials, style:'inText' } ], style:'eachLine'},
-    // { text: [ "Volunteers Needed: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},
-    
-
-// "HAZARD / SAFETY TESTING:",
-//     { ul: [
-//             { text: [ "LEAD?: ", {text: dataPAF.hasLead, style:'inText' } ], style:'eachBullet'},         //yes or no
-//             { text: [ "ASBESTOS?: ", {text: dataPAF.hasAsbestos, style:'inText' } ], style:'eachBullet'},     //yes or no
-//             { text: [ "   If Yes on either, plan & cost estimate: ", {text: dataPAF.safety, style:'inText' } ], style:'eachBullet'}
-//           ],
-//       style: 'list'
-//     },
-
-// "\nPARTNERS: ",                   //<name, in-kind materials description>
-//     { text: [ {text: partnerItems, style:'inText' } ], style:'eachWorkItem'},
-
-// { text: [ "SUBCONTRACTOR(S): ", {text: dataPAF.subcontractors, style:'inText' }], style:'eachLine'},
-
-"OTHER COSTS:",
-    { ul: [
-            { text: [ "TOOL RENTALS: ", {text: dataPAF.toolrentals, style:'inText' } ], style:'eachBullet'},      //<y/n, description & cost if “yes”>
-            { text: [ "PERMIT Needed: ", {text:  dataPAF.permitAggregated, style:'inText' } ], style:'eachBullet'},     //<y/n, description & cost if “yes”>
-            { text: [ "PORTAPOTTIE: ", {text: dataPAF.portaAggregated, style:'inText' } ], style:'eachBullet'},       //<y/n, description & cost if “yes”>
-            { text: [ "WASTE: ", {text: dataPAF.dumpsterAggregated, style:'inText' } ], style:'eachBullet'}              //<y/n, description & cost if “yes”>
-          ],
-      style: 'list'
-    },
-
-{ text: [ "\nTOTAL COST ESTIMATE:   $", {text: dataPAF.estimates, style:'inText' } ], style:'eachLine'},   //<sum of cost fields> 
-
-// { text: [ "VOLUNTEERS NEEDED: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},      //< # >
-
-{ text: [ "PROPOSED DATES: ", {text: dataPAF.dateAggregated, style:'inText' } ], style:'eachLine'},         //<start date, end date>
-
-{ text: [ "NOTES: ", {text: dataPAF.notes, style:'inText' } ], style:'eachLine'},                    //<text field>
-
-
-{ text: '\n\n*****', style: 'center' }
-], //END CONTENT ***************************************************
-defaultStyle: { //START STYLES
-        fontSize: 12,
-        bold: true,
-        underline: true
-                                    // decorationStyle: 'dashed' decorationType: 'underline'
-    },
-styles: {      
-    eachLine: { 
-        margin:[0,0,0,8]
-        },
-    inText: { 
-            decorationStyle: 'dashed',
-            decoration: 'underline',
-            bold: false,
-        },
-    question: { 
-            fontSize: 12,
-            bold: true,
-            underline: true
-                                    // decorationStyle: 'dashed' decorationType: 'underline'
-    },
-    h2b: {
-        fontSize: 15,
-        // bold: true,
-        alignment: 'center'
-
-    },
-    reg: {
-        bold: false
-    },
-    eachBullet: {
-    },
-    b: {
-        fontSize: 12,
-        // bold: true
-    },
-    center: {
-        fontSize: 14,
-        alignment: 'center'
-    },
-    left: {
-        fontSize: 14,
-        // bold: true,
-        alignment: 'left'
-    },
-    right: {
-        fontSize: 14,
-        // bold: true,
-        alignment: 'right'
-    },
-    list: {
-        // bold: false,
-        margin: [12, 0, 0, 0],
-    }
-}, //END STYLES
-
-// pageSize: 'LETTER',
-info: {
-    title: 'PAF Form Catalyst',
-    author: 'Catalyst',
-    subject: 'Project Assessment Form',
-    keywords: 'PAF Catalyst Corvus',
-      }
-// pageMargins: [ 40, 60, 40, 60 ],
-};        // END PRINT LAYOUT
-
-// END PDF EXPORT WRITEUP ------------------------------------------------------------------------
 </script>
-
-
-
 <script src="/javascript/xedit.js" type="text/javascript"></script>
 <script src="/javascript/addProjectNote.js" type="text/javascript"></script>
 <style>
@@ -456,15 +53,27 @@ info: {
  select.task-owner.unassigned {
    
  }
+
+
+.btnEditDrive {
+  font-size: 14px;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  margin-top: -3px;
+}
 </style>
 
 
 <div class="row">
   <div class="col-sm-12">
     <h5 style="padding-left: 21px;">Project View
-      <button class="btn btn-success" style="margin-left: 5%" onclick="exportPAFtoPDF()">Export PAF Report</button>
-      <button class="btn btn-success" style="margin-left: 3%" onclick="exportHandletoPDF()">Export Handle-It Report</button>
-    </h5>
+      <!-- <button id="pafB" class="btn btn-success" style="margin-left: 5%" onclick="exportPAFtoPDF()">Export PAF Report</button>
+      <button id="hanB" class="btn btn-success" style="margin-left: 3%" onclick="exportHandletoPDF()">Export Handle-It Report</button> -->
+      <!-- <div> -->
+        <button class="btn btn-info" id="exportBtn" style="margin-left: 5%;">Export PDFs</button>
+      <!-- </div> -->
+    </h5><div id="iframeHolder"></div>
+    
     <nav class="navbar">
       <div class="input-group">
         <input type="text" id="note" class="form-control" placeholder="Enter Project Planning Note Here...">
@@ -476,7 +85,7 @@ info: {
     {{#each results.doc}}
       <div class="row">
         <div class="col-xs-12">
-          <h1 style="display:inline-block;">{{application.name.first}} {{application.name.middle}} {{application.name.last}}</h1>
+          <h1 style="display:inline-block;">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.middle}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.middle}} {{application.name.last}}{{/if}}</h1>
           <h4 style="float:center;margin-left:50px;display:inline-block;">{{application.address.line_1}}{{#if_not_eq application.address.line_2 ''}}, {{application.address.line_2}}{{/if_not_eq}}, {{application.address.city}}, {{application.address.state}} {{application.address.zip}}</h4> 
           <h3 style="float:right;display:inline-block;" class="text-muted">#{{app_name}}</h3>
         </div>
@@ -512,7 +121,7 @@ info: {
     <!-- Tab panes -->
     <div class="tab-content">
       <div class="tab-pane active" id="projectInfo" role="tabpanel">
-        <br />
+        <br /> 
         {{#each results.doc}}
           <div class="row">
             <div class="col-xs-12 col-sm-6" style="float:left;">
@@ -643,8 +252,28 @@ info: {
 
             <div class="col-xs-12 col-sm-6" style="float:left;">
 
-               <h4>Summary</h4>
+            <!-- HBS - IF NO DRIVE LINK  - then show this. -->
+               <span id="noDrive" style="display: inline-flex;">
+                  <h4>Drive URL:&nbsp;&nbsp;</h4>
+                  <a href="#" onclick="showDriveDone()" id="drive_url" data-type="text" data-pk="{{_id}}" data-url="/edit/project/{{_id}}" data-name="drive_url" data-title="Drive Link">{{drive.drive_url}}</a>&nbsp;&nbsp; 
+                  <button class="btn btn-success" id="driveDoneBtn" style="display: none;" onclick="window.location.reload(true)">Collapse</button>
+                 
+               </span>
+                 </br>
+
+
+            <!-- HBS - IF LINK EXISTS - then show this. -->
+
+
+               <span id="yesDrive" style="display: inline-flex;">
+                  <a id="driveHref" target="_blank" href="{{drive.drive_url}}"><h4>Google Drive</h4></a>
+                  <button class="btn btnEditDrive" onclick="editDriveURL()">Edit</button>
+               </span>
+
                <br/>
+               
+           <!--     <h4>Summary</h4>
+               <br/> -->
               {{#if notes.vet_summary}}
               <h4>Vetting Summary</h4>
               <p>
@@ -688,18 +317,18 @@ info: {
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th >Date</th>
                     <th>Note</th>
                     <th>Submitted By</th>
+                    <th >Date</th>
                  </tr>
                 </thead>
                 <tbody id="notes-body" class="notes-body-container">
                   {{#if projectNotes}}
                     {{#each projectNotes}}
                       <tr>
-                        <td>{{this.date}}</td>
-                        <td class="note-descrip">{{this.description}}</td>
-                        <td class="note-vetAgent">{{this.projectPlanner}}</td>                       
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>                       
                       </tr>
                     {{/each}}
                   {{else}}
@@ -825,18 +454,18 @@ info: {
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th >Date</th>
                     <th>Note</th>
                     <th>Submitted By</th>
+                    <th >Date</th>
                  </tr>
                 </thead>
                 <tbody id="notes-body" class="notes-body-container">
                   {{#if projectNotes}}
                     {{#each projectNotes}}
                       <tr>
-                        <td>{{this.date}}</td>
-                        <td class="note-descrip">{{this.description}}</td>
-                        <td class="note-vetAgent">{{this.projectPlanner}}</td>                       
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>  
+                        <td>{{dateToLocaleDate this.date}}</td>                     
                       </tr>
                     {{/each}}
                   {{else}}
@@ -874,7 +503,7 @@ info: {
         </tr>
 
         <tr>
-          <th class="col-xs-12 col-sm-6">Project postal mailed to client</th>
+          <th class="col-xs-12 col-sm-6">Contract postal mailed to client</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
                    title="{{getCompletedDate plan 'contract' }}">
@@ -891,7 +520,43 @@ info: {
         </tr>
 
         <tr>
-          <th class="col-xs-12 col-sm-6">Project activated</th>
+          <th class="col-xs-12 col-sm-6">Create project webpage, calendar event, and volunteer schedule in Endis</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'create_page_event_schedule' }}">
+              <input type="checkbox" name="create_page_event_schedule" value=""
+                     {{#if plan.create_page_event_schedule.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="create_page_event_schedule"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Send out initial email requesting volunteers. Register into Website/DB.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'volunteer_request_initial' }}">
+              <input type="checkbox" name="volunteer_request_initial" value=""
+                     {{#if plan.volunteer_request_initial.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="volunteer_request_initial"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Project activation call to client</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
                    title="{{getCompletedDate plan 'activated' }}">
@@ -921,6 +586,57 @@ info: {
           <td class="col-xs-6 col-sm-4">
             Owner
             <select class="task-owner plan" data-owner-of="planning_visit"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Create list of materials, rentals &amp; supplies needed. Send to Darrell.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'report_materials_supplies' }}">
+              <input type="checkbox" name="report_materials_supplies" value=""
+                     {{#if plan.report_materials_supplies.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="report_materials_supplies"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Verify site resources needed</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'verify_site_resources' }}">
+              <input type="checkbox" name="verify_site_resources" value=""
+                     {{#if plan.verify_site_resources.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="verify_site_resources"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'arrange_purchase_delivery' }}">
+              <input type="checkbox" name="arrange_purchase_delivery" value=""
+                     {{#if plan.arrange_purchase_delivery.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="arrange_purchase_delivery"></select>
           </td>
         </tr>
 
@@ -958,56 +674,44 @@ info: {
           </td>
         </tr>
 
+
         <tr>
-          <th class="col-xs-12 col-sm-6">Create project webpage, calendar event, and volunteer schedule in Endis</th>
+          <th class="col-xs-12 col-sm-6">Check the weather forecast and make plans accordingly</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'create_page_event_schedule' }}">
-              <input type="checkbox" name="create_page_event_schedule" value=""
-                     {{#if plan.create_page_event_schedule.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'check_weather_forecast' }}">
+              <input type="checkbox" name="check_weather_forecast" value=""
+                     {{#if plan.check_weather_forecast.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="create_page_event_schedule"></select>
+            <select class="task-owner plan" data-owner-of="check_weather_forecast"></select>
           </td>
         </tr>
 
+
+
+
         <tr>
-          <th class="col-xs-12 col-sm-6">Send out initial email requesting volunteers</th>
+          <th class="col-xs-12 col-sm-6">Verify number of volunteers signed up</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'volunteer_request_initial' }}">
-              <input type="checkbox" name="volunteer_request_initial" value=""
-                     {{#if plan.volunteer_request_initial.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'verify_volunteer_count' }}">
+              <input type="checkbox" name="verify_volunteer_count" value=""
+                     {{#if plan.verify_volunteer_count.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="volunteer_request_initial"></select>
+            <select class="task-owner plan" data-owner-of="verify_volunteer_count"></select>
           </td>
         </tr>
 
-        <tr>
-          <th class="col-xs-12 col-sm-6">Send follow-up emails requesting volunteers</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'volunteer_request_followup' }}">
-              <input type="checkbox" name="volunteer_request_followup" value=""
-                     {{#if plan.volunteer_request_followup.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="volunteer_request_followup"></select>
-          </td>
-        </tr>
 
         <tr>
           <th class="col-xs-12 col-sm-6">Send final email to signed up volunteers 3-5 days before project</th>
@@ -1027,89 +731,46 @@ info: {
         </tr>
 
         <tr>
-          <th class="col-xs-12 col-sm-6">Report list of materials, rentals &amp; supplies needed</th>
+          <!-- <th class="col-xs-12 col-sm-6">Send follow-up emails requesting volunteers</th> -->
+          <th class="col-xs-12 col-sm-6">Send follow-up emails to volunteers via Endis as needed</th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'report_materials_supplies' }}">
-              <input type="checkbox" name="report_materials_supplies" value=""
-                     {{#if plan.report_materials_supplies.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'volunteer_request_followup' }}">
+              <input type="checkbox" name="volunteer_request_followup" value=""
+                     {{#if plan.volunteer_request_followup.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="report_materials_supplies"></select>
+            <select class="task-owner plan" data-owner-of="volunteer_request_followup"></select>
           </td>
         </tr>
 
+
         <tr>
-          <th class="col-xs-12 col-sm-6">Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.</th>
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom" data-title="custom">{{plan.custom.note}}</a>
+          </th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'arrange_purchase_delivery' }}">
-              <input type="checkbox" name="arrange_purchase_delivery" value=""
-                     {{#if plan.arrange_purchase_delivery.complete}} checked {{/if}}
+                   title="{{getCompletedDate plan 'custom' }}">
+              <input type="checkbox" name="custom" value=""
+                     {{#if plan.custom.complete}} checked {{/if}}
               />
               Complete
             </label>
           </td>
           <td class="col-xs-6 col-sm-4">
             Owner
-            <select class="task-owner plan" data-owner-of="arrange_purchase_delivery"></select>
+            <select class="task-owner plan" data-owner-of="custom"></select>
           </td>
         </tr>
 
-        <tr>
-          <th class="col-xs-12 col-sm-6">Check the weather forecast and make plans accordingly</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'check_weather_forecast' }}">
-              <input type="checkbox" name="check_weather_forecast" value=""
-                     {{#if plan.check_weather_forecast.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="check_weather_forecast"></select>
-          </td>
-        </tr>
 
-        <tr>
-          <th class="col-xs-12 col-sm-6">Verify number of volunteers signed up</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'verify_volunteer_count' }}">
-              <input type="checkbox" name="verify_volunteer_count" value=""
-                     {{#if plan.verify_volunteer_count.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="verify_volunteer_count"></select>
-          </td>
-        </tr>
 
-        <tr>
-          <th class="col-xs-12 col-sm-6">Verify site resources needed</th>
-          <td class="col-xs-6 col-sm-2">
-            <label data-toggle="tooltip"
-                   title="{{getCompletedDate plan 'verify_site_resources' }}">
-              <input type="checkbox" name="verify_site_resources" value=""
-                     {{#if plan.verify_site_resources.complete}} checked {{/if}}
-              />
-              Complete
-            </label>
-          </td>
-          <td class="col-xs-6 col-sm-4">
-            Owner
-            <select class="task-owner plan" data-owner-of="verify_site_resources"></select>
-          </td>
-        </tr>
+
       </table>
         
       </div><!-- end #planning -->
@@ -1154,18 +815,18 @@ info: {
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>Date</th>
                     <th>Note</th>
                     <th>Submitted By</th>
+                    <th>Date</th>
                  </tr>
                 </thead>
                 <tbody id="notes-body" class="notes-body-container">
                   {{#if projectNotes}}
                     {{#each projectNotes}}
                       <tr>
-                        <td>{{this.date}}</td>
-                        <td class="note-descrip">{{this.description}}</td>
-                        <td class="note-vetAgent">{{this.projectPlanner}}</td>                       
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>                       
                       </tr>
                     {{/each}}
                   {{else}}
@@ -1523,17 +1184,17 @@ info: {
                     <br/>
                     <strong>Vetting comments:</strong>
                     <br/>
-                    <span name="{{_id}}.vettingComments">{{vettingComments}}</span>
+                    <span style="white-space: pre-wrap" name="{{_id}}.vettingComments">{{vettingComments}}</span>
                     <br/>
                     <br/>
                     <strong>Site comments:</strong>
                     <br/>
-                    <span name="{{_id}}.siteComments">{{siteComments}}</span>
+                    <span style="white-space: pre-wrap" name="{{_id}}.siteComments">{{siteComments}}</span>
                     <br/>
                     <br/>
                     <strong>Project comments:</strong>
                     <br/>
-                    <span name="{{_id}}.projectComments">{{projectComments}}</span>
+                    <span style="white-space: pre-wrap" name="{{_id}}.projectComments">{{projectComments}}</span>
                     <br/>
                     <br/>
                     <strong>Cost:</strong>
@@ -1561,18 +1222,18 @@ info: {
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th >Date</th>
                     <th>Note</th>
                     <th>Submitted By</th>
-                    <th             </tr>
+                    <th >Date</th>
+                  </tr>
                 </thead>
                 <tbody id="notes-body" class="notes-body-container note-editor-container">
                   {{#if projectNotes}}
                     {{#each projectNotes}}
                       <tr>
-                        <td>{{this.date}}</td>
-                        <td class="note-descrip">{{this.description}}</td>
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
                         <td class="note-vetAgent">{{this.projectPlanner}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>
                         <td>
                           <form>
                             <input type="hidden" value="{{this._id}}" name="noteId" />
@@ -1615,12 +1276,25 @@ info: {
  var plan = {{{ stringify plan }}};
  var leadtime = {{{ stringify leadtime }}}
 
+$(function(){
+    $('#exportBtn').click(function(){
+        if(!$('#iframe').length) {
+                $('#iframeHolder').html('<iframe id="iframe" src="/projectview/exportPDF/{{doc._id}}" frameborder="0" width="100%" height="75"></iframe>');
+				$('#exportBtn').hide();
+        }
+    });   
+});
+
+
    $(document).ready(function() {
      $('.work-item-comment').each(watchEditButton)   
      $('.work-item-delete').on('click', showWorkItemDeleteConfirm)
      $('.work-item-new').on('click', handleNewWorkItemSubmission)
      $('.work-item-clear').on('click', handleNewWorkItemClear)
      
+     $('#drive_url').editable();
+
+     $('#custom').editable();
 
      $('#crew_chief').editable();
      $('#project_advocate').editable();
@@ -1628,6 +1302,8 @@ info: {
 
      $('#actual_volunteer_count').editable();
      $('#actual_labor_count').editable();
+
+     yesDriveLoaded();
 
      $('#status').editable({
        value: docs[0].project.status,     //POST to /edit/project will update this status in project.status field.
@@ -1703,6 +1379,44 @@ info: {
    $(this).on('click', showWorkItemEditForm)
  }
 
+ function editDriveURL() {
+    //Toggle = show edit span, and hide current span
+    document.getElementById("yesDrive").style.display = "none";
+    document.getElementById("noDrive").style.display = "inline-flex";
+
+ }
+
+ function showDriveDone() {
+    document.getElementById("driveDoneBtn").style.display = "inline-flex";
+ }
+
+ function yesDriveLoaded() {
+     //alert(document.getElementById("driveHref").href);
+     //alert(window.location.hostname);
+
+     var webUrl = "{{{escape doc.drive.drive_url}}}";
+
+     //alert(webUrl);
+    if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location) {
+        document.getElementById("yesDrive").style.display = "none";
+        document.getElementById("noDrive").style.display = "inline-flex";
+    } else {
+        if (document.getElementById("driveHref") && document.getElementById("driveHref").href) {
+          //var sWith = document.getElementById("driveHref").href;
+          //alert(sWith);
+
+          var webUrl = "{{{escape doc.drive.drive_url}}}";
+          //alert(webUrl);
+          //alert(! webUrl.startsWith('http'));
+          if (! webUrl.startsWith('http')) {
+              document.getElementById("driveHref").href = 'http://' + webUrl;
+          }
+        }
+
+        document.getElementById("yesDrive").style.display = "inline-flex";
+        document.getElementById("noDrive").style.display = "none";
+    }
+ }
 
  function showWorkItemEditForm(e) {
    e.preventDefault()
@@ -2166,9 +1880,18 @@ info: {
    
    $('#planning input:checkbox').each(function () {
      var $this = $(this);
-     var name = $this.attr('name')
+     var name = $this.attr('name');
 
+     //alert(name);
      console.log(name, plan[name]);
+
+     if (! plan[name]) {
+        plan[name] = {};
+        plan[name].complete = null;
+        plan[name].completed_on = null;
+        plan[name].note = null;
+     }
+
      plan[name].complete = $this.prop('checked');
      if (plan[name].complete && !plan[name].completed_on) {
        plan[name].completed_on = Date.now();

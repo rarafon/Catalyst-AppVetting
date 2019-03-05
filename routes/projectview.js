@@ -96,6 +96,39 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
          });
 
 
+		router
+				 .get('/exportPDF/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders,
+					 api.getAssignableUsers, api.getWrapUpDoc, api.getProjectPlanDoc,
+					 api.getLeadtimeDefaults,
+					 function(req, res, next) {
+					 //Checking what's in params
+					 //console.log("Rendering application " + ObjectId(req.params.id));
+				 
+						 console.log("Export to PDF Called");
+					 var payload = {};
+				 
+						 payload.doc = res.locals.results.doc[0];
+						 payload.work = res.locals.results.work;
+						 payload.user = req.user._id;
+						 payload.user_email = res.locals.email;
+							 payload.user_role = res.locals.role;
+							 payload.user_roles = res.locals.user_roles;
+						 payload.projectNotes = res.locals.results.projectNotes;
+					 payload.assignableUsers = res.locals.assignableUsers;
+					 payload.wrapUp = res.locals.wrapUp ? res.locals.wrapUp : ProjectWrapUpPackage.empty(req.params.id);
+						 payload.part = res.locals.results.part||req.partnerTime;			//Data for Partners Tab Partial
+					 payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
+					 payload.leadtime = res.locals.leadtime;
+						 payload.partDocId = res.locals.results.doc[0]._id;
+						 console.log("results - export as PDF");
+					 console.log(payload);
+					 
+						 // res.render('siteassessmenttool', payload);
+						 res.render('exportPDF', payload);
+				 
+			});
+
+
 //same as vetting route.  Shouldn't be issues with logic as is
 router.route('/additem')
 	.post(isLoggedInPost, api.addWorkItem, function(req, res) {
@@ -128,7 +161,7 @@ router.route('/updatesummary')
         res.json(res.locals);
     }
 	});	
-
+	
 router.route('/wrapup')
       .post(isLoggedInPost, api.saveProjectWrapUp, function(req, res) {
 	      if(res.locals.status != '200'){
@@ -240,7 +273,14 @@ function isLoggedIn(req, res, next) {
 						if(results.user.user_status == "ACTIVE") {
               res.locals.assign_tasks = results.user.assign_tasks;
 
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
+							if(results.user.user_roles.indexOf("ADMIN") !== -1 || results.user.user_roles.indexOf("PROJECT_MANAGEMENT") !== -1 || results.user.user_roles.indexOf("VET") !== -1 || results.user.user_roles.indexOf("SITE") !== -1) {
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+
+							}
+							else if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role == "PROJECT_MANAGEMENT") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
 								res.locals.user_roles = results.user.user_roles;
@@ -303,9 +343,17 @@ function isLoggedInPost(req, res, next) {
 					}
 					else {
 						if(results.user.user_status == "ACTIVE") {
-							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE") {
+							if(results.user.user_roles.indexOf("ADMIN") !== -1 || results.user.user_roles.indexOf("PROJECT_MANAGEMENT") !== -1 || results.user.user_roles.indexOf("VET") !== -1 || results.user.user_roles.indexOf("SITE") !== -1) {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
+								return next();
+
+							}
+							else if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role == "PROJECT_MANAGEMENT") {
+								res.locals.email = results.user.contact_info.user_email;
+								res.locals.role = results.user.user_role;
+								res.locals.user_roles = results.user.user_roles;
 								return next();
 
 							}

@@ -52,7 +52,7 @@ var UserPackageSchema = new Schema({
 	hash : String,
 	salt: String,
 
-  assign_tasks: Boolean,
+    assign_tasks: Boolean,
 
 	user_documents: {
 		waiver_signed:		Boolean,

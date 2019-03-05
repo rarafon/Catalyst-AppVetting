@@ -37,24 +37,24 @@
                 </div>
                 <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover" id="project_table">
+                        <table class="table table-sm table-bordered table-hover orderTable0" id="project_table">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable0', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable0', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                 <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable0', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable0', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable0', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable0', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable0', 6)" class="col-md-2">Start Date</th>
                <!--  <th class="col-md-1">#</th>  -->             
                             </tr>
                             </thead>
                             <tbody>
                             {{#each handle}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -84,24 +84,24 @@
                 </div>
                 <div id="collapseTwo" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable1">
                             <thead>
                                     <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable1', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable1', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable1', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable1', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable1', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable1', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable1', 6)" class="col-md-2">Start Date</th>
                 <!-- <th class="col-md-1">#</th>  -->            
                      </tr>
                             </thead>
                             <tbody>
                             {{#each handleAssigned}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -142,15 +142,15 @@
                                 <th class="col-md-2">Proj. Advocate</th>
                                 <th class="col-md-2">SH</th>
                                 <th class="col-md-2">Partners</th>
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">Application Date</th>
+                                <th class="col-md-2">Appl. Status</th>
+                <th class="col-md-2">Start Date</th>
                 <th class="col-md-2">Application Number</th>
                             </tr>
                             </thead>
                             <tbody>
                             {{#each completed}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                   <td class="col-md-2">{{project.project_start}}</td>
@@ -178,17 +178,17 @@
                 </div>
                 <div id="collapseFive" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable2">
                             <thead>
                                       <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable2', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable2', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                 <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable2', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable2', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable2', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable2', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable2', 6)" class="col-md-2">Start Date</th>
                 <!-- <th class="col-md-1">#</th>   -->           
                  
                             </tr>
@@ -196,7 +196,7 @@
                             <tbody>
                             {{#each projectInProgress}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -228,24 +228,24 @@
                 </div>
                 <div id="collapseSix" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable3">
                             <thead>
                                       <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable3', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable3', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable3', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable3', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable3', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable3', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable3', 6)" class="col-md-2">Start Date</th>
                <!--  <th class="col-md-1">#</th>    -->           
                   </tr>
                             </thead>
                             <tbody>
                             {{#each projectGoBacks}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -277,24 +277,24 @@
                 </div>
                 <div id="collapseFour" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable4">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable4', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable4', 1)" class="col-md-2">Address</th>
                                 {{!-- <th class="col-md-2">Last Edit</th> --}}
-                                <th class="col-md-2">Status</th>
-                                <th class="col-md-2 cell-overflow">CC</th>
-                <th  class="col-md-1 cell-overflow">PA</th>
-                <th class="col-md-1 cell-overflow">SH</th>
-                <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable4', 2)" class="col-md-2">Appl. Status</th>
+                                <th onclick="orderTable('orderTable4', 3)" class="col-md-2 cell-overflow">CC</th>
+                <th onclick="orderTable('orderTable4', 4)" class="col-md-1 cell-overflow">PA</th>
+                <th onclick="orderTable('orderTable4', 5)" class="col-md-1 cell-overflow">SH</th>
+                <th onclick="orderTable('orderTable4', 6)" class="col-md-2">Start Date</th>
                 <!-- <th class="col-md-1">#</th> -->
                             </tr>
                             </thead>
                             <tbody>
                             {{#each project}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -335,18 +335,18 @@
                 </div>
                 <div id="collapseSeven" class="collapse in" role="tabpanel" aria-labelledby="headingThree">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable5">
                             <thead>
                             <tr>
-                                           <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                           <!-- <tr> -->
+                                <th onclick="orderTable('orderTable5', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable5', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-               <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable5', 2)" class="col-md-2">Appl. Status</th>
+               <th onclick="orderTable('orderTable5', 3)" class="col-md-2">CC</th>
+               <th onclick="orderTable('orderTable5', 4)" class="col-md-1">PA</th>
+               <th onclick="orderTable('orderTable5', 5)" class="col-md-1">SH</th>
+               <th onclick="orderTable('orderTable5', 6)" class="col-md-2">Start Date</th>
                <!--  <th class="col-md-1">#</th> -->
                            </tr>
                             </thead>
@@ -354,7 +354,7 @@
                 <div class="compAll" style="display: none;">
                         {{#each completed}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
@@ -369,7 +369,7 @@
 <!--                 <div class="compH" style="display: none;">
                         {{#each handleCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -381,7 +381,7 @@
                 <div class="compP" style="display: none;">
                         {{#each projectCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -393,7 +393,7 @@
                 <div class="compStacked" style="display: none !important;">
                         {{#each projectCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -402,7 +402,7 @@
                         {{/each}}
                         {{#each handleCompleted}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2">{{updated}}</td>
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
                                     <td class="col-md-2">{{project.project_start}}</td>
@@ -441,25 +441,25 @@
 
                 <div id="collapseEight" class="collapse in" role="tabpanel" aria-labelledby="headingFour">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover" id="unapproved_table">
+                        <table class="table table-sm table-bordered table-hover orderTable6" id="unapproved_table">
                             <thead>
                             <tr>
-                                          <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
+                                          <!-- <tr> -->
+                                <th onclick="orderTable('orderTable6', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable6', 1)" class="col-md-2">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th class="col-md-2">Status</th>
-                <th class="col-md-2">CC</th>
-                <th class="col-md-1">PA</th>
-                <th class="col-md-1">SH</th>
-                 <th class="col-md-2">Date</th>
+                                <th onclick="orderTable('orderTable6', 2)" class="col-md-2">Appl. Status</th>
+                <th onclick="orderTable('orderTable6', 3)" class="col-md-2">CC</th>
+                <th onclick="orderTable('orderTable6', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable6', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable6', 6)" class="col-md-2">Start Date</th>
                <!--  <th class="col-md-1">#</th> -->
                             </tr>
                             </thead>
                             <tbody>
                             {{#each nostatus}}
                                 <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{application.name.first}} {{application.name.last}}</a></td>
+                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger cell-overflow">{{status}}</span></td>
@@ -523,6 +523,50 @@
         }
     }
 
+
+// SORT TABLE CODE --------------------------------------------------
+function orderTable(inTableClass, colmn) {
+    var switchCnt = 0, rows, reverse;
+
+    var curr = "ascending";
+    var thisTable = document.getElementsByClassName(inTableClass)[0];
+    var switching = true;
+    
+    var i, x, y;
+    while (switching) {
+        switching = false;
+        rows = thisTable.getElementsByTagName("tr");
+        
+        for (i = 1; i < (rows.length - 1); i++) {
+            reverse = false;
+            x = rows[i].getElementsByTagName("td")[colmn];
+            y = rows[i + 1].getElementsByTagName("td")[colmn];
+            if (curr == "ascending") {
+                if (x.innerText.toLowerCase() > y.innerText.toLowerCase()) {
+                    reverse = true;
+                    break;
+                }
+            } else if (curr == "descending") {
+                if (x.innerText.toLowerCase() < y.innerText.toLowerCase()) {
+                    reverse = true;
+                    break;
+                }
+            }
+        }
+
+        if (reverse) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchCnt++;      
+        } else {
+            if (switchCnt == 0 && curr == "ascending") {
+            curr = "descending";
+            switching = true;
+            }
+        }
+    }
+}
+// -------------------------------------------------- END SORT TABLE CODE 
 
 </script>
 
