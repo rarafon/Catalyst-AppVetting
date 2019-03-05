@@ -133,6 +133,78 @@ var ProjectPlanPackageSchema = new Schema({
     lead_time: Number,
 
     note: String
+  },
+
+  custom1: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom2: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom3: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom4: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom5: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom6: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom7: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
+  },
+
+  custom8: {
+    complete: { type: Boolean, index: true },
+    completed_on: Date,
+    owner: { type: ObjectId, index: true },
+    lead_time: Number,
+
+    note: String
   }
 });
 
@@ -229,7 +301,47 @@ ProjectPlanPackageSchema.statics.filterOwnedTasks = function (userId) {
         "custom.owner": { $ne: null },
         "custom.owner": userId,
         "custom.complete": false
-       }      
+       },
+       {        
+        "custom1.owner": { $ne: null },
+        "custom1.owner": userId,
+        "custom1.complete": false
+       },          
+       {        
+        "custom2.owner": { $ne: null },
+        "custom2.owner": userId,
+        "custom2.complete": false
+       },      
+       {        
+        "custom3.owner": { $ne: null },
+        "custom3.owner": userId,
+        "custom3.complete": false
+       },      
+       {        
+        "custom4.owner": { $ne: null },
+        "custom4.owner": userId,
+        "custom4.complete": false
+       },      
+       {        
+        "custom5.owner": { $ne: null },
+        "custom5.owner": userId,
+        "custom5.complete": false
+       },      
+       {        
+        "custom6.owner": { $ne: null },
+        "custom6.owner": userId,
+        "custom6.complete": false
+       },      
+       {        
+        "custom7.owner": { $ne: null },
+        "custom7.owner": userId,
+        "custom7.complete": false
+       },      
+       {        
+        "custom8.owner": { $ne: null },
+        "custom8.owner": userId,
+        "custom8.complete": false
+       }        
     ]
   }
 }
@@ -286,7 +398,31 @@ ProjectPlanPackageSchema.statics.filterOpenTasks = function () {
        },
        {        
         "custom.complete": false
-       }      
+       },
+       {        
+        "custom1.complete": false
+       },      
+       {        
+        "custom2.complete": false
+       }, 
+       {        
+        "custom3.complete": false
+       }, 
+       {        
+        "custom4.complete": false
+       }, 
+       {        
+        "custom5.complete": false
+       }, 
+       {        
+        "custom6.complete": false
+       }, 
+       {        
+        "custom7.complete": false
+       }, 
+       {        
+        "custom8.complete": false
+       }   
     ]
   }
 }
@@ -307,7 +443,16 @@ var labels = {
   check_weather_forecast: "Check the weather forecast and make plans accordingly",
   verify_volunteer_count: "Verify number of volunteers signed up",
   verify_site_resources: "Verify site resources needed",
-  custom: "Custom Task"
+  custom: "Custom Task",
+  custom1: "Custom Task",
+  custom2: "Custom Task",
+  custom3: "Custom Task",
+  custom4: "Custom Task",
+  custom5: "Custom Task",
+  custom6: "Custom Task",
+  custom7: "Custom Task",
+  custom8: "Custom Task"
+
 };
 
 ProjectPlanPackageSchema.statics.labels = labels;
@@ -408,7 +553,15 @@ ProjectPlanPackage.empty = function(applicationId) {
     check_weather_forecast: { complete: false, owner: null, completed_on: null, lead_time: null },
     verify_volunteer_count: { complete: false, owner: null, completed_on: null, lead_time: null },
     verify_site_resources: { complete: false, owner: null, completed_on: null, lead_time: null, ipad: false },
-    custom: { complete: false, owner: null, completed_on: null, lead_time: null, note: null }
+    custom: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom1: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom2: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom3: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom4: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom5: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom6: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom7: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
+    custom8: { complete: false, owner: null, completed_on: null, lead_time: null, note: null },
   }
 };
 
