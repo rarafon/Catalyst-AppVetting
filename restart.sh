@@ -1,5 +1,5 @@
 #! /bin/sh
-
+PATH='/home/ubuntu/.nvm/versions/node/v11.10.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
 ##dirname="/Users/Rohin/CorvusDev/Catalyst-Appvetting"
 ##dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
