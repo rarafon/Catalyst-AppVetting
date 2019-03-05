@@ -7,7 +7,7 @@ DEST=/home/ubuntu/Capricornus---Catalyst/db_backups/$(date +\%Y-\%m-\%d:\%H:\%M:
 mkdir $DEST
 
 #Dump database into directory
-mongodump -h 35.164.54.173:51150 -u catalystAdmin -p "LtVu9v@8&h5^%6bSVFf2AUEf" --authenticationDatabase admin -d catalyst -o $DEST
+mongodump -h ****** --authenticationDatabase admin -d catalyst -o $DEST
 
 #Upload directory to S3 bucket
 aws s3 cp $DEST s3://catalystnwbackup/db_backups/${DEST:47:19} --recursive
