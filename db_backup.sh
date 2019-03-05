@@ -12,6 +12,7 @@ sudo mkdir $DEST
    #mongodump -h IP:PORT -u username -p "password" --authenticationDatabase admin -d catalyst -o $DEST
 sudo mongodump --authenticationDatabase admin -d catalyst -o $DEST
 
+
 #Upload directory to S3 bucket
     #aws s3 cp $DEST s3://catalystnwbackup/db_backups/${DEST:47:19} --recursive
 aws s3 cp $DEST s3://catalyst-application-db/db_backups/${DEST:34:19} --recursive
