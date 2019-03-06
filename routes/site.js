@@ -294,6 +294,9 @@ function isLoggedInPost(req, res, next) {
 							if(results.user.user_role == "VET" || results.user.user_role == "ADMIN" || results.user.user_role == "SITE" || results.user.user_role=="PROJECT_MANAGEMENT") {
 								res.locals.email = results.user.contact_info.user_email;
 								res.locals.role = results.user.user_role;
+								if (results.user.user_roles) {
+									res.locals.user_roles = results.user.user_roles;
+								}
 								return next();
 
 							}
