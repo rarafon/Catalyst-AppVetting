@@ -2382,7 +2382,18 @@ getDocumentPlanning: function (req, res, next) {
 		}
 		updates.cost = req.body.cost;
 		updates.updated = Date.now();
-        
+ 
+        if(req.body.siteComments != null) {
+            updates.siteComments = req.body.siteComments;
+        }
+        if(req.body.vettingComments != null) {
+            updates.vettingComments = req.body.vettingComments;
+        }
+        if(req.body.projectComments != null)
+        {
+            updates.projectComments = req.body.projectComments;
+        }
+
         if(res.locals.role === undefined || res.locals.role==='')
         {
             if(req.body.siteComments != null) {
