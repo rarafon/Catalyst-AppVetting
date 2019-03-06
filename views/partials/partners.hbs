@@ -1,0 +1,623 @@
+
+
+<!--        Btn: #addAssocPartners
+        [ THIS = CURRENT PARTNERS ]     -->
+
+<span name="currentPartnersViewSpan" style="display:block;">        <!-- currentPartnersViewSpan -->
+  <div class="col-xs-12 col-sm-6">
+    <input type="hidden" value="{{partDocId}}" name="partAppId1" style="display:none;">
+    <input type="hidden" value="{{part.[0].projectId}}" name="partAppId2" style="display:none;">
+    <input type="hidden" value="{{part.[1].projectId}}" name="partAppId3" style="display:none;">
+    <input type="hidden" value="{{part.projectId}}" name="partAppId" style="display:none;">
+    <input type="hidden" value="{{results.projectId}}" name="partAppId4" style="display:none;">
+
+      <h3 name="currentPartnersLabel" class="h3underline">List of Partners</h3>
+        <thead> 
+            <th class="col-sm-7"><button onclick="addAssocPartnersBtn()" name="accessAssocPartners" class="accessAssocPartners btn btn-info">Modify Partners for this Project</button></th>
+        </thead>
+
+
+        <span name="oneTable">
+                  <table class="table">
+                    <thead> 
+                          <th class="col-sm-4">Organization</th>
+                          <th class="col-sm-7">Information</th>
+                    </thead> 
+                    <tbody>
+                        
+                        {{#if part}}
+                          {{#each part.pAssoc}}
+                            <div class="{{_id}}" name="{{_id}}">
+                              <tr class="{{_id}}" name="{{_id}}">
+                                <th class="col-sm-4" name="{{_id}}">{{org_name}}</th>
+                                  <td class="col-sm-7" name="{{_id}}"><strong>{{org_address}}</strong></td>
+                              </tr>
+                              
+                              <tr class="{{_id}}" name="{{_id}}">
+                                <th class="col-sm-4" name="{{_id}}">
+                                  <!-- <button name="removeThisPartner" style="display:none;" class="btn btn-danger btn-sm" id="{{_id}}" onclick="removeThisBtn('{{_id}}')">Remove this (Make sure it is not in use)</button> -->
+                                </th>
+                                  <td class="col-sm-7" name="{{_id}}">Contact: {{contact_name}}</td>
+                              </tr>
+
+                              <tr>
+                                <th class="col-sm-4" name="{{_id}}"></th>
+                                  <td class="col-sm-7" name="{{_id}}">Phone: <a href="tel:{{contact_phone}}">{{contact_phone}}</a></td>
+                              </tr>
+
+                              <tr>
+                                <th class="col-sm-4" name="{{_id}}"></th>
+                                  <td class="col-sm-7" name="{{_id}}">Email: <a href="mailto:{{contact_email}}">{{contact_email}}</a></td>
+                              </tr>
+                            </div>
+                          {{/each}}
+                        {{/if}}
+
+                    </tbody>
+                  </table>
+        </span>
+
+
+
+  </div>
+</span>
+
+<!-- ->     Btn: #addNEWtoDB      -> Btn: GO BACK to  [  CURRENT PARTNERS ]  
+        [ THIS = addAssocPartners ]   (all partners but as a checklist - where associated ones are pre-selected. ). -->
+<span name="addAssocPartners" style="display:none;">                 
+  <div class="col-xl-12">                                                                     <!-- addAssocPartners -->
+      <h3 name="newAssignLabel" class="h3underline">Assign Partners to this Project:</h3>
+        <thead> 
+            <th class="col-xs-3"><button onclick="assocSaveBtn('edit')" name="assocEdit" class="assocEdit btn btn-success">Select from below</button></th>
+            <th class="col-xs-3"><button onclick="assocSaveBtn('submit')" name="assocSave" class="assocSave btn btn-success" style="display:none;">Confirm changes</button></th>
+            <th class="col-xs-3"><button onclick="assocSaveBtn()" name="assocCancel" class="assocCancel btn btn-secondary" style="display:none;">Cancel</button></th>
+            <label class="notInListLabel">Not in list?  <button onclick="assocSaveBtn('goToSpanThree')" name="goToNewDbBtn" class="goToNewDbBtn btn btn-info">ADD/REMOVE PARTNERS DB</button></label>
+        </thead>
+  </div>
+</span>
+
+
+
+<!--          Btn: GO BACK to {{addAssocPartners}}  - TOGGLE BETWEEN THE TWO
+        [ THIS = addNEWtoDB ]    -->
+<span name="addNEWtoDB" style="display:none;">                                                  <!-- addNEWtoDB -->
+ <!--  <div class="row"> -->
+    <div class="col-xs-12">
+      <h3 name="globalPartnersLabel" class="h3underline">Global Partners List</h3>
+
+  <!--     <div class="row">
+        <div class="col-xs-12 col-sm-6"> -->
+          <table id="buttonTable" name="buttonTable" style="display:block;">
+          <h4 name="newPartnerLabel" style="display:none;">Adding NEW Partner</h4>
+            <thead> 
+                <th class="col-sm-7"><button onclick="createPartnerBtnPressed()" name="createPartner" class="createPartnerBtn btn btn-success">Add New Partner</button></th>
+                <th class="col-sm-4"><button onclick="editPartnerBtnPressed('remove')" name="removePartner" class="removePartnerBtn btn btn-warning">Remove Partners</button></th>
+                <th><button onclick="assocSaveBtn('easyRefresh')" name="returnBack" class="returnBackBtn btn btn-info">Go Back</button></th>
+            </thead>
+          </table>
+
+          <span name="formSpan" style="display:none;">
+            <div>
+                <form class="form-inline editableform" style="">
+                  <div class="control-group form-group">
+                    <!-- <div class="editable-input"> -->
+                      <!-- <select type="radio" class="form-control input-sm"> -->  <!-- <option value="projectCompleted">Project - Completed</option> -->
+                      <label class="partnerAddTextLabel"><strong>Organization:</strong>
+                        <input required name="create_org_name" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 50px;"></label><br>
+                      <label class="partnerAddTextLabel"><strong>Address:</strong>
+                        <input name="create_org_address" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 85px;"></label><br>
+                      <label class="partnerAddTextLabel"><strong>Contact Name:</strong>
+                        <input name="create_contact_name" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 40px;"></label><br>
+                      <label class="partnerAddTextLabel"><strong>Contact Phone:</strong>
+                        <input name="create_contact_phone" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 35px;"></label><br>
+                      <label class="partnerAddTextLabel"><strong>Contact Email:</strong>
+                        <input name="create_contact_email" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 40px;"></label><br>
+
+                    <div class="editable-buttons">
+                        <!-- <div name="createPartnerSpinning" class="editableform-loading" style="display: none;"></div> -->
+                        <button onclick="createPartnerSubmitBtn()" name="submitAddPartnerBtn" class="btnCheckmark btn btn-primary btn-sm editable-submit">
+                          <i class="glyphicon glyphicon-ok"></i>
+                        </button>
+                        <button onclick="discardPartnerFormBtnPressed()" name="cancelAddPartnerBtn" class="btnBackArrow btn btn-default btn-sm editable-cancel">
+                          <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </div>
+                  
+                </div>
+              </form>
+            </div>
+          </span>
+
+    </div>
+</span>
+
+<span name="twoTable" style="display:none;">
+          <table class="table">
+            <thead> 
+                  <th class="col-sm-5">Name</th>
+                  <th class="col-sm-4">Address</th>
+                  <th class="col-sm-3">Contact Person</th>
+            </thead> 
+            <tbody>
+              
+                {{#if part}}
+                  {{#each part.pAssoc}}
+                    <div class="{{_id}}" name="p_{{_id}}">
+                      <tr class="{{_id}}" name="p_{{_id}}">
+                          <td class="col-sm-5" name="p_{{_id}}">
+                              <button name="PisAssoc" style="display:none;" class="btn btn-danger btn-sm isAssoc" id="assoc{{_id}}" onclick="miniSubmit('remove','{{_id}}')" value="{{_id}}">&check;</button>
+                              <button name="PisNotAssoc" style="display:none;" class="btn btn-success btn-sm isNotAssoc" id="nAssoc{{_id}}" onclick="miniSubmit('add','{{_id}}')">&nbsp;&nbsp;&nbsp;</button>{{org_name}}</td>
+                          <td class="col-sm-4" name="p_{{_id}}">{{org_address}}</td>
+                          <td class="col-sm-3" name="p_{{_id}}">{{contact_name}}</td>
+                      </tr>
+                      
+<!--                       <tr class="{{_id}}" name="p_{{_id}}">
+                        <td class="col-sm-4" name="p_{{_id}}">
+                          <button name="PisAssoc" style="display:none;" class="btn btn-danger btn-sm isAssoc" id="assoc{{_id}}" onclick="miniSubmit('remove','{{_id}}')" value="{{_id}}">- Remove from Project</button>
+                          <button name="PisNotAssoc" style="display:none;" class="btn btn-success btn-sm isNotAssoc" id="nAssoc{{_id}}" onclick="miniSubmit('add','{{_id}}')">+ Add to Project</button>
+                        </td>
+                      </tr> -->
+
+<!--                       <tr>
+                        <th class="col-sm-4" name="p_{{_id}}"></th>
+                          <td class="col-sm-7" name="p_{{_id}}">Phone: <a href="tel:{{contact_phone}}">{{contact_phone}}</a></td>
+                      </tr>
+
+                      <tr>
+                        <th class="col-sm-4" name="p_{{_id}}"></th>
+                          <td class="col-sm-7" name="p_{{_id}}">Email: <a href="mailto:{{contact_email}}">{{contact_email}}</a></td>
+                      </tr> -->
+                    </div>
+                  {{/each}}
+                {{/if}}
+
+                {{#if part}}
+                  {{#each part.uAssoc}}
+                    <div class="{{_id}}" name="u_{{_id}}">
+                      <tr class="{{_id}}" name="u_{{_id}}">
+                          <td class="col-sm-5" name="u_{{_id}}">
+                              <button name="UisNotAssoc" style="display:none;" class="btn btn-success btn-sm isNotAssoc" id="nAssoc{{_id}}" onclick="miniSubmit('add','{{_id}}')">&nbsp;&nbsp;&nbsp;</button>
+                              <button name="UisAssoc" style="display:none;" class="btn btn-danger btn-sm isAssoc" id="assoc{{_id}}" onclick="miniSubmit('remove','{{_id}}')" value="{{_id}}">&check;</button>{{org_name}}</td>
+                          <td class="col-sm-4" name="u_{{_id}}">{{org_address}}</td>
+                          <td class="col-sm-3" name="u_{{_id}}">{{contact_name}}</td>
+                      </tr>
+                      
+  <!--                     <tr class="{{_id}}" name="{{_id}}">
+                        <th class="col-sm-4" name="{{_id}}">
+                          <button name="UisNotAssoc" style="display:none;" class="btn btn-success btn-sm isNotAssoc" id="nAssoc{{_id}}" onclick="miniSubmit('add','{{_id}}')">+ Add to Project</button>
+                          <button name="UisAssoc" style="display:none;" class="btn btn-danger btn-sm isAssoc" id="assoc{{_id}}" onclick="miniSubmit('remove','{{_id}}')" value="{{_id}}">- Remove from Project</button>
+                        </th>
+                          <td class="col-sm-7" name="u_{{_id}}">Contact: {{contact_name}}</td>
+                      </tr> -->
+
+<!--                       <tr>
+                        <th class="col-sm-4" name="u_{{_id}}"></th>
+                          <td class="col-sm-7" name="u_{{_id}}">Phone: <a href="tel:{{contact_phone}}">{{contact_phone}}</a></td>
+                      </tr>
+
+                      <tr>
+                        <th class="col-sm-4" name="u_{{_id}}"></th>
+                          <td class="col-sm-7" name="u_{{_id}}">Email: <a href="mailto:{{contact_email}}">{{contact_email}}</a></td>
+                      </tr> -->
+                    </div>
+                  {{/each}}
+                {{/if}}
+
+
+
+            </tbody>
+          </table>
+</span>
+
+
+<span name="threeTable" style="display:none;">
+          <table class="table">
+            <thead> 
+                  <th class="col-sm-4">Organization</th>
+                  <th class="col-sm-7">Information</th>
+            </thead> 
+            <tbody>
+                
+                {{#if part}}
+                  {{#each part.pAll}}
+                    <div class="{{_id}}" name="{{_id}}">
+                      <tr class="{{_id}}" name="{{_id}}">
+                          <th class="col-sm-4" name="{{_id}}">         <!--  RED -->
+                              <a href="#" id="org_name" data-type="text" data-pk="{{_id}}" data-url="/edit/putUpdatePartner/{{_id}}" data-name="org_name" data-title="Organization Name" class="p_editable">{{org_name}}</a>
+                          </th>
+
+                          <td class="col-sm-7" name="{{_id}}"><a href="#" id="org_address" data-type="text" data-pk="{{_id}}" data-url="/edit/putUpdatePartner/{{_id}}" data-name="org_address" data-title="Organization Address" class="p_editable"><strong>{{org_address}}</strong></a>
+                          </td>
+                      </tr>
+                      
+                      <tr class="{{_id}}" name="{{_id}}">
+                        <th class="col-sm-4" name="{{_id}}">
+                          <button name="removeThisPartner" style="display:none;" class="btn btn-danger btn-sm" onclick="removeThisBtn('{{_id}}')">Remove this [make sure it's not in use]</button>
+                        </th>
+                          <td class="col-sm-7" name="{{_id}}">Contact: <a href="#" id="contact_name" data-type="text" data-pk="{{_id}}" data-url="/edit/putUpdatePartner/{{_id}}" data-name="contact_name" data-title="Name" class="p_editable">{{contact_name}}</a>
+                          </td>
+                      </tr>
+
+                      <tr>
+                        <th class="col-sm-4" name="{{_id}}"></th>
+                          <td class="col-sm-7" name="{{_id}}">Phone: <a href="#" id="contact_phone" data-type="text" data-pk="{{_id}}" data-url="/edit/putUpdatePartner/{{_id}}" data-name="contact_phone" data-title="Number" class="p_editable">{{contact_phone}}</a>
+                          </td>
+                      </tr>
+
+                      <tr>
+                        <th class="col-sm-4" name="{{_id}}"></th>
+                          <td class="col-sm-7" name="{{_id}}">Email: <a href="#" id="contact_email" data-type="text" data-pk="{{_id}}" data-url="/edit/putUpdatePartner/{{_id}}" data-name="contact_email" data-title="Contact Email" class="p_editable">{{contact_email}}</a>
+                          </td>
+                      </tr>
+                    </div>
+                  {{/each}}
+                {{/if}}
+
+            </tbody>
+          </table>
+</span>
+         
+                   
+<script src="/javascript/xedit.js" type="text/javascript"></script>
+<script src="/javascript/searchYear.js" type="text/javascript"></script>
+<!-- Make entire table rows clickable! -->
+<script>
+
+ $(document).ready(function() {
+     $('.p_editable').editable();
+ });
+
+     function miniSubmit (action, someID) {
+        // if (action == 'remove') {                  //RIGHT NOW TOGGLES RED-/+GREEN BUTTONS 
+        //     alert("To Remove => " + someID);
+            
+          var assocStr = "assoc" + String(someID);  
+          var nAssocStr = "nAssoc" + String(someID); 
+          
+          var remBtn = document.getElementById(assocStr);
+          var addBtn = document.getElementById(nAssocStr);
+
+            if (remBtn.style.display === "none") {
+                  addBtn.style.display = "none";
+                  // remBtn.style.marginRight = "8px";
+                  remBtn.style.display = "inline";
+            } else if (remBtn.style.display === "inline") {
+                  addBtn.style.display = "inline";
+                  // addBtn.style.marginRight = "8px";
+                  remBtn.style.display = "none";
+            } else if (addBtn.style.display === "none") {
+                  addBtn.style.display = "none";
+                  // remBtn.style.marginRight = "8px";
+                  remBtn.style.display = "inline";
+            } else if (addBtn.style.display === "inline") {
+                  addBtn.style.display = "inline";
+                  remBtn.style.display = "none";
+                  // addBtn.style.marginRight = "8px";
+            }
+
+          //Since Toggle change was made, we can now RE-ENABLE Confirm Changes Btn
+          document.getElementsByClassName("assocSave")[0].disabled = false;
+
+    }
+
+    function editPartnerBtnPressed(inAction) {
+        // alert("Edit buttons to show: " + inAction);
+
+        if (inAction == 'remove') {
+              // alert('Remove pressed');
+              var createBtn = document.getElementsByName("createPartner");
+                  createBtn[0].disabled = true
+                  createBtn[0].className = "btn btn-light";
+
+              var mainBtn = document.getElementsByName("removePartner");
+                  mainBtn[0].disabled = true;
+                  mainBtn[0].className = "btn btn-light";
+              
+              var returnBackBtn = document.getElementsByName("returnBack");
+                  returnBackBtn[0].innerText = "Done";
+
+              var eachBtn = document.getElementsByName("removeThisPartner"); 
+
+              for (var i = 0; i < eachBtn.length; i++) {
+                  eachBtn[i].style.display = "block";       //Show Remove buttons for all
+              }  
+        } 
+        // else if (inAction == 'assign'){      // Not in use    
+        //       // alert('Assign Mode Entered');
+        //       
+
+        // } else if (inAction == 'unAssign') {
+        //       // Not in use
+        // }
+
+        else { 
+            alert("Error: Please refresh the page (" + inAction + ")");
+        }
+
+    }
+
+    function addAssocPartnersBtn() {                                                  //First BUTTON
+        //Toggle Partner DB and Other Span View 
+
+        
+        
+        var firstModifyBtn = document.getElementsByName("accessAssocPartners");
+        var firstSpan      = document.getElementsByName("currentPartnersViewSpan");
+        var secondSpan     = document.getElementsByName("addAssocPartners");
+        var twoTable  = document.getElementsByName("twoTable");
+
+        
+        if (firstSpan[0].style.display === "none") {      //Show First Span
+            secondSpan[0].style.display = "none";
+            firstSpan[0].style.display = "block";
+            firstModifyBtn[0].style.marginBottom = "1rem";
+            twoTable[0].style.display = "none";   
+
+
+        } else {
+            firstSpan[0].style.display = "none";          // Show second (hide first)
+            firstModifyBtn[0].style.marginBottom = "0rem";
+            secondSpan[0].style.display = "block";
+            twoTable[0].style.display = "block";
+        }
+    }
+
+
+    function assocSaveBtn(inSubmit) {                                               //Second BUTTON(S)
+        if (inSubmit === 'submit') {   //Assign selected - Submit POST
+            
+          // var allCnt = document.querySelectorAll('.PisAssoc, .UisAssoc');
+          var selected = [];
+          var assocCnt = document.getElementsByClassName('isAssoc');
+
+
+          for (var i = 0; i < assocCnt.length; i++) {
+              if (assocCnt[i].style.display === "inline") {
+                  selected.push(String(assocCnt[i].value));
+              }
+          }
+
+          console.log("Submitting: Assigning " +  selected.length + " partners.");
+      
+          assignSelectedBtn(selected);
+
+
+
+        } else if (inSubmit === 'edit') {        //We are in edit mode -- ENABLE add/remove buttons
+            document.getElementsByName("goToNewDbBtn")[0].disabled = true;    
+            document.getElementsByClassName("assocCancel")[0].style.display = "inline";
+            document.getElementsByClassName("notInListLabel")[0].style.color = " #737373";  
+
+            document.getElementsByClassName("assocEdit")[0].style.display = "none";   //Hide current pressed Button
+            document.getElementsByClassName("assocSave")[0].style.display = "inline";  //Show button to confirm edit
+
+            document.getElementsByClassName("assocSave")[0].disabled = true;   //Hide it's own button until changes are made
+            //hide itself !
+
+            var eachP = document.getElementsByName("PisAssoc");
+            var eachNotU = document.getElementsByName("UisNotAssoc");
+
+            for (var c1 = 0; c1 < eachP.length; c1++) {              //Show assoc buttons
+              eachP[c1].style.display = "inline";
+            }
+
+            for (var c2 = 0; c2 < eachNotU.length; c2++) {        //Show unassoc buttons
+              eachNotU[c2].style.display = "inline";
+            }
+
+        } else if (inSubmit === 'goToSpanThree') {        //Show Global List (Span #3)
+            var secondSpan = document.getElementsByName("addAssocPartners");
+            var thirdSpan  = document.getElementsByName("addNEWtoDB");
+
+            var twoTable  = document.getElementsByName("twoTable");
+            var threeTable  = document.getElementsByName("threeTable");
+
+            secondSpan[0].style.display = "none";
+            twoTable[0].style.display = "none";
+            thirdSpan[0].style.display = "block";
+            threeTable[0].style.display = "block";
+        } 
+
+        else {                                          //Cancel Button - will not submit anything
+            window.location.reload(true);
+        }
+    }
+
+    function createPartnerBtnPressed() {                                                //Third BUTTON
+        var buttonTable = document.getElementsByName("buttonTable");
+        var newPartnerLabel = document.getElementsByName("newPartnerLabel");
+        var formSpan = document.getElementsByName("formSpan");
+
+        buttonTable[0].style.display = "none";
+        newPartnerLabel[0].style.display = "block";
+        formSpan[0].style.display = "block";
+    }
+
+    function discardPartnerFormBtnPressed() {
+        var buttonTable = document.getElementsByName("buttonTable");
+        var newPartnerLabel = document.getElementsByName("newPartnerLabel");
+        var formSpan = document.getElementsByName("formSpan");
+
+        buttonTable[0].style.display = "block";
+        newPartnerLabel[0].style.display = "none";
+        formSpan[0].style.display = "none";
+    }
+
+    function createPartnerSubmitBtn() {
+
+        var sendData =  {
+                  org_name:      document.getElementsByName("create_org_name")[0].value,
+                  org_address:   document.getElementsByName("create_org_address")[0].value,
+                  contact_name:  document.getElementsByName("create_contact_name")[0].value,
+                  contact_phone: document.getElementsByName("create_contact_phone")[0].value,
+                  contact_email: document.getElementsByName("create_contact_email")[0].value,
+        };
+
+        xhr(sendData, 'POST', '/partners/createPartner', function(err) {
+            if (err) {
+            	console.log(err);
+            }
+            else {
+                window.location.reload(true);
+            }
+        });
+    }
+
+    function getAllAssociations(remId) {
+        var sendData = {_id: remId};
+        xhr(sendData, 'POST', '/partners/deletePartner', function(err) {
+            if (err) {
+                alert('Value did not save, please reload the page');
+            }
+            else {
+                while (document.getElementsByName(remId).length !== 0) {
+                   document.getElementsByName(remId)[0].remove();
+                }
+            }
+        })
+    }
+
+    function assignSelectedBtn(inObject) {
+        var docuId = document.getElementsByName("partAppId")[0].value;
+        var sendData = {  assocArray: inObject,
+                          projectId: docuId
+                       };
+        xhr(sendData, 'POST', '/partners/createPartnerAssoc', function(err) {
+            if (err) {
+                alert('Value did not save, please reload the page');
+                window.location.reload(true);
+            }
+            else {
+              window.location.reload(true);
+                // while (document.getElementsByName(remId).length !== 0) {
+                //    document.getElementsByName(remId)[0].remove();
+                // }
+            }
+        })
+    }
+
+    function removeThisBtn(remId) {
+        var sendData = {_id: remId};
+        xhr(sendData, 'POST', '/partners/deletePartner', function(err) {
+            if (err) {
+                alert('Value did not save, please reload the page');
+            }
+            else {
+                while (document.getElementsByName(remId).length !== 0) {
+                   document.getElementsByName(remId)[0].remove();
+                }
+            }
+        })
+    }
+
+    function xhr(data, method, url, next) {
+      //post to database
+      var posting = $.ajax({
+        type : method,
+        url : url,
+        dataType : 'json',
+        contentType : 'application/json; charset=UTF-8',
+        data : JSON.stringify(data)
+      });
+
+      // alert('xhr function called...');
+
+      //check for error
+      posting.done(function (xhr) {
+       //alert("Posted!");
+        if(xhr.status === 'success' || xhr.status === 200 || xhr.status ==='200') {
+          next(null, xhr)
+        } else {
+          next(new Error('Could not complete xhr'))
+        }
+      });
+
+      posting.fail(function (res) {
+      //alert("Posting Failed!");
+        next(new Error('Could not complete xhr'))
+      });
+    }
+
+
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
+
+<style type="text/css">
+  .bg-pink {
+    background-color: #ff72b3;
+  }
+  .dataRow {
+    background-color: #ff72b3 !important;
+  }
+
+  .notInListLabel {
+    margin-left:50px;
+    font-weight: 600;
+  }
+  .assocSave {
+    margin-left: 1rem;
+  }
+
+  .assocEdit {
+    margin-left: 1rem;
+  }
+
+  .accessAssocPartners {
+    margin-left: 1rem;
+    margin-bottom:1rem;
+  }
+
+  .partnerAddTextLabel {
+    margin-left: 30px;
+  }
+
+  .btnCheckmark {
+    margin-left: 180px;
+    margin-bottom: 1rem;
+  }
+
+  .btnBackArrow {
+    margin-bottom: 1rem;
+  }
+
+  table[name=buttonTable] {
+    margin-bottom:20px;
+  }
+  
+  .h3underline {
+    margin-bottom:20px;
+    padding-left:20px;
+  }
+
+  .returnBackBtn {
+    margin-left: 6rem;
+  }
+
+  button.btn-sm {
+    margin-right: 4px;
+  }
+
+  button.btn.btn-primary.btn-sm.editable-submit {
+    width: 35px;
+    height: 35px;
+  }
+
+  button.btn.btn-primary.btn-sm.editable-submit:after {
+    content:  "\2713 ";
+    font-size: 24px;
+  }
+
+  button.btn.btn-default.btn-sm.editable-cancel {
+    width: 35px;
+    height: 35px;
+  }
+  button.btn.btn-default.btn-sm.editable-cancel:after {
+    content:  "\2190 ";
+    font-size: 24px;
+  }
+  
+</style>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <nav class="navbar navbar-default fixed ctlst-navbar">
     <div class="container-fluid">
         <ul class="ctlst-buttons">
@@ -19,6 +20,11 @@
 
 
 <br>
+=======
+<a href="/view" class="btn btn-primary">Back to Vetting Home</a>
+<a href="/vettingworksheet/{{doc._id}}" class="btn btn-primary">Vetting Worksheet</a>
+<!-- <a id="csvExportButton" class="btn btn-primary">Export to CSV</a> -->
+>>>>>>> develop
 
 <div class="container-fluid body-view">
     
@@ -846,6 +852,7 @@
         $('[id="notes.vet_summary"]').editable()
     });
 
+<<<<<<< HEAD
     $('#csvExportButton').on('click', function (e) {
         var urlParts = window.location.pathname.split('/')
         var applicationID = urlParts[urlParts.length - 1]
@@ -879,3 +886,38 @@
         })
     })
 </script>
+=======
+ //    $('#csvExportButton').on('click', function(e) {
+	// var urlParts = window.location.pathname.split('/')
+ //    var applicationID = urlParts[urlParts.length-1]
+	// var firstname = '{{{doc.application.name.first}}}';
+	// var lastname = '{{{doc.application.name.last}}}';
+ //    var payload = {
+ //      	application: applicationID,
+	// 	firstname: firstname,
+	// 	lastname: lastname
+ //    }
+ //    var csvRequest = $.ajax({
+ //      	type: 'POST',
+ //        url: '/view/csvExport',
+ //        dataType: 'json',
+ //        contentType: 'application/json; chartset=UTF-8',
+ //        data: JSON.stringify(payload)
+ //      })
+ //      csvRequest.done(function(xhr) {
+ //        if (xhr.status === 'success') {
+ //          // TODO: Set window.location.href equal to the download file
+
+	// 	window.location.href = '/view/file/' + '{{{doc.application.name.last}}}' + '-' + '{{{doc.application.name.first}}}' + '-' + applicationID + '.csv'
+
+ //        } else {
+	// 		console.log(xhr.status);
+ //        }
+ //      })
+ //      csvRequest.fail(function(data) {
+	// 	console.log(data.status)
+ //        debugger
+ //      })
+ //    })
+</script>
+>>>>>>> develop

@@ -3,11 +3,12 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
 <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script src="/javascript/xedit.js" type="text/javascript"></script>
 <script src="/javascript/addNote.js" type="text/javascript"></script>
 <script src="/javascript/setFlags.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
 
 <div class="row">
   <div class="col-xs-12">
@@ -169,11 +170,21 @@
         </a>
       </dd>
 
-      <dt class="col-xs-4">Role</dt>
+      <dt class="col-xs-4">Roles</dt>
       <dd class="col-xs-8">
-        <a href="#" id="user_role" data-type="select"
-        data-pk="{{ user._id }}"
-        data-url="/user/editUser" data-title="User role">
+        <select class="selectpicker showtick" id="user_roles" title="{{user.user_roles}}" multiple>
+          <option value="VET">Vetting Agent</option>
+          <option value="SITE">Site Assement</option>
+          <option value="PROJECT_MANAGEMENT">Project Management</option>
+          <option value="ADMIN">Admin</option>          
+        </select>
+      </dd>
+
+      <dt class="col-xs-4">Assign Tasks</dt>
+      <dd class="col-xs-8">
+        <a href="#" id="assign_tasks" data-type="select"
+           data-pk="{{ user._id }}"
+           data-url="/user/editUser" data-title="Assign Tasks">
         </a>
       </dd>
 
@@ -256,6 +267,7 @@
     'user_documents.waiver_signed',
     'user_documents.background_check',
     'user_documents.ID_badge',
+    'assign_tasks'
   ]
 
   function changePassword(e) {
@@ -298,11 +310,83 @@
       ]
     })
 
-    $("#user_role").editable({
-      value: "{{ user.user_role }}",
+$('#user_roles').selectpicker();
+
+
+$('#user_roles option').each(function(f) {
+  var roles = '{{user.user_roles}}';
+ 
+  if(roles.includes($(this).val()))
+  {
+    $(this).attr('selected', 'selected');
+    
+  }
+//$('#user_roles').val(roles);
+  $('#user_roles').selectpicker('refresh');
+  
+})
+
+$('#user_roles').on('change', function(e)
+{
+  var vals = [];
+  var $sel = $(this).find('option:selected');
+  console.log($sel);
+    for(var i=0; i < $sel.length; i++) {
+      vals[i]= $sel.eq(i).val();
+  }
+    
+  console.log(vals);
+ $.post('/user/editUserRoles/', {
+      Id: '{{ user._id }}',
+	  user_roles: JSON.stringify(vals)
+    }).done(function() {
+      // alert( "Done" );
+    }).fail(function() {
+      alert( "Error, did not save - please try again." );
+      window.location.reload(true); 
+    }) 
+});
+
+
+
+$('.bootstrap-select').click(function(e)
+{
+  $(this).addClass('open');
+  //console.log('hit');
+  // e.stopPropagation();
+});
+
+$('body').click(function(e) {
+   if(e.target.id != 'user_roles') {
+        if ( $('#user_roles').hasClass('open') ) {
+          $('#user_roles').removeClass('open');
+        }        
+        if ( $('#user_roles').is('open') ) $('#user_roles').removeClass('open');
+        if ( $('#user_roles').is('.open') ) $('#user_roles').removeClass('open');
+   }
+});
+
+
+    /* $("#user_roles").editable({
+      type: 'select2',
+      select2: {
+        multiple: true,
+        placeholder: 'No Roles'
+      },      
+      source: [      
+        { id: 'VET', text: 'Vetting Agent'},
+        { id: 'SITE', text: 'Site Agent'},
+         { id: 'PROJECT_MANAGEMENT', text: 'Project Manager'},
+         { id: 'ADMIN', text: 'Admin'}
+      ]
+      
+    }) */
+
+    $('#assign_tasks').editable({
+      value: {{ user.assign_tasks }},
       source: [
-        { value: 'VET', text: 'Vetting Agent'},
-        { value: 'SITE', text: 'Site Agent'},
+        { value: false, text: 'False'},
+        { value: true, text: 'True' }
       ]
     })
 

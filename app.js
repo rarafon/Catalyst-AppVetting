@@ -15,9 +15,12 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var morgan = require('morgan');
 var session = require('express-session');
+var ProjectPlanPackage = require('./models/projectPlanPackage.js');
+
 var app = express();
+
 //configure passport
-app.use(session({ secret: 'hidethissomewhere'}));
+app.use(session({ secret: 'hidethissomewhere', resave: true, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -32,10 +35,16 @@ var routes = require('./routes/index')(passport);
 var test = require('./routes/test');
 var view = require('./routes/view')(passport);
 var edit = require('./routes/edit')(passport);
+var tasks = require('./routes/tasks.js')(passport);
+var leadtime = require('./routes/leadtime.js')(passport);
 var appform = require('./routes/appform')(passport);
 var vettingworksheet = require('./routes/vettingworksheet')(passport);
 var regUser = require('./routes/regUser')(passport);
 var site = require('./routes/site')(passport);
+var planning = require('./routes/planning')(passport);
+var projectsummary = require('./routes/projectsummary')(passport);
+var partners = require('./routes/partners')(passport);
+var projectview = require('./routes/projectview')(passport);
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,6 +63,8 @@ app.set('views', path.join(__dirname, 'views'));
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 app.set('view options', { layout: 'layout' });
+
+// hbs.registerPartial('partnerTab', path.join(__dirname,'views/partners.hbs'));
 
 hbs.registerHelper("debug", function(optionalValue) {
     console.log("Current Context");
@@ -92,6 +103,17 @@ hbs.registerHelper('if_not_eq', function(a, b, opts) {
     }
 });
 
+
+hbs.registerHelper('if_in', function(list, elm, opts) {
+  if(list === undefined)
+    return opts.inverse(this);  
+  if (list.indexOf(elm) > -1) {
+      return opts.fn(this);
+  } else {
+    return opts.inverse(this);
+  }
+})
+
 hbs.registerHelper('googleMapAddr', function(addr) {
   var addrText = ''
   addrText += addr.line_1 + ','
@@ -102,6 +124,14 @@ hbs.registerHelper('googleMapAddr', function(addr) {
 
   return addrText.replace(' ', '+')
 })
+
+hbs.registerHelper('escape', function(variable) {
+  if (variable) {
+
+    return new hbs.handlebars.SafeString(variable.toString().replace(/(['"\n\r])/g, '\\$1'));
+  } else return '';
+  
+});
 
 hbs.registerHelper('assetsValueAndName', function(assets) {
   var returnText = ''
@@ -147,6 +177,121 @@ hbs.registerHelper('otherResidents', function(residentsObject) {
   }
 })
 
+hbs.registerHelper('select', function(values) {
+  console.log('here');
+  console.log(values);
+  var $el = $('select');
+  console.log($el);
+  var i = 0;
+  for(i; i<values.length; i++)
+  {
+    $el.find('[value="' + values[i] + '"]').attr({'selected': 'selected'});
+  }
+  return $el.html();
+})
+
+hbs.registerHelper('getCompletedDate', function (item, name) {
+  return item.getCompletedDate(name);
+})
+
+hbs.registerHelper('getAppNameForPlan', function(apps, appid) {
+  return apps[appid].app_name
+});
+hbs.registerHelper('getPlanLeadTime', function(plan) {
+  return 'todo: put lead time here'
+});
+hbs.registerHelper('getApplicationStartTime', function (apps, appid) {
+  if (apps[appid].project && apps[appid].project.project_start) {
+    return new Date(apps[appid].project.project_start).toLocaleDateString();
+  } else {
+    return 'Not set'
+  }
+});
+
+hbs.registerHelper('getApplicationDueDate', function (apps, appid, ldTime) {
+  console.log("Handlebars Helper: getApplicationDueDate called");
+  console.log(ldTime);
+  if (apps[appid].project && apps[appid].project.project_start) {
+      var myNewDate = new Date(apps[appid].project.project_start);
+      
+      myNewDate.setDate(myNewDate.getDate() - parseInt(20));
+
+      return myNewDate.toLocaleDateString();
+  } else {
+      return 'Not set'
+  }
+});
+
+hbs.registerHelper('dateToLocaleDate', function (date) {
+  console.log('dateToLocaleDate', arguments);
+  
+  if (date === "Not set") {
+    return 'Not set'
+  } else {
+      var d = new Date(date)
+      var month = (d.getMonth() + 1).toString();
+      if (month.length !== 2) {
+        month = '0' + month;
+      }
+      var day = d.getDate().toString()
+      if (day.length !== 2) {
+        day = '0' + day;
+      }
+      return d.getFullYear() + '-' + month + '-' + day
+  }
+
+});
+hbs.registerHelper('getPlanTaskAssignments', function(plan, userId, apps, appid) {
+  var assigned = ProjectPlanPackage.getOnlyAssigned(plan, userId);
+  var labels = [];
+  for (var i = 0; i < assigned.length; i++) {
+    if (!assigned[i].complete) {
+      console.log("apple");
+      console.log(assigned[i]);
+      labels.push(assigned[i].label);
+    }
+  }
+  return new hbs.handlebars.SafeString(labels.join("<br/>"))
+});
+
+
+hbs.registerHelper('getPlanTop3Tasks', function(plan, apps, appid, assignableUsers) {  
+  var open = ProjectPlanPackage.getTopXOpen(plan, 3);
+  var labels = [];
+  for (var i = 0; i < open.length; i++) {
+    if (!open[i].complete) {    
+      var user;
+      var userName = "";
+      if(open[i].owner !== null)
+      {
+      
+        user =  assignableUsers.find(function(x){
+        
+          return x._id.toString() === open[i].owner.toString();});
+        
+          userName = user.contact_info.user_name.user_first + " " + user.contact_info.user_name.user_last;
+      
+          labels.push(open[i].label + " - " + userName); 
+      }  
+      else{
+        labels.push(open[i].label); 
+      }    
+    
+    }
+  }
+  return new hbs.handlebars.SafeString(labels.join("<br/>"))
+});
+
+hbs.registerHelper('getPreferredName', function(apps, appid) {
+  if (apps[appid] && apps[appid].application && apps[appid].application.name) {
+    return (apps[appid].application.name.preferred || apps[appid].application.name.first) +
+           ' ' + apps[appid].application.name.last
+  } else {
+    return '';
+  }
+});
+
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Middleware
 // Use any middleware for the application that is needed. bodyParse allows parsing to
@@ -189,10 +334,17 @@ app.use('/view', view);
 app.use('/edit', edit);
 app.use('/application', appform);
 app.use('/vettingworksheet', vettingworksheet);
+
 app.use('/user', regUser);
 
 app.use('/site', site);
+app.use('/pm', planning);
 
+app.use('/projectsummary', projectsummary);
+app.use('/partners', partners);
+app.use('/projectview', projectview);
+app.use('/tasks/', tasks);
+app.use('/leadtime', leadtime);
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Server Side Libraries
 // Links to jQuery and Boots strap files

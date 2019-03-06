@@ -195,8 +195,23 @@ var DocumentPackageSchema = new Schema({
 	// Note: upon application submission, the Yes checkbox (name="tac-yes") and the digital signature (name="signature") at the bottom of the form are not captured anywhere.
 	//Note above is done, along with timestamp
     project:    {
-        // TODO: Complete after application, status, vetting notes, etc -- THIS IS LAST
+        status: String,
+        crew_chief: String,
+        project_advocate: String,
+        site_host: String,
+        project_start: Date,
+        project_end: Date,
+        actual_volunteer_count: String,
+        actual_labor_count: String
+    },
+
+    // Store external links to documents (and client photos in the future).
+    drive:      {
+        photos: String,
+        drive_url: String
     }
+
+
 });
 
 var DocumentPackage = mongoose.model('DocumentPackage', DocumentPackageSchema);
