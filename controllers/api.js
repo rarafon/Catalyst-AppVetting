@@ -2584,19 +2584,23 @@ getDocumentPlanning: function (req, res, next) {
     console.log(req.body);
 
     var n = req.body.name || "custom";
-
+    var upName = n + ".note";
     var updates = {};
-    updates[n] = {"note": req.body.value};
+    //updates[n] = {"note": req.body.value};
+    //var q = {};
+    updates[upName] = req.body.value;
+    //const key = `${n}.newProp`;
     //updates[n].note = req.body.value;
+    //console.log(updates);
 
-    console.log(updates);
+    console.log("Saving Custom Checklist: ", upName, "value: ", req.body.value);
     //var applId = req.body.applicationId || 
     //req.body.applicationId = 
 
     Promise.props({
       plan: ProjectPlanPackage.findOneAndUpdate(
         { applicationId: req.params.id },
-        { $set: { "custom.note": req.body.value} },
+        { $set: updates },
         { new: true,
           upsert: true,
           runValidators: false,

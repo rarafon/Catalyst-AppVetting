@@ -749,9 +749,9 @@ function getCurrentDate() {
         </tr>
 
 
-        <tr>
+        <tr class="customRow">
           <th class="col-xs-12 col-sm-6">
-            <a href="#" id="custom" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom" data-title="custom">{{plan.custom.note}}</a>
+            <a href="#" id="custom" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom" data-title="custom">{{plan.custom.note}}</a>
           </th>
           <td class="col-xs-6 col-sm-2">
             <label data-toggle="tooltip"
@@ -768,11 +768,161 @@ function getCurrentDate() {
           </td>
         </tr>
 
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom1" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom1" data-title="custom1">{{plan.custom1.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom1' }}">
+              <input type="checkbox" name="custom1" value=""
+                     {{#if plan.custom1.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom1"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom2" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom2" data-title="custom2">{{plan.custom2.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom2' }}">
+              <input type="checkbox" name="custom2" value=""
+                     {{#if plan.custom2.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom2"></select>
+          </td>
+        </tr>
+        
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom3" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom3" data-title="custom3">{{plan.custom3.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom3' }}">
+              <input type="checkbox" name="custom3" value=""
+                     {{#if plan.custom3.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom3"></select>
+          </td>
+        </tr>
 
 
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom4" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom4" data-title="custom4">{{plan.custom4.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom4' }}">
+              <input type="checkbox" name="custom4" value=""
+                     {{#if plan.custom4.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom4"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom5" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom5" data-title="custom5">{{plan.custom5.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom5' }}">
+              <input type="checkbox" name="custom5" value=""
+                     {{#if plan.custom5.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom5"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom6" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom6" data-title="custom6">{{plan.custom6.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom6' }}">
+              <input type="checkbox" name="custom6" value=""
+                     {{#if plan.custom6.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom6"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom7" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom7" data-title="custom7">{{plan.custom7.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom7' }}">
+              <input type="checkbox" name="custom7" value=""
+                     {{#if plan.custom7.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom7"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom8" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom8" data-title="custom8">{{plan.custom8.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom8' }}">
+              <input type="checkbox" name="custom8" value=""
+                     {{#if plan.custom8.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom8"></select>
+          </td>
+        </tr>
 
       </table>
-        
+      <button class="btn btn-info" id="customBtn" onclick="customBtn()" style="margin-left: 3%;" disabled='true'>Add custom task</button>
       </div><!-- end #planning -->
 
 <!-- start #leaders -->
@@ -1294,7 +1444,7 @@ $(function(){
      
      $('#drive_url').editable();
 
-     $('#custom').editable();
+     $('.customEdit').editable();
 
      $('#crew_chief').editable();
      $('#project_advocate').editable();
@@ -1321,6 +1471,7 @@ $(function(){
          {value: 'projDeclined', text: 'Declined'}
        ]
      });
+        hideEmptyCustom();
 
      // Enable tooltips.
      $('[data-toggle="tooltip"]').tooltip();
@@ -1337,7 +1488,46 @@ $(function(){
        populateOwners($(this), plan, updatePlan);
      });
 
+     if($('.customRow').children('a.filled-text').length > 0) {
+        console.log("Found");
+     }
+
+    
+
    });
+
+function hideEmptyCustom() {
+    var custR = document.getElementsByClassName("customRow");
+    //var custE = custR.getElementsByClassName("customEdit");
+    
+    var cnt = 0;
+
+    for (var i = 0; i < custR.length; i++) {
+      if (custR[i].getElementsByClassName("customEdit")[0].outerText == "" || custR[i].getElementsByClassName("customEdit")[0].outerText == "Empty") {
+          custR[i].style.display = 'none';
+          document.getElementById("customBtn").disabled = '';
+      } 
+    }
+}
+
+function customBtn() {
+    var custR = document.getElementsByClassName("customRow");
+    //var custE = custR.getElementsByClassName("customEdit");
+    
+    for (var i = 0; i < custR.length; i++) {
+        if (custR[i].getElementsByClassName("customEdit")[0].outerText == "" || custR[i].getElementsByClassName("customEdit")[0].outerText == "Empty") {
+            //alert("a");
+            custR[i].style.display = 'block';
+
+            if (i == custR.length-1) {
+                //alert("b");
+                document.getElementById("customBtn").disabled = 'true';
+            }
+            //alert("c");
+            return;
+        }
+    }
+}
 
  function populateOwners($select, checklist, onChange) {
    var taskName = $select.data('owner-of');
@@ -1887,10 +2077,20 @@ $(function(){
 
      if (! plan[name]) {
         plan[name] = {};
-        plan[name].complete = null;
-        plan[name].completed_on = null;
-        plan[name].note = null;
+       // plan[name].complete = null;
+       // plan[name].completed_on = null;
+       // plan[name].note = null;
      }
+
+     if (name.startsWith("custom")) {
+
+        var n = document.getElementById(name);
+        console.log("Rohin");
+        console.log(n);
+
+        plan[name].note = n.outerText;
+     }
+
 
      plan[name].complete = $this.prop('checked');
      if (plan[name].complete && !plan[name].completed_on) {
@@ -1909,6 +2109,10 @@ $(function(){
    if (typeof plan.__v !== 'undefined') {
      delete plan.__v;
    }
+
+   //if (plan[name].note == null) {
+     //alert("its null");
+   //}
    console.log('sending post to save: ', plan);
 
    // Save the new record to the database.
