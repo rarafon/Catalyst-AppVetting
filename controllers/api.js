@@ -430,7 +430,9 @@ getDocumentPlanning: function (req, res, next) {
             projectUpcoming: DocumentPackage.find({status: "projectUpcoming"}).lean().execAsync(),
             projectInProgress: DocumentPackage.find({status: "projectInProgress"}).lean().execAsync(),
             projectGoBacks: DocumentPackage.find({status: "projectGoBacks"}).lean().execAsync(),
-            projectCompleted: DocumentPackage.find({status: "projectCompleted"}).lean().execAsync()
+            projectCompleted: DocumentPackage.find({status: "projectCompleted"}).lean().execAsync(),
+
+            waitlist: DocumentPackage.find({ status: "waitlist" }).lean().execAsync()
         })
             .then(function (results) {
                 if (!results) {

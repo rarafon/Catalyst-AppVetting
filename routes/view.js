@@ -329,7 +329,18 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
 			element = formatElement(element);
 			payload.unapproved.push(element);
 		});
-	}
+    }
+    //Put waitlist status in a separate waitlist bucket
+    payload.waitlist = [];
+    
+	if (res.locals.results.waitlist[0] == null) {
+		console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'waitlist\'');
+	} else {
+		res.locals.results.waitlist.forEach(function (element) {
+			element = formatElement(element);
+			payload.waitlist.push(element);
+		});
+    }
 
     //add all other existing statuses to processing array
     payload.processing = [];
@@ -612,6 +623,9 @@ function formatStatus(element) {
             break;
         case 'project':
             status ='Approved Project';
+            break;
+        case 'waitlist':
+            status ='Waitlist';
             break;
         default:
             status = element.status;
