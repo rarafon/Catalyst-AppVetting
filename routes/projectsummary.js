@@ -260,15 +260,21 @@ router.post('/csvExport', isLoggedInPost, function(req, res){
 	console.log("** MONGOEXPORT CALLED FROM projectsummary.js **");
 });
 
-router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
+router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, function(req, res, next) {
 
     var payload = {};
+    payload.part = res.locals.results.part||req.partnerTime;	
+
+    console.log("RR0", payload.part);
+    //console.log(payload.part);
+   // console.log("RR1" + payload.part.pAssoc["5bf483e823ffa1cde60da1cb"]);
 
 
 	if (res.locals.results.handle[0] == null) {
         console.log('[ API ] getProjectsByStatus: Unable to find Document Packages with status: \'handle\'');
     } else {
         res.locals.results.handle.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 element.parts = payload.part.pAssoc[element._id].join("; ");             }
             element = formatElement(element);
 		});
     }
@@ -279,6 +285,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: Unable to find Document Packages with status: \'project\'');
     } else {
         res.locals.results.project.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                            if (payload.part.pAssoc[element._id]) {                 element.parts = payload.part.pAssoc[element._id].join("; ");             }             }
             element = formatElement(element);
 		});
     }
@@ -304,6 +311,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
     } else {
     	//console.log('[ API ] getProjectsByStatus: [' + res.locals.results.handleToBeAssigned.length + '] whose current status: \'handleToBeAssigned\'')
         res.locals.results.handleToBeAssigned.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.handleToBeAssigned.push(element);
         });
@@ -314,6 +324,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
     } else {
     	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.handle.length + '] whose current status: \'handle\'')
         res.locals.results.handle.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatDate(element);
             payload.handle.push(element);
         });
@@ -324,6 +337,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
     } else {
     	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.project.length + '] whose current status: \'project\'')
         res.locals.results.project.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatDate(element);
             payload.project.push(element);
         });
@@ -335,6 +351,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
     } else {
     	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.completed.length + '] whose current status: \'completed (both handle-its and projects)\'')
         res.locals.results.completed.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.completed.push(element);
         });
@@ -345,6 +364,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
     } else {
     	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.handleAssigned.length + '] No Project Packages whose current status: \'handleAssigned\'');
         res.locals.results.handleAssigned.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.handleAssigned.push(element);
         });
@@ -354,6 +376,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'handleCompleted\'');
     } else {
         res.locals.results.handleCompleted.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.handleCompleted.push(element);
         });
@@ -363,6 +388,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectUpcoming\'');
     } else {
         res.locals.results.projectUpcoming.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.projectUpcoming.push(element);
         });
@@ -372,6 +400,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectInProgress\'');
     } else {
         res.locals.results.projectInProgress.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.projectInProgress.push(element);
         });
@@ -381,6 +412,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectGoBacks\'');
     } else {
         res.locals.results.projectGoBacks.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.projectGoBacks.push(element);
         });
@@ -390,6 +424,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectCompleted\'');
     } else {
         res.locals.results.projectCompleted.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.projectCompleted.push(element);
         });
@@ -399,6 +436,9 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, function(req, res, next) {
         console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'nostatus\'');
     } else {
         res.locals.results.nostatus.forEach(function (element) {
+                       if (payload.part.pAssoc[element._id]) {                 
+                           element.parts = payload.part.pAssoc[element._id].join("; ");             
+                        }
             element = formatElement(element);
             payload.nostatus.push(element);
         });

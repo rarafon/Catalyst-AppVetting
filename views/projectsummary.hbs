@@ -40,15 +40,16 @@
                         <table class="table table-sm table-bordered table-hover orderTable0" id="project_table">
                             <thead>
                             <tr>
-                                <th onclick="orderTable('orderTable0', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable0', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable0', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable0', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th onclick="orderTable('orderTable0', 2)" class="col-md-2">Appl. Status</th>
-                <th onclick="orderTable('orderTable0', 3)" class="col-md-2">CC</th>
+                                <th onclick="orderTable('orderTable0', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+                <th onclick="orderTable('orderTable0', 3)" class="col-md-1">CC</th>
                 <th onclick="orderTable('orderTable0', 4)" class="col-md-1">PA</th>
                 <th onclick="orderTable('orderTable0', 5)" class="col-md-1">SH</th>
-                <th onclick="orderTable('orderTable0', 6)" class="col-md-2">Start Date</th>
-               <!--  <th class="col-md-1">#</th>  -->             
+                <th onclick="orderTable('orderTable0', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                <th onclick="orderTable('orderTable0', 7)" class="col-md-2 cell-overflow">Partners</th>
+                <!--  <th class="col-md-1">#</th>  -->             
                             </tr>
                             </thead>
                             <tbody>
@@ -58,11 +59,12 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
-                  <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
-                   <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
-               <!--    <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
+                <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
+                <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
+                <!--    <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
                                 </tr>
                             {{/each}}                            </tbody>
                         </table>
@@ -87,14 +89,15 @@
                         <table class="table table-sm table-bordered table-hover orderTable1">
                             <thead>
                                     <tr>
-                                <th onclick="orderTable('orderTable1', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable1', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable1', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable1', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th onclick="orderTable('orderTable1', 2)" class="col-md-2">Appl. Status</th>
-                <th onclick="orderTable('orderTable1', 3)" class="col-md-2">CC</th>
+                                <th onclick="orderTable('orderTable1', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+                <th onclick="orderTable('orderTable1', 3)" class="col-md-1">CC</th>
                 <th onclick="orderTable('orderTable1', 4)" class="col-md-1">PA</th>
                 <th onclick="orderTable('orderTable1', 5)" class="col-md-1">SH</th>
-                <th onclick="orderTable('orderTable1', 6)" class="col-md-2">Start Date</th>
+                <th onclick="orderTable('orderTable1', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                <th onclick="orderTable('orderTable0', 7)" class="col-md-2 cell-overflow">Partners</th>
                 <!-- <th class="col-md-1">#</th>  -->            
                      </tr>
                             </thead>
@@ -105,10 +108,11 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                   <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
                             {{/each}}
@@ -181,14 +185,15 @@
                         <table class="table table-sm table-bordered table-hover orderTable2">
                             <thead>
                                       <tr>
-                                <th onclick="orderTable('orderTable2', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable2', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable2', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable2', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th onclick="orderTable('orderTable2', 2)" class="col-md-2">Appl. Status</th>
-                <th onclick="orderTable('orderTable2', 3)" class="col-md-2">CC</th>
+                                <th onclick="orderTable('orderTable2', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+                <th onclick="orderTable('orderTable2', 3)" class="col-md-1">CC</th>
                 <th onclick="orderTable('orderTable2', 4)" class="col-md-1">PA</th>
                 <th onclick="orderTable('orderTable2', 5)" class="col-md-1">SH</th>
-                <th onclick="orderTable('orderTable2', 6)" class="col-md-2">Start Date</th>
+                <th onclick="orderTable('orderTable2', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                <th onclick="orderTable('orderTable2', 7)" class="col-md-2 cell-overflow">Partners</th>
                 <!-- <th class="col-md-1">#</th>   -->           
                  
                             </tr>
@@ -200,10 +205,11 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                   <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
                             {{/each}}
@@ -231,14 +237,16 @@
                         <table class="table table-sm table-bordered table-hover orderTable3">
                             <thead>
                                       <tr>
-                                <th onclick="orderTable('orderTable3', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable3', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable3', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable3', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th onclick="orderTable('orderTable3', 2)" class="col-md-2">Appl. Status</th>
-                <th onclick="orderTable('orderTable3', 3)" class="col-md-2">CC</th>
+                                <th onclick="orderTable('orderTable3', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+                <th onclick="orderTable('orderTable3', 3)" class="col-md-1">CC</th>
                 <th onclick="orderTable('orderTable3', 4)" class="col-md-1">PA</th>
                 <th onclick="orderTable('orderTable3', 5)" class="col-md-1">SH</th>
-                <th onclick="orderTable('orderTable3', 6)" class="col-md-2">Start Date</th>
+                <th onclick="orderTable('orderTable3', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                <th onclick="orderTable('orderTable3', 7)" class="col-md-2 cell-overflow">Partners</th>
+
                <!--  <th class="col-md-1">#</th>    -->           
                   </tr>
                             </thead>
@@ -249,10 +257,11 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                    {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                   <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
                             {{/each}}
@@ -280,14 +289,16 @@
                         <table class="table table-sm table-bordered table-hover orderTable4">
                             <thead>
                             <tr>
-                                <th onclick="orderTable('orderTable4', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable4', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable4', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable4', 1)" class="col-md-2 cell-overflow">Address</th>
                                 {{!-- <th class="col-md-2">Last Edit</th> --}}
-                                <th onclick="orderTable('orderTable4', 2)" class="col-md-2">Appl. Status</th>
-                                <th onclick="orderTable('orderTable4', 3)" class="col-md-2 cell-overflow">CC</th>
-                <th onclick="orderTable('orderTable4', 4)" class="col-md-1 cell-overflow">PA</th>
-                <th onclick="orderTable('orderTable4', 5)" class="col-md-1 cell-overflow">SH</th>
-                <th onclick="orderTable('orderTable4', 6)" class="col-md-2">Start Date</th>
+                                <th onclick="orderTable('orderTable4', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+                                <th onclick="orderTable('orderTable4', 3)" class="col-md-1">CC</th>
+                <th onclick="orderTable('orderTable4', 4)" class="col-md-1">PA</th>
+                <th onclick="orderTable('orderTable4', 5)" class="col-md-1">SH</th>
+                <th onclick="orderTable('orderTable4', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                <th onclick="orderTable('orderTable4', 7)" class="col-md-2 cell-overflow">Partners</th>
+            
                 <!-- <th class="col-md-1">#</th> -->
                             </tr>
                             </thead>
@@ -298,10 +309,11 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                    <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
                                 </tr>
                             {{/each}}
@@ -339,14 +351,15 @@
                             <thead>
                             <tr>
                                            <!-- <tr> -->
-                                <th onclick="orderTable('orderTable5', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable5', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable5', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable5', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th onclick="orderTable('orderTable5', 2)" class="col-md-2">Appl. Status</th>
-               <th onclick="orderTable('orderTable5', 3)" class="col-md-2">CC</th>
+                                <th onclick="orderTable('orderTable5', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+               <th onclick="orderTable('orderTable5', 3)" class="col-md-1">CC</th>
                <th onclick="orderTable('orderTable5', 4)" class="col-md-1">PA</th>
                <th onclick="orderTable('orderTable5', 5)" class="col-md-1">SH</th>
-               <th onclick="orderTable('orderTable5', 6)" class="col-md-2">Start Date</th>
+               <th onclick="orderTable('orderTable5', 6)" class="col-md-1 cell-overflow">Start Date</th>
+               <th onclick="orderTable('orderTable5', 7)" class="col-md-2 cell-overflow">Partners</th>
                <!--  <th class="col-md-1">#</th> -->
                            </tr>
                             </thead>
@@ -358,10 +371,11 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                 <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
                             {{/each}}
@@ -445,14 +459,15 @@
                             <thead>
                             <tr>
                                           <!-- <tr> -->
-                                <th onclick="orderTable('orderTable6', 0)" class="col-md-2">Name</th>
-                                <th onclick="orderTable('orderTable6', 1)" class="col-md-2">Address</th>
+                                <th onclick="orderTable('orderTable6', 0)" class="col-md-2 cell-overflow">Name</th>
+                                <th onclick="orderTable('orderTable6', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
-                                <th onclick="orderTable('orderTable6', 2)" class="col-md-2">Appl. Status</th>
-                <th onclick="orderTable('orderTable6', 3)" class="col-md-2">CC</th>
+                                <th onclick="orderTable('orderTable6', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
+                <th onclick="orderTable('orderTable6', 3)" class="col-md-1">CC</th>
                 <th onclick="orderTable('orderTable6', 4)" class="col-md-1">PA</th>
                 <th onclick="orderTable('orderTable6', 5)" class="col-md-1">SH</th>
-                <th onclick="orderTable('orderTable6', 6)" class="col-md-2">Start Date</th>
+                <th onclick="orderTable('orderTable6', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                <th onclick="orderTable('orderTable6', 7)" class="col-md-2 cell-overflow">Partners</th>
                <!--  <th class="col-md-1">#</th> -->
                             </tr>
                             </thead>
@@ -463,10 +478,11 @@
                                     <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
                                     {{!-- <td class="col-md-2">{{updated}}</td> --}}
                                     <td class="col-md-2"><span class="text-danger cell-overflow">{{status}}</span></td>
-                                     <td title="{{project.crew_chief}}" class="col-md-2 cell-overflow">{{project.crew_chief}}&nbsp;</td>
+                                     <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-2 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                <!--    <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
                                 </tr>
                             {{/each}}

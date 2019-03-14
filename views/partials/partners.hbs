@@ -98,7 +98,7 @@
 
           <span name="formSpan" style="display:none;">
             <div>
-                <form class="form-inline editableform" style="">
+                <div class="form-inline editableform">
                   <div class="control-group form-group">
                     <!-- <div class="editable-input"> -->
                       <!-- <select type="radio" class="form-control input-sm"> -->  <!-- <option value="projectCompleted">Project - Completed</option> -->
@@ -112,19 +112,15 @@
                         <input name="create_contact_phone" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 35px;"></label><br>
                       <label class="partnerAddTextLabel"><strong>Contact Email:</strong>
                         <input name="create_contact_email" type="text" class="form-control input-sm" style="padding-left: 10px;margin-left: 40px;"></label><br>
-
-                    <div class="editable-buttons">
+                </div>
+                    <div class="edi">
                         <!-- <div name="createPartnerSpinning" class="editableform-loading" style="display: none;"></div> -->
-                        <button onclick="createPartnerSubmitBtn()" name="submitAddPartnerBtn" class="btnCheckmark btn btn-primary btn-sm editable-submit">
-                          <i class="glyphicon glyphicon-ok"></i>
-                        </button>
-                        <button onclick="discardPartnerFormBtnPressed()" name="cancelAddPartnerBtn" class="btnBackArrow btn btn-default btn-sm editable-cancel">
-                          <i class="glyphicon glyphicon-remove"></i>
-                        </button>
+                        <button onclick="createPartnerSubmitBtn()" name="submitAddPartnerBtn" class="btn btn-primary">Submit</button>
+                        <button onclick="discardPartnerFormBtnPressed()" name="cancelAddPartnerBtn" class="btn btn-default">Cancel</button>
                     </div>
                   
                 </div>
-              </form>
+                          
             </div>
           </span>
 
@@ -457,9 +453,9 @@
             if (err) {
             	console.log(err);
             }
-            else {
+            //else {
                 window.location.reload(true);
-            }
+            //}
         });
     }
 
@@ -604,6 +600,16 @@
   button.btn.btn-primary.btn-sm.editable-submit {
     width: 35px;
     height: 35px;
+  }
+
+  .crBtn {
+    width: 35px;
+    height: 35px;
+  }
+
+  .edi {
+    vertical-align: top;
+     margin-left: 5% !important;
   }
 
   button.btn.btn-primary.btn-sm.editable-submit:after {

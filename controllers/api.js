@@ -1843,6 +1843,101 @@ getDocumentPlanning: function (req, res, next) {
         });
     },
 
+    //post - GET (Retrieve) partners and leaders associated to that project
+    getSummaryPartners: function(req, res, next) {
+        //console.log(req.body);
+        //var projectId =  ObjectId(req.params.id) ||req.params.id || req.body.projectId;                    
+        console.log('[ API ] getSummaryPartners :: Call invoked');
+
+        //res.locals.docId = projectId;
+
+        // var projectId = String(req.body.projectId);
+        var resArray = [];
+
+        Promise.props({
+            allPartners: PartnerPackage.find().sort({ "org_name": 1 }).execAsync(),
+            pCount: PartnerPackage.count().execAsync(),
+            assocPartners: ProjectSummaryPackage.find({ projectId: { $exists: true } }).execAsync()
+        })
+        .then(function (assocRes) {
+            
+            if (assocRes) {
+            var allPartners = assocRes.allPartners;                             //Array of Objects
+
+            var unAssocArray = assocRes.allPartners;  
+            var uIDs = [];
+
+            var asso = assocRes.assocPartners.length;
+            console.log("RR1", asso);
+
+              var assocPartners = assocRes.assocPartners[0].assocPartners || null;        //An array of IDS
+                console.log('[ API ] getSummaryPartners :: item(s) found: TRUE');
+
+                console.log("Partner Associations Result: " + assocPartners);
+                var m; 
+                var allCnt;
+                var aCnt;
+                var k;
+            for (k = 0; k < asso; k++) {
+                assocPartners = assocRes.assocPartners[k].assocPartners || null;   
+              if (assocPartners) {  
+                for (aCnt = 0; aCnt < assocPartners.length; aCnt++) {
+                    for (allCnt=0; allCnt < allPartners.length; allCnt++) {    
+                        if (allPartners[allCnt]._id == assocPartners[aCnt]) {
+                                m = assocRes.assocPartners[k].projectId;
+                                if (resArray[m]) {
+                                    resArray[m].push(allPartners[allCnt].org_name);
+                                } else {
+                                    resArray[m] = [];
+                                    resArray[m].push(allPartners[allCnt].org_name);
+                                }
+                                //break;
+
+                        } 
+                        else if (allCnt + 1 == allPartners.length) {
+                            uIDs.push(assocPartners[aCnt]);
+                        }
+                    }
+                }
+              }
+            }
+                    // var filtered = unAssocArray.filter(customFilter);
+
+                    // function customFilter(eachObj) {
+                    //     var isFound = false;
+                    //     for (var aCnt = 0; aCnt < assocPartners.length; aCnt++) {
+                    //         if (eachObj._id == assocPartners[aCnt]) {
+                    //             isFound = true; 
+                    //         } 
+                    //     }
+                    //     return (! isFound);
+                    // }
+
+
+            var sendRes =   { 
+                                pAll:   allPartners, 
+                                // aCount: assocRes.pCount, 
+                                pAssoc: resArray,
+                                // aIDs:   assocPartners,
+                               // uAssoc: filtered,
+                             //   projectId: projectId
+                                // uCount: filtered.length,
+                                // uIDs:   uIDs
+                            };
+            req.partnerTime = sendRes;
+            res.locals.results.part = sendRes;
+            // req.partnerTime = sendRes;
+            res.locals.status = '200';
+            } else {
+                console.log('[ API ] getProjPartnersLeaders :: item(s) found: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
 
 
     //post - GET (Retrieve) partners and leaders associated to that project
