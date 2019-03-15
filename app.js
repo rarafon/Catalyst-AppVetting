@@ -195,13 +195,19 @@ hbs.registerHelper('getCompletedDate', function (item, name) {
 })
 
 hbs.registerHelper('getAppNameForPlan', function(apps, appid) {
-  return apps[appid].app_name
+  if (apps[appid] && apps[appid].app_name) {
+    return apps[appid].app_name
+  } 
+  // else {
+  //   return "---";
+  // }
+
 });
 hbs.registerHelper('getPlanLeadTime', function(plan) {
   return 'todo: put lead time here'
 });
 hbs.registerHelper('getApplicationStartTime', function (apps, appid) {
-  if (apps[appid].project && apps[appid].project.project_start) {
+  if (apps[appid] && apps[appid].project && apps[appid].project.project_start) {
     return new Date(apps[appid].project.project_start).toLocaleDateString();
   } else {
     return 'Not set'
@@ -211,7 +217,7 @@ hbs.registerHelper('getApplicationStartTime', function (apps, appid) {
 hbs.registerHelper('getApplicationDueDate', function (apps, appid, ldTime) {
   console.log("Handlebars Helper: getApplicationDueDate called");
   console.log(ldTime);
-  if (apps[appid].project && apps[appid].project.project_start) {
+  if (apps[appid] && apps[appid].project && apps[appid].project.project_start) {
       var myNewDate = new Date(apps[appid].project.project_start);
       
       myNewDate.setDate(myNewDate.getDate() - parseInt(20));

@@ -38,6 +38,7 @@
  withdrawn    - client has freely withdrawn their application
  withdrawnooa - the client is outside the service area of Catalyst
  project      - the project has been approved and the document package will be converted to a project package
+ waitlist     - these applications are waiting to be vetted, typically projects that require roofs that need to wait until the next project season.
  */
 
 var mongoose = require('mongoose');

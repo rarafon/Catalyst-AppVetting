@@ -661,6 +661,9 @@ function formatStatus(element) {
 			break;
 		case 'projectCompleted':
 			status = 'Project - Completed';
+            break;
+        case 'waitlist':
+			status = 'On Waitlist';
 			break;
         default:
             status = element.status;
