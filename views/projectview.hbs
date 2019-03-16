@@ -1492,7 +1492,23 @@ $(function(){
         console.log("Found");
      }
 
-    
+      if (window.location.hash == "#partners") {
+          $('a[href="#partners"]').trigger('click');
+          window.location.hash = "";
+      }
+
+      if (window.location.hash == "#partnersModify") {
+        $('a[href="#partners"]').trigger('click');
+        $('.accessAssocPartners').trigger('click');
+        window.location.hash = "";
+
+      }
+      
+      if (window.location.hash == "#partnersDB") {
+        $('a[href="#partners"]').trigger('click');
+        $('.goToNewDbBtn').trigger('click');
+        window.location.hash = "";
+      }
 
    });
 

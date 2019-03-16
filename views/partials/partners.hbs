@@ -70,7 +70,7 @@
         <thead> 
             <th class="col-xs-3"><button onclick="assocSaveBtn('edit')" name="assocEdit" class="assocEdit btn btn-success">Select from below</button></th>
             <th class="col-xs-3"><button onclick="assocSaveBtn('submit')" name="assocSave" class="assocSave btn btn-success" style="display:none;">Confirm changes</button></th>
-            <th class="col-xs-3"><button onclick="assocSaveBtn()" name="assocCancel" class="assocCancel btn btn-secondary" style="display:none;">Cancel</button></th>
+            <th class="col-xs-3"><button onclick="assocSaveBtn()" name="assocCancel" class="assocCancel btn btn-secondary">Cancel</button></th>
             <label class="notInListLabel">Not in list?  <button onclick="assocSaveBtn('goToSpanThree')" name="goToNewDbBtn" class="goToNewDbBtn btn btn-info">ADD/REMOVE PARTNERS DB</button></label>
         </thead>
   </div>
@@ -413,9 +413,17 @@
             thirdSpan[0].style.display = "block";
             threeTable[0].style.display = "block";
         } 
-
+        else if (inSubmit === "easyRefresh") {
+          // #partnersModify #partnersDB
+           window.location.hash = "#partnersModify";
+           window.location.reload(true);
+        }
         else {                                          //Cancel Button - will not submit anything
-            window.location.reload(true);
+           //var pLoc = window.location.href + "#partners";
+           //window.location.href = pLoc;
+           // #partnersModify #partnersDB
+           window.location.hash = "#partners";
+           window.location.reload(true);
         }
     }
 
@@ -454,7 +462,9 @@
             	console.log(err);
             }
             //else {
-                window.location.reload(true);
+           // #partnersModify #partnersDB
+           window.location.hash = "#partnersDB";
+           window.location.reload(true);
             //}
         });
     }
@@ -480,11 +490,17 @@
                        };
         xhr(sendData, 'POST', '/partners/createPartnerAssoc', function(err) {
             if (err) {
-                alert('Value did not save, please reload the page');
-                window.location.reload(true);
+                alert('Value did not save, page will be reloaded!');
+                //window.location.reload(true);
+           // #partnersModify #partnersDB
+           window.location.hash = "#partners";
+           window.location.reload(true);
             }
             else {
-              window.location.reload(true);
+              //window.location.reload(true);
+           // #partnersModify #partnersDB
+           window.location.hash = "#partners";
+           window.location.reload(true);
                 // while (document.getElementsByName(remId).length !== 0) {
                 //    document.getElementsByName(remId)[0].remove();
                 // }
