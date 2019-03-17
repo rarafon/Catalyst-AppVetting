@@ -1313,7 +1313,7 @@ function getCurrentDate() {
                   </div>
                   <div class="form-group">
                     <label class="form-control-label">Handle-it</label>
-                    <input type="checkbox" id="checkbox1" style="margin-left: 10px; !important" value="true" name="isHandle" checked>
+                    <input type="checkbox" name="isHandle" id="checkbox1" style="margin-left: 10px; !important" value="true" name="isHandle" checked>
                   </div>
                 </p>
                 <a href="#" class="btn btn-primary card-link work-item-new">Save</a>
@@ -1355,16 +1355,15 @@ function getCurrentDate() {
                     <br/>
                     <span name="{{_id}}.cost">{{cost}}</span>
                     <br/>
-                    
-                    <a href="#" id="isHandle" data-type="text" checked="{{isHandle}}" data-url="/edit/project/{{doc._id}}" data-name="crew_chief" data-title="Crew Chief">{{doc.project.crew_chief}}</a>
 
 
                   </p>
                   <a href="#" class="btn btn-primary card-link work-item-comment">Edit</a>
                   <a href="#" class="btn btn-warning card-link work-item-delete">Delete</a>
+                  <input class="isHandle card-link" type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
       
                 </div>
-              </div>
+              </div> 
             </div>
             {{/each}}
           
@@ -1462,8 +1461,6 @@ $(function(){
      $('#actual_volunteer_count').editable();
      $('#actual_labor_count').editable();
 
-     $('.isHandle').editable();
-
      yesDriveLoaded();
 
      $('#status').editable({
@@ -1532,9 +1529,54 @@ $("#checkbox1").on('change', function() {
   } else {
     $(this).attr('value', 'false');
   }
-  
-  //$('#checkbox-value').text($('#checkbox1').val());
+
 });
+
+$(".isHandle").on('change', function() {
+  if ($(this).is(':checked')) {
+    $(this).attr('value', 'true');
+
+    var id = $(this).attr('dataID');
+    console.log("ID is: ", id);
+
+    var postUrl = '/edit/work/' + id;
+
+    console.log("POST URL is: ", postUrl);
+
+    var update = { "name": "isHandle", "value": true };
+
+	  xhr(update, 'POST', postUrl, function(err, data) {
+		 if (err) { alert('Could not Save, please refresh page.') }
+		 else {
+       console.log("Checked - Success!");
+			 }
+		 
+	 })
+    
+  } else {
+    $(this).attr('value', 'false');
+
+    var id = $(this).attr('dataID');
+    console.log("ID is: ", id);
+
+    var postUrl = '/edit/work/' + id;
+
+    console.log("POST URL is: ", postUrl);
+
+    var update = { "name": "isHandle", "value": false };
+
+	  xhr(update, 'POST', postUrl, function(err, data) {
+		 if (err) { alert('Could not Save, please refresh page.') }
+		 else {
+       console.log("Unchecked - Success!");
+			 }
+		 
+	 })
+
+  }
+  
+});
+
 
 function hideEmptyCustom() {
     var custR = document.getElementsByClassName("customRow");
@@ -1916,7 +1958,7 @@ function customBtn() {
    var newWorkItem = {}, error = false
 
    $('input, textarea', e.target.parentNode).each(function(idx) {
-     if (this.value.length === 0 && this.name !== 'cost') {
+     if (this.value.length === 0 && this.name !== 'cost' && this.name !=='isHandle') {
        $(this.parentNode).addClass('has-danger')
        error = true
      } else {
@@ -1948,7 +1990,8 @@ function customBtn() {
    });
    $('#add-work-item-collapse').collapse('hide');
 
-   document.getElementById("workAddBtn").style.display = "block";
+   //document.getElementById("workAddBtn").style.display = "block";  
+   $("#checkbox1").prop('checked', true);
  }
 
  function createNewWorkItem(w, next) {
@@ -2049,9 +2092,74 @@ function customBtn() {
                               .on('click', showWorkItemDeleteConfirm)
                               .appendTo(cardBlock)
 
+  console.log("R3", w)
+
+   // <input class="isHandle card-link" type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
+  // type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
+
+  //R1
+
+
+  //                       
+
+  $('<input>&nbsp;Handle-it</input>').prop('checked', w.isHandle)
+                              .attr('type', 'checkbox')
+                              .attr('dataID', w._id)
+                              .attr('data-name', "isHandle")
+                              .addClass('isHandle').addClass('card-link')
+                              .on('change',  function() {
+                                    if ($(this).is(':checked')) {
+                                      $(this).attr('value', 'true');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": true };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Checked - Success!");
+                                        }
+                                      
+                                    })
+                                      
+                                    } else {
+
+                                      $(this).attr('value', 'false');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": false };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Unchecked - Success!");
+                                        }
+                                      
+                                    })
+
+                                    }
+                                    
+                                  })
+                              .appendTo(cardBlock)
+
    return cardBlock
  }
 
+
+
+ 
  function updateWrapup () {
    $('#wrapUp input:checkbox').each(function () {
      var $this = $(this);
