@@ -68,6 +68,18 @@ module.exports = function(passport) {
   });
 
 
+ router.post('/work/:id', isLoggedInWork, api.putUpdateWork, function(req, res) {
+
+   if(res.locals.status != '200'){
+     res.status(500).send("Could not update field");
+   }
+   else{
+     res.status(200).send({ status: 'success' });
+   }
+
+ });
+
+
 router.post('/customnote/:id', isLoggedInProjectRole, api.saveCustomChecklist, function(req, res) {
         console.log("customnote triggered --> Calling api.saveProjectPlan");
         if(res.locals.status != '200'){
@@ -271,6 +283,11 @@ function isLoggedInPost(req, res, next) {
                    
                    return next();
                  }
+                 else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('ADMIN') >-1)
+                 {
+                   
+                   return next();
+                 }
 						   else {
 							   //user is not a vetting agent or admin, route to error handler
 							   res.locals.status = 406;
@@ -293,6 +310,62 @@ function isLoggedInPost(req, res, next) {
 			res.locals.status = 406;
 			return next('route');
 		}
+}
+
+
+//post request authenticator.  Checks if user is an admin or vetting agent
+function isLoggedInWork(req, res, next) {
+  if(req.isAuthenticated()) {
+    console.log(req.user._id);
+    var userID = req.user._id.toString();
+    
+    var ObjectId = require('mongodb').ObjectID;
+    
+    Promise.props({
+      user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
+    })
+           .then(function (results) {
+             console.log(results);
+             
+             if (!results) {
+               //user not found in db.  Route to error handler
+               res.locals.status = 406;
+               return next('route');
+             }
+             else {
+               
+               if (results.user.user_role == "PROJECT_MANAGEMENT" || results.user.user_role == "VET" || results.user.user_role == "ADMIN") {
+                 return next();
+
+               }
+               else if (results.user.user_roles !== undefined)
+                 {
+                   if (results.user.user_roles.indexOf('PROJECT_MANAGEMENT') >-1 || results.user.user_roles.indexOf('VET') >-1 || results.user.user_roles.indexOf('ADMIN') >-1 ) {
+                      return next();
+                   }
+                 }
+               else {
+                 //user is not a vetting agent or admin, route to error handler
+                 res.locals.status = 406;
+                 return next('route');
+               }
+             }
+             
+             
+             
+           })
+    
+           .catch(function(err) {
+             console.error(err);
+           })
+           .catch(next);
+  }
+  else {
+    //user is not logged in
+    console.log("no user id");
+      res.locals.status = 406;
+      return next('route');
+    }
 }
 
 //post request authenticator.  Checks if user is an admin or vetting agent

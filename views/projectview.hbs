@@ -1311,6 +1311,10 @@ function getCurrentDate() {
                     <label class="form-control-label">Cost</label>
                     <input type="cost" class="form-control" name="cost">
                   </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Handle-it</label>
+                    <input type="checkbox" id="checkbox1" style="margin-left: 10px; !important" value="true" name="isHandle" checked>
+                  </div>
                 </p>
                 <a href="#" class="btn btn-primary card-link work-item-new">Save</a>
                 <a href="#" class="btn btn-danger card-link work-item-clear">Clear</a>
@@ -1350,6 +1354,11 @@ function getCurrentDate() {
                     <strong>Cost:</strong>
                     <br/>
                     <span name="{{_id}}.cost">{{cost}}</span>
+                    <br/>
+                    
+                    <a href="#" id="isHandle" data-type="text" checked="{{isHandle}}" data-url="/edit/project/{{doc._id}}" data-name="crew_chief" data-title="Crew Chief">{{doc.project.crew_chief}}</a>
+
+
                   </p>
                   <a href="#" class="btn btn-primary card-link work-item-comment">Edit</a>
                   <a href="#" class="btn btn-warning card-link work-item-delete">Delete</a>
@@ -1453,6 +1462,8 @@ $(function(){
      $('#actual_volunteer_count').editable();
      $('#actual_labor_count').editable();
 
+     $('.isHandle').editable();
+
      yesDriveLoaded();
 
      $('#status').editable({
@@ -1510,7 +1521,20 @@ $(function(){
         window.location.hash = "";
       }
 
+      
+
    });
+
+
+$("#checkbox1").on('change', function() {
+  if ($(this).is(':checked')) {
+    $(this).attr('value', 'true');
+  } else {
+    $(this).attr('value', 'false');
+  }
+  
+  //$('#checkbox-value').text($('#checkbox1').val());
+});
 
 function hideEmptyCustom() {
     var custR = document.getElementsByClassName("customRow");
@@ -1603,7 +1627,8 @@ function customBtn() {
      var webUrl = "{{{escape doc.drive.drive_url}}}";
 
      //alert(webUrl);
-    if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location) {
+     //alert(document.getElementById("driveHref").href + "#");
+    if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location || document.getElementById("driveHref").href + "#" == window.location) {
         document.getElementById("yesDrive").style.display = "none";
         document.getElementById("noDrive").style.display = "inline-flex";
     } else {
@@ -1896,6 +1921,15 @@ function customBtn() {
        error = true
      } else {
        newWorkItem[this.name] = this.value
+
+        if ($('#checkbox1').is(':checked')) {
+          newWorkItem["isHandle"] = true
+        } else {
+          newWorkItem["isHandle"] = false
+        }
+       //var aChk =  $('#checkbox1').val()
+
+
        $(this.parentNode).removeClass('has-danger')
      }
    })

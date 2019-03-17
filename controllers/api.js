@@ -1069,6 +1069,8 @@ getDocumentPlanning: function (req, res, next) {
 
 
 
+    
+
 
     putUpdateProject: function(req, res, next) {
         // When executed this will apply updates to a doc and return the MODIFIED doc
@@ -1200,6 +1202,95 @@ getDocumentPlanning: function (req, res, next) {
             .catch(next);
     },
 
+
+
+    putUpdateWork: function(req, res, next) {
+        // When executed this will apply updates to a doc and return the MODIFIED doc
+
+        // Log the _id, name, and value that are passed to the function
+        console.log('[ API ] putUpdateWork :: Call invoked with _id: ' + req.params.id
+            + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
+        console.log(req.body.name + ' + ' + req.body.value);
+        var updates = {};
+        var id;
+ 
+     
+        if (req.body.name == "isHandle") {
+            if (req.body.value == true) {
+                updates = { "isHandle": true };
+            } else {
+                updates = { "isHandle": false };
+            }
+        }
+
+        var conditions = {};
+        conditions['_id'] = req.params.id || mongoose.Types.ObjectId(id);
+        console.log("Search Filter:");
+        console.log(conditions);
+        console.log("Update:");
+        updates['updated'] = Date.now();
+        console.log(updates);
+
+
+        // Promise.props({
+        //     project: DocumentPackage.findOneAndUpdate(
+        //         // Condition
+        //         conditions,
+        //         // Updates
+        //         {
+        //             // $set: {name: value}
+        //             $set: updates
+        //         },
+        //         // Options
+        //         {
+        //             // new - defaults to false, returns the modified document when true, or the original when false
+        //             new: true,
+        //             //upsert: true
+        //         }
+        //         // Callback if needed
+        //         // { }
+        //     ).execAsync()
+        // })
+
+        Promise.props({
+        item: WorkItemPackage.findOneAndUpdate(
+            // Condition
+               conditions,
+               // Updates
+               {
+                   $set: updates
+               },
+               // Options
+               {
+                   // new - defaults to false, returns the modified document when true, or the original when false
+                   new: true,
+                   // runValidators - defaults to false, make sure the data fits the model before applying the update
+                   runValidators: true
+               }
+                   ).execAsync()
+        })
+
+            .then(function (results) {
+                // TODO: Confirm true/false is correct
+                if (results) {
+                    console.log('[ API ] putUpdateWork :: found: TRUE');
+                }
+                else {
+                    console.log('[ API ] putUpdateWork :: found: FALSE, Created new one!');
+                }
+                res.locals.results = results;
+                //sending a status of 200 for now
+                res.locals.status = '200';
+
+                // If we are at this line all promises have executed and returned
+                // Call next() to pass all of this glorious data to the next express router
+                next();
+            })
+            .catch(function (err) {
+                console.error(err);
+            })
+            .catch(next);
+    },
 
 
 	postUser: function(req, res, next) {
