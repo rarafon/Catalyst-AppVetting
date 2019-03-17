@@ -218,6 +218,10 @@
 							<label class="form-control-label">Cost</label>
 							<input type="cost" class="form-control" name="cost">
 						</div>
+						<div class="form-group">
+							<label class="form-control-label">Handle-it</label>
+							<input type="checkbox" name="isHandle" id="checkbox1" style="margin-left: 10px; !important" value="true" name="isHandle" checked>
+                 	 	</div>
 					</p>
 					<a href="#" class="btn btn-primary card-link work-item-new">Save</a>
 					<a href="#" class="btn btn-danger card-link work-item-clear">Clear</a>
@@ -257,6 +261,8 @@
 						</p>
 						<a href="#" class="btn btn-primary card-link work-item-edit">Edit</a>
 						<a href="#" class="btn btn-danger card-link work-item-delete">Delete</a>
+					    <input class="isHandle card-link" type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
+
 					</div>
 				</div>
 			</div>
@@ -1060,6 +1066,63 @@ $(function(){
 			var fpb = new FinacialPackageBuilder();
 			fpb.populateHtml();
 			fpb.getData();
+
+
+			$("#checkbox1").on('change', function() {
+			if ($(this).is(':checked')) {
+				$(this).attr('value', 'true');
+			} else {
+				$(this).attr('value', 'false');
+			}
+
+			});
+
+			$(".isHandle").on('change', function() {
+			if ($(this).is(':checked')) {
+				$(this).attr('value', 'true');
+
+				var id = $(this).attr('dataID');
+				console.log("ID is: ", id);
+
+				var postUrl = '/edit/work/' + id;
+
+				console.log("POST URL is: ", postUrl);
+
+				var update = { "name": "isHandle", "value": true };
+
+				xhr(update, 'POST', postUrl, function(err, data) {
+					if (err) { alert('Could not Save, please refresh page.') }
+					else {
+				console.log("Checked - Success!");
+						}
+					
+				})
+				
+			} else {
+				$(this).attr('value', 'false');
+
+				var id = $(this).attr('dataID');
+				console.log("ID is: ", id);
+
+				var postUrl = '/edit/work/' + id;
+
+				console.log("POST URL is: ", postUrl);
+
+				var update = { "name": "isHandle", "value": false };
+
+				xhr(update, 'POST', postUrl, function(err, data) {
+					if (err) { alert('Could not Save, please refresh page.') }
+					else {
+				console.log("Unchecked - Success!");
+						}
+					
+				})
+
+			}
+			
+			});
+
+
 		});
 
 	/* Finacial Package Builder - Dave Martinez, Feb. 7, 2017
@@ -1703,11 +1766,20 @@ $(function(){
     	var newWorkItem = {}, error = false
 
 		$('input, textarea', e.target.parentNode).each(function(idx) {
-			if (this.value.length === 0 && this.name !== 'cost') {
+			if (this.value.length === 0 && this.name !== 'cost' && this.name !=='isHandle') {
 				$(this.parentNode).addClass('has-error')
 				error = true
 			} else {
 				newWorkItem[this.name] = this.value
+
+				if ($('#checkbox1').is(':checked')) {
+				newWorkItem["isHandle"] = true
+				} else {
+				newWorkItem["isHandle"] = false
+				}
+				//var aChk =  $('#checkbox1').val()
+
+
 				$(this.parentNode).removeClass('has-error')
 			}
 		})
@@ -1725,6 +1797,8 @@ $(function(){
       $(this).val('')
       $(this.parentNode).removeClass('has-error')
     })
+
+	$("#checkbox1").prop('checked', true);
   }
 
   function createNewWorkItem(w, next) {
@@ -1822,6 +1896,62 @@ $(function(){
 		.attr('href', '#')
 		.on('click', showWorkItemDeleteConfirm)
 		.appendTo(cardBlock)
+
+console.log("Output", w)
+
+
+  $('<input>&nbsp;Handle-it</input>').prop('checked', w.isHandle)
+                              .attr('type', 'checkbox')
+                              .attr('dataID', w._id)
+                              .attr('data-name', "isHandle")
+                              .addClass('isHandle').addClass('card-link')
+                              .on('change',  function() {
+                                    if ($(this).is(':checked')) {
+                                      $(this).attr('value', 'true');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": true };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Checked - Success!");
+                                        }
+                                      
+                                    })
+                                      
+                                    } else {
+
+                                      $(this).attr('value', 'false');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": false };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Unchecked - Success!");
+                                        }
+                                      
+                                    })
+
+                                    }
+                                    
+                                  })
+                              .appendTo(cardBlock)
+
 
     return cardBlock
   }

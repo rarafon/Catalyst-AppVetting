@@ -2092,15 +2092,8 @@ function customBtn() {
                               .on('click', showWorkItemDeleteConfirm)
                               .appendTo(cardBlock)
 
-  console.log("R3", w)
+  console.log("Output", w)
 
-   // <input class="isHandle card-link" type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
-  // type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
-
-  //R1
-
-
-  //                       
 
   $('<input>&nbsp;Handle-it</input>').prop('checked', w.isHandle)
                               .attr('type', 'checkbox')
