@@ -56,13 +56,27 @@ dataPAF.currentDate = getCurrentDate();
  {{/if}}
 
 var workItems = [];
-
+ var workItemsHandle = [];
+ 
  {{#if results.work}}
    {{#each results.work}}
 workItems.push("-     " + "Name:  {{{escape name}}}\n");
 workItems.push("-     " + "Description:  {{{escape description}}}\n");
 workItems.push("-     " + "Site Comments:  {{{escape siteComments}}}\n");
 workItems.push("-     " + "COST:  {{{escape cost}}}\n\n");
+   {{/each}}
+ {{/if}}
+
+
+
+ {{#if results.work}}
+   {{#each results.work}}
+      {{#if_eq isHandle true}}
+        workItemsHandle.push("-     " + "Name:  {{{escape name}}}\n");
+        workItemsHandle.push("-     " + "Description:  {{{escape description}}}\n");
+        workItemsHandle.push("-     " + "Site Comments:  {{{escape siteComments}}}\n");
+        workItemsHandle.push("-     " + "COST:  {{{escape cost}}}\n\n");
+      {{/if_eq}}
    {{/each}}
  {{/if}}
 
@@ -398,7 +412,7 @@ var handleDefinition = {  content: [           // BEGIN PRINT LAYOUT! **********
 { text: [ "BIO/Project Summary: ", {text: dataPAF.vettSumm, style:'inText' } ], style:'eachLine'},  // Vetting Summary
 
 "\nWork Requested:",           //WORK ITEM AND COST
-    { text: [ {text: workItems, style:'inText' } ], style:'eachWorkItem'},
+    { text: [ {text: workItemsHandle, style:'inText' } ], style:'eachWorkItem'},
     // { text: [ "Materials: ", {text: dataPAF.materials, style:'inText' } ], style:'eachLine'},
     // { text: [ "Volunteers Needed: ", {text: dataPAF.volunteers, style:'inText' } ], style:'eachLine'},
     
