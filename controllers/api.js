@@ -29,16 +29,22 @@
  * Import any other required modules
  */
 
-
 var mongoose = require('mongoose');
 var db = require('../mongoose/connection');
 var DocumentPackage = require('../models/documentPackage');
 var HighlightPackage = require('../models/highlightPackage');
+var ProjectNotePackage = require('../models/projectNotePackage.js');
 var VettingNotePackage = require('../models/vettingNotePackage');
-
+var AssessmentPackage = require('../models/assessmentPackage.js');
+var PlanningPackage = require('../models/planningPackage.js');
+var ProjectPlanPackage = require('../models/projectPlanPackage.js');
 var WorkItemPackage = require('../models/workItemPackage');
 var UserPackage = require('../models/userPackage');
 var RolePackage = require('../models/rolePackage');
+var ProjectWrapUpPackage = require('../models/projectWrapUpPackage.js');
+var ProjectSummaryPackage = require('../models/projectSummaryPackage.js');
+var PartnerPackage = require('../models/partnerPackage.js');
+var LeadtimeDefaults = require('../models/leadtimeDefaults.js');
 
 var FinancialPackage = require('../models/finPackage');
 var crypto = require('crypto');
@@ -204,50 +210,76 @@ module.exports = {
 	
 	//site assessment get docs for view
 	getDocumentSite: function (req, res, next) {
-        // Log the api call we make along with the _id used by it
-        console.log('[ API ] getDocumentSite :: Call invoked with id: ' + req.params.id);
+    // Log the api call we make along with the _id used by it
+    console.log('[ API ] getDocumentSite :: Call invoked with id: ' + req.params.id);
+    res.locals.docId = req.params.id;
 		// Use results.DocumentPackage.<whatever you need> to access the information
-        Promise.props({
-            //document: DocumentPackage.findById(req.params.id).lean().execAsync()
-			doc: DocumentPackage.aggregate(
-				[
+    Promise.props({
+      //document: DocumentPackage.findById(req.params.id).lean().execAsync()
+			doc: DocumentPackage.aggregate([
 				{$match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-					{ $redact: {
-						$cond: {
-							if: { $eq: [ "$level", 5 ] },
-							then: "$$PRUNE",
-							else: "$$DESCEND"
-						}
-					}}
-					
-				]
-			).execAsync(),
-			work: WorkItemPackage.find({applicationId: ObjectId(req.params.id)}).lean().execAsync()
-			
-        })
-            .then(function(results) {
-				console.log("results");
-				
-				
-				console.log(results);
-                if (!results) {
-                    console.log('[ API ] getDocumentStatusSite :: Documents package found: FALSE');
-                }
-                else {
-                    console.log('[ API ] getDocumentStatusSite :: Documents package found: TRUE');
-                }
-				res.locals.results = results;
+				{ $redact: {
+					$cond: {
+						if: { $eq: [ "$level", 5 ] },
+						then: "$$PRUNE",
+						else: "$$DESCEND"
+					}
+				}}
+			]).execAsync(),
+			work: WorkItemPackage.find({applicationId: ObjectId(req.params.id)}).lean().execAsync(),
+      assessment: AssessmentPackage.find({ applicationId: ObjectId(req.params.id) }).lean().execAsync(),
+      projectNotes: ProjectNotePackage.find({applicationId: ObjectId(req.params.id)}).lean().execAsync(),
+    }).then(function(results) {
+			console.log("results\n", results);
+      if (!results) {
+        console.log('[ API ] getDocumentStatusSite :: Documents package found: FALSE');
+      }
+      else {
+        console.log('[ API ] getDocumentStatusSite :: Documents package found: TRUE');
+        
+      }
+			res.locals.results = results;
+      next();
 
-                // If we are at this line all promises have executed and returned
-                // Call next() to pass all of this glorious data to the next express router
-                next();
-            })
-            .catch(function(err) {
-                console.error(err);
-            })
-            .catch(next);
-    },
+    }).catch(function(err) {
+      console.error(err);
+    }).catch(next);
+  },
+//site assessment get docs for view
+getDocumentPlanning: function (req, res, next) {
+    // Log the api call we make along with the _id used by it
+    console.log('[ API ] getDocumentSite :: Call invoked with id: ' + req.params.id);
+		// Use results.DocumentPackage.<whatever you need> to access the information
+    Promise.props({
+      //document: DocumentPackage.findById(req.params.id).lean().execAsync()
+			doc: DocumentPackage.aggregate([
+				{$match: { _id : mongoose.Types.ObjectId(req.params.id)}},
+				{ $redact: {
+					$cond: {
+						if: { $eq: [ "$level", 5 ] },
+						then: "$$PRUNE",
+						else: "$$DESCEND"
+					}
+				}}
+			]).execAsync(),
+			work: WorkItemPackage.find({applicationId: ObjectId(req.params.id)}).lean().execAsync(),
+      planning: PlanningPackage.find({ applicationId: ObjectId(req.params.id) }).lean().execAsync()
 
+    }).then(function(results) {
+			console.log("results\n", results);
+      if (!results) {
+        console.log('[ API ] getDocumentStatusSite :: Documents package found: FALSE');
+      }
+      else {
+        console.log('[ API ] getDocumentStatusSite :: Documents package found: TRUE');
+      }
+			res.locals.results = results;
+      next();
+
+    }).catch(function(err) {
+      console.error(err);
+    }).catch(next);
+  },
 	getUsers: function(req, res, next) {
 		console.log("getting users");
 		 Promise.props({
@@ -261,7 +293,18 @@ module.exports = {
                     console.log('users found');
 					for(var x=0; x<results.users.length; x++) {
 						results.users[x].salt = "";
-						results.users[x].hash = "";
+                        results.users[x].hash = "";
+                        console.log('here');
+                        console.log(results.users[x]);
+                        results.users[x].user_roles_display="";
+                        if (results.users[x].user_roles === undefined || results.users[x].user_roles.length===0 ) {
+                            results.users[x].user_roles_display += results.users[x].user_role + " | ";
+                        }
+                        else {
+                            for (var i = 0; i < results.users[x].user_roles.length; i++) {
+                                results.users[x].user_roles_display += results.users[x].user_roles[i] + " | ";
+                            }
+                        }
 					}
 				}
 
@@ -369,8 +412,27 @@ module.exports = {
             withdrawnooa: DocumentPackage.find({ status: "withdrawnooa" }).lean().execAsync(),
             approval: DocumentPackage.find({status: "approval"}).lean().execAsync(),
             handle: DocumentPackage.find({status: "handle"}).lean().execAsync(),
-            declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
-            project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync()
+            // declined: DocumentPackage.find({status: "declined", app_year : year}).lean().execAsync(),
+            // project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
+            // handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned", app_year : year}).lean().execAsync(),
+            // handleAssigned: DocumentPackage.find({status: "handleAssigned", app_year : year}).lean().execAsync(),
+            // handleCompleted: DocumentPackage.find({status: "handleCompleted", app_year : year}).lean().execAsync(),
+            // projectUpcoming: DocumentPackage.find({status: "projectUpcoming", app_year : year}).lean().execAsync(),
+            // projectInProgress: DocumentPackage.find({status: "projectInProgress", app_year : year}).lean().execAsync(),
+            // projectGoBacks: DocumentPackage.find({status: "projectGoBacks", app_year : year}).lean().execAsync(),
+            // projectCompleted: DocumentPackage.find({status: "projectCompleted", app_year : year}).lean().execAsync()
+
+            declined: DocumentPackage.find({status: "declined"}).lean().execAsync(),
+            project: DocumentPackage.find({status: "project"}).lean().execAsync(),
+            handleToBeAssigned: DocumentPackage.find({status: "handleToBeAssigned"}).lean().execAsync(),
+            handleAssigned: DocumentPackage.find({status: "handleAssigned"}).lean().execAsync(),
+            handleCompleted: DocumentPackage.find({status: "handleCompleted"}).lean().execAsync(),
+            projectUpcoming: DocumentPackage.find({status: "projectUpcoming"}).lean().execAsync(),
+            projectInProgress: DocumentPackage.find({status: "projectInProgress"}).lean().execAsync(),
+            projectGoBacks: DocumentPackage.find({status: "projectGoBacks"}).lean().execAsync(),
+            projectCompleted: DocumentPackage.find({status: "projectCompleted"}).lean().execAsync(),
+
+            waitlist: DocumentPackage.find({ status: "waitlist" }).lean().execAsync()
         })
             .then(function (results) {
                 if (!results) {
@@ -390,6 +452,265 @@ module.exports = {
             })
             .catch(next);
     },
+
+    /**
+     * Description: retrieve all Project Packages from the database and group by status code
+     * Type: GET
+     * Params: none
+     * Address: api.getProjectsByStatus
+     * Returns: results.statuscode[array of Document Packages]
+     * Notes: statuscode is defined as any property of Promise.props (ex: new, phone, assess)
+     */
+    getProjectsByStatus: function(req, res, next) {
+        // Log the api call made to the console
+        console.log('[ API ] getProjectsByStatus :: Call invoked');
+        var currentTime = new Date();
+        var year = currentTime.getFullYear();
+        // Access the returned items as results.<status code>[array index].<what you need>
+        // Example: results.visit[3].address.line_1 = a string
+
+
+        Promise.props({
+
+            //handle: DocumentPackage.find({status: "handle", app_year: year}).lean().execAsync(),
+            //project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
+            
+
+            updatedHandle: DocumentPackage.update(
+                // Condition
+                {
+                    status: "handle" ,
+                    // app_year : year,
+                    project:  { $exists: false } ,
+                
+                },
+                // Updates
+                {
+                    // $set: {name: value}
+                    $set: {"project": {status: "handle"}},
+                },
+                // Options
+                {
+                    multi: true
+                }
+
+                // Callback if needed
+                // { }
+            ).execAsync(),
+
+            updatedProject: DocumentPackage.update(
+                // Condition
+                {
+                    status: "project" ,
+                    // app_year : year,
+                    project:  { $exists: false } ,
+                
+                },
+                // Updates
+                {
+                    // $set: {name: value}
+                    $set: {project: {status: "project"}},
+                },
+                // Options
+                {
+                    multi: true
+                }
+
+                // Callback if needed
+                // { }
+            ).execAsync()
+
+        }).then(function (firstRes) {
+
+            console.log("New handle-its since last refresh: " + firstRes.updatedHandle );
+            console.log("New projects since last refresh: " + firstRes.updatedProject );
+            // for (var i=0; i < firstRes.handle.length; i++) {
+            //     if ((typeof firstRes.handle[i].project.status === 'undefined') && (firstRes.handle[i].status == "handle" || firstRes.handle[i].status == "project")){
+            //         DocumentPackage.find({project: {status: "handleAssigned"}}).lean().execAsync();
+            //     }
+            // }
+
+            // for (var j=0; j < firstRes.project.length; j++) {
+            //     if ((typeof firstRes.project[j].project.status === 'undefined') && (firstRes.project[j].status == "project")) {
+            //         DocumentPackage.find({project: {status: "handleAssigned"}}).lean().execAsync();
+            //     }
+            // }            
+
+                    Promise.props({
+                        // approval: DocumentPackage.find({status: "approval"}).lean().execAsync(),
+                        
+                        // handle: DocumentPackage.find({status: "handle", app_year : year}).lean().execAsync(),
+                        // project: DocumentPackage.find({status: "project", app_year : year}).lean().execAsync(),
+
+                        handle: DocumentPackage.find({"project.status": "handle"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        project: DocumentPackage.find({"project.status": "project"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+
+                        handleToBeAssigned: DocumentPackage.find({"project.status": "handleToBeAssigned"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        projectUpcoming: DocumentPackage.find({"project.status": "projectUpcoming"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        
+                        handleAssigned: DocumentPackage.find({"project.status": "handleAssigned"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        projectInProgress: DocumentPackage.find({"project.status": "projectInProgress"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        projectGoBacks: DocumentPackage.find({"project.status": "projectGoBacks"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        projectCompleted: DocumentPackage.find({"project.status": "projectCompleted"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        handleCompleted: DocumentPackage.find({"project.status": "handleCompleted"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        nostatus: DocumentPackage.find({"project.status": "nostatus"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+
+                        completed: DocumentPackage.find({
+                                "$or":  [
+                                            {"project.status": "projectCompleted"}, 
+                                            {"project.status": "handleCompleted"}
+                                        ]
+                        }).sort({ "project.project_start": 1 }).lean().execAsync()
+
+
+                    })
+                        .then(function (results) {
+                            if (!results) {
+                                console.log('[ API ] getProjectsByStatus :: Project Summary package found: FALSE');
+                            }
+                            else {
+                                console.log('[ API ] getProjectsByStatus :: Project Summary package found: TRUE');
+                            }
+
+
+                            if (results) {
+
+                                if (results.handle) {
+                                    var obj = results.handle;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.handle = obj;    
+                                    });                                    
+                                }
+                                if (results.project) {
+                                    var obj = results.project;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.project = obj;    
+                                    });                                    
+                                }
+                                if (results.handleToBeAssigned) {
+                                    var obj = results.handleToBeAssigned;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.handleToBeAssigned = obj;    
+                                    });                                    
+                                }
+                                if (results.projectUpcoming) {
+                                    var obj = results.projectUpcoming;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.projectUpcoming = obj;    
+                                    });                                    
+                                }
+                                if (results.handleAssigned) {
+                                    var obj = results.handleAssigned;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.handleAssigned = obj;    
+                                    });                                    
+                                }
+                                if (results.projectInProgress) {
+                                    var obj = results.projectInProgress;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.projectInProgress = obj;    
+                                    });                                    
+                                }
+                                if (results.projectGoBacks) {
+                                    var obj = results.projectGoBacks;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.projectGoBacks = obj;    
+                                    });                                    
+                                }
+                                if (results.projectCompleted) {
+                                    var obj = results.projectCompleted;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.projectCompleted = obj;    
+                                    });                                    
+                                }
+                                if (results.handleCompleted) {
+                                    var obj = results.handleCompleted;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.handleCompleted = obj;    
+                                    });                                    
+                                }
+                                if (results.nostatus) {
+                                    var obj = results.nostatus;
+                                    obj.forEach(function(v, i) {
+                                        if (v.project.project_start == null) {//test to see if the id is 3
+                                            obj.push(obj[i]);//push the object to the last position
+                                            obj.splice(i, 1);//remove the object from the current position
+                                        }
+                                        results.nostatus = obj;    
+                                    });                                    
+                                }
+                            }
+                            
+
+                            res.locals.results = results;
+
+                            console.log("API :: Results: " + JSON.stringify(results));
+
+                            // If we are at this line all promises have executed and returned
+                            // Call next() to pass all of this glorious data to the next express router
+                            next();
+                        })
+                        .catch(function(err) {
+                            console.error(err);
+                        })
+                        .catch(next);
+
+
+                })
+    },
+
+
+
+  // Fetch only status: "project" documents for this year.
+  getProjectDocuments: function(req, res, next) {
+    var currentYear = new Date().getFullYear();
+    Promise.props({
+      projects: DocumentPackage.find({ status: "project", app_year: currentYear }).lean().execAsync()
+
+    }).then(function (results) {
+      res.locals.projects = results.projects;
+
+    }).catch(function (err) {
+      console.log(err);
+      next();
+    })
+  },
 	
 	getDocsByYear: function(req, res, next) {
 		console.log('[ API ] getDocumentByStatus :: Call invoked');
@@ -640,13 +961,47 @@ module.exports = {
 		var id;
 		if(res.locals.role == "SITE") {
 			if(req.body.name == "notes.site_summary") {
-			updates['notes.site_summary'] = req.body.value;
+			     updates['notes.site_summary'] = req.body.value;
 			}
 			else if(req.body.name == "status") {
+                if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
+                    var inStatus = { status: req.body.value };
+                    updates.project = inStatus;
+                }
 				updates['status'] = req.body.value;
 			}
 			id = req.body.id;
 		}
+        else if (req.body.name == "status") {
+                if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
+                    var inStatus = { status: req.body.value };
+                    updates.project = inStatus;
+                }
+                updates['status'] = req.body.value;
+
+                if(req.params.id != null) {
+                    id = req.params.id;
+                }
+                else {
+                    id = req.body.id;
+                }
+            }
+        // else if (req.body.name == "drive_url") {
+        //         console.log("[ API ] putUpdateDocument :: Save Google drive URL Called");
+                
+        //         if (req.body.value) {
+        //             var inStatus = { drive_url: req.body.value };
+        //             updates.drive = inStatus;
+        //         }
+        //        // updates['status'] = req.body.value;
+
+        //         if(req.params.id != null) {
+        //             id = req.params.id;
+        //         }
+        //         else {
+        //             id = req.body.id;
+        //         }
+        // }
 		else {
 		
 			if(req.params.id != null) {
@@ -711,6 +1066,232 @@ module.exports = {
             })
             .catch(next);
     },
+
+
+
+    
+
+
+    putUpdateProject: function(req, res, next) {
+        // When executed this will apply updates to a doc and return the MODIFIED doc
+
+        // Log the _id, name, and value that are passed to the function
+        console.log('[ API ] putUpdateProject :: Call invoked with _id: ' + req.params.id
+            + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
+        console.log(req.body.name + ' + ' + req.body.value);
+        var updates = {};
+        var id;
+        // if(res.locals.role == "SITE") {
+        //     if(req.body.name == "notes.site_summary") {
+        //         updates['notes.site_summary'] = req.body.value;
+        //     }
+        //     id = req.body.id;
+        // }
+        if(req.body.name == "status") {
+
+            if (req.body.value == 'projWithdrawn') {
+
+                updates =   {   "status":"withdrawn",
+                                "project.status":req.body.value 
+                            };
+            } else if (req.body.value == 'projDeclined') {
+
+                updates =   { 
+                                "status":"declined",
+                                "project.status":req.body.value 
+                            };
+            } else {
+                updates = {"project.status":req.body.value };
+            }
+
+            //updates = {project: {"status": req.body.value}};
+        }
+        else if (req.body.name == "crew_chief") {
+                updates = {"project.crew_chief":req.body.value };
+        }
+        else if (req.body.name == "project_advocate") {
+                updates = {"project.project_advocate":req.body.value };
+        }
+        else if (req.body.name == "site_host") {
+                updates = {"project.site_host":req.body.value };
+        }
+
+        else if (req.body.name == "actual_volunteer_count") {
+                updates = {"project.actual_volunteer_count":req.body.value };
+        }
+
+        else if (req.body.name == "actual_labor_count") {
+                updates = {"project.actual_labor_count":req.body.value };
+        } else if (req.body.name == "project.project_start") {
+                updates = {"project.project_start":req.body.value };
+        } else if (req.body.name == "project.project_end") {
+                updates = {"project.project_end":req.body.value };
+        } else if (req.body.name == "drive_url") {
+                updates = {"drive.drive_url":req.body.value };
+        }   
+
+        // else {
+        
+        //     if(req.params.id != null) {
+        //         id = req.params.id;
+        //     }
+        //     else {
+        //         id = req.body.id;
+        //     }
+        //     // Build the name:value pairs to be updated
+        //     // Since there is only one name and one value, we can use the method below
+            
+        //     updates[req.body.name] = req.body.value;
+        //     // Record Update time
+        //     //filters
+        // }
+
+        // if(req.params.id != null) {
+        //         id = req.params.id;
+        //     }
+        // else {
+        //         id = req.body.id || null;
+        //     }
+        var conditions = {};
+        conditions['_id'] = req.params.id || mongoose.Types.ObjectId(id);
+        console.log("Search Filter:");
+        console.log(conditions);
+        console.log("Update:");
+        updates['updated'] = Date.now();
+        console.log(updates);
+
+
+        Promise.props({
+            project: DocumentPackage.findOneAndUpdate(
+                // Condition
+                conditions,
+                // Updates
+                {
+                    // $set: {name: value}
+                    $set: updates
+                },
+                // Options
+                {
+                    // new - defaults to false, returns the modified document when true, or the original when false
+                    new: true,
+                    //upsert: true
+                }
+                // Callback if needed
+                // { }
+            ).execAsync()
+        })
+            .then(function (results) {
+                // TODO: Confirm true/false is correct
+                if (results) {
+                    console.log('[ API ] putUpdateProject :: Project Doc found: TRUE');
+                }
+                else {
+                    console.log('[ API ] putUpdateProject :: Project Doc found: FALSE, Created new one!');
+                }
+                res.locals.results = results;
+                //sending a status of 200 for now
+                res.locals.status = '200';
+
+                // If we are at this line all promises have executed and returned
+                // Call next() to pass all of this glorious data to the next express router
+                next();
+            })
+            .catch(function (err) {
+                console.error(err);
+            })
+            .catch(next);
+    },
+
+
+
+    putUpdateWork: function(req, res, next) {
+        // When executed this will apply updates to a doc and return the MODIFIED doc
+
+        // Log the _id, name, and value that are passed to the function
+        console.log('[ API ] putUpdateWork :: Call invoked with _id: ' + req.params.id
+            + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
+        console.log(req.body.name + ' + ' + req.body.value);
+        var updates = {};
+        var id;
+ 
+     
+        if (req.body.name == "isHandle") {
+            if (req.body.value == true) {
+                updates = { "isHandle": true };
+            } else {
+                updates = { "isHandle": false };
+            }
+        }
+
+        var conditions = {};
+        conditions['_id'] = req.params.id || mongoose.Types.ObjectId(id);
+        console.log("Search Filter:");
+        console.log(conditions);
+        console.log("Update:");
+        updates['updated'] = Date.now();
+        console.log(updates);
+
+
+        // Promise.props({
+        //     project: DocumentPackage.findOneAndUpdate(
+        //         // Condition
+        //         conditions,
+        //         // Updates
+        //         {
+        //             // $set: {name: value}
+        //             $set: updates
+        //         },
+        //         // Options
+        //         {
+        //             // new - defaults to false, returns the modified document when true, or the original when false
+        //             new: true,
+        //             //upsert: true
+        //         }
+        //         // Callback if needed
+        //         // { }
+        //     ).execAsync()
+        // })
+
+        Promise.props({
+        item: WorkItemPackage.findOneAndUpdate(
+            // Condition
+               conditions,
+               // Updates
+               {
+                   $set: updates
+               },
+               // Options
+               {
+                   // new - defaults to false, returns the modified document when true, or the original when false
+                   new: true,
+                   // runValidators - defaults to false, make sure the data fits the model before applying the update
+                   runValidators: true
+               }
+                   ).execAsync()
+        })
+
+            .then(function (results) {
+                // TODO: Confirm true/false is correct
+                if (results) {
+                    console.log('[ API ] putUpdateWork :: found: TRUE');
+                }
+                else {
+                    console.log('[ API ] putUpdateWork :: found: FALSE, Created new one!');
+                }
+                res.locals.results = results;
+                //sending a status of 200 for now
+                res.locals.status = '200';
+
+                // If we are at this line all promises have executed and returned
+                // Call next() to pass all of this glorious data to the next express router
+                next();
+            })
+            .catch(function (err) {
+                console.error(err);
+            })
+            .catch(next);
+    },
+
 
 	postUser: function(req, res, next) {
         // Data will be submitted using req.body
@@ -876,7 +1457,86 @@ module.exports = {
 		}
     },
 
+    updateUserRoles: function(req, res, next) {
+        // When executed this will apply updates to a user and return the MODIFIED user
+        // Log the _id, name, and value that are passed to the function
 
+         console.log('[ API ] updateUserRoles :: Call invoked with _id: ' + req.body.pk
+           + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
+        //console.log(req.body.name + ' + ' + req.body.value);
+	   //console.log("in req body");
+        console.log(req.body)
+		//res.locals.status = 200;
+		//next();
+        // Build the name:value pairs to be updated
+        // Since there is only one name and one value, we can use the method below
+
+		
+			
+		        var updates = {};
+				//updates[req.body.name] = req.body.value;
+               
+                var user_roles = JSON.parse(req.body.user_roles);
+                console.log(user_roles);
+              
+				// Record Update time
+				//filters
+				var conditions = {};
+                conditions['_id'] = req.body.Id;
+                console.log(req.body['user_roles']);
+				console.log("Search Filter:");
+				console.log(conditions);
+                console.log("Update:");
+                updates['user_roles'] = user_roles;
+                
+               
+                updates['updated'] = Date.now();
+                
+				console.log(updates);
+
+				Promise.props({
+					user: UserPackage.findOneAndUpdate(
+						// Condition
+						conditions,
+						// Updates
+						{
+							// $set: {name: value}
+							$set: updates
+						},
+						// Options
+						{
+							// new - defaults to false, returns the modified document when true, or the original when false
+							new: true,
+							// runValidators - defaults to false, make sure the data fits the model before applying the update
+							runValidators: true
+						}
+						// Callback if needed
+						// { }
+					).execAsync()
+				})
+					.then(function (results) {
+						console.log(results);
+						// TODO: Confirm true/false is correct
+						if (results) {
+							console.log('[ API ] updateUser :: Documents package found: TRUE');
+						}
+						else {
+							console.log('[ API ] updateUser :: Documents package found: FALSE');
+						}
+						res.locals.results = results;
+						//sending a status of 200 for now
+						res.locals.status = '200';
+
+						// If we are at this line all promises have executed and returned
+						// Call next() to pass all of this glorious data to the next express router
+						next();
+					})
+					.catch(function (err) {
+						console.error(err);
+					})
+					.catch(next);
+		
+    },
 
 
 	updatePassword: function(req, res, next) {
@@ -1025,7 +1685,11 @@ module.exports = {
 
 		var admin = new RolePackage();
 		admin.role_name = "ADMIN";
-		admin.role_display = "Admin";
+        admin.role_display = "Admin";
+        
+        var projectmanger = new RolePackage();
+		projectmanger.role_name = "PROJECT_MANAGEMENT";
+		projectmanger.role_display = "Project Management";
 
 		vet.saveAsync(function (err, doc, numAffected) {
             if (err) {
@@ -1130,6 +1794,425 @@ module.exports = {
             })
             .catch(next);
     },
+
+
+    //post create Partner       //next
+    createPartner: function(req, res, next) {
+        console.log('[ API ] createPartner :: Call invoked');
+        console.log(req.body);
+        var item = new PartnerPackage(req.body);
+
+        item.saveAsync(function (err, note, numAffected) {
+            if (err) {
+                console.error(err);
+            }
+            else if (numAffected == 1) {
+                console.log("saved!");
+                console.log('[ API ] createPartner :: New Partner created with _id: ' + item._id);
+                console.log(item);
+                //send note ID so it can be referenced without page refresh
+                //res.send( { status : 200, _id: item._id } );
+                res.locals.status = '200';
+            } else {
+                console.log ('[ API ] :: createPartner error.');
+            }
+            next();
+        });
+    },
+
+    //post delete Partner           //next
+    deletePartner: function(req, res, next) {
+        console.log('[ API ] deletePartner :: Call invoked: req.body: ');
+        console.log(req.body);
+        Promise.props({
+            note: PartnerPackage.remove(
+                {
+                    _id: req.body._id
+                }
+            ).execAsync()
+        })
+        .then(function (results) {
+            if (results) {
+                console.log('[ API ] deletePartner :: Partner found: TRUE');
+                res.locals.results = results;
+                //sending a status of 200 for now
+                res.locals.status = '200';
+            }
+            else {
+                console.log('[ API ] deletePartner :: Partner found: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
+    putUpdatePartner: function(req, res, next) {
+        // When executed this will apply updates to a doc and return the MODIFIED doc
+
+        // Log the _id, name, and value that are passed to the function
+        console.log('[ API ] putUpdatePartner :: Call invoked with _id: ' + req.params.id
+            + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
+        console.log(req.body.name + ' + ' + req.body.value);
+
+   
+        var conditions = {};
+        conditions['_id'] = req.params.id;
+
+        var updates = {};
+        updates[req.body.name] = req.body.value;
+
+        console.log("Search Filter:");
+        console.log(conditions);
+        console.log("Update:");
+        console.log(updates);
+
+
+        Promise.props({
+            project: PartnerPackage.findOneAndUpdate(
+                // Condition
+                conditions,
+                // Updates
+                {
+                    // $set: {name: value}
+                    $set: updates
+                },
+                // Options
+                {
+                    // new - defaults to false, returns the modified document when true, or the original when false
+                    new: true,
+                    //upsert: true
+                }
+                // Callback if needed
+                // { }
+            ).execAsync()
+        })
+            .then(function (results) {
+                // TODO: Confirm true/false is correct
+                if (results) {
+                    console.log('[ API ] putUpdatePartner :: Partner found: TRUE');
+                }
+                else {
+                    console.log('[ API ] putUpdatePartner :: Cannot update - This Partner ID does not exist');
+                }
+                res.locals.results = results;
+                //sending a status of 200 for now
+                res.locals.status = '200';
+
+                // If we are at this line all promises have executed and returned
+                // Call next() to pass all of this glorious data to the next express router
+                next();
+            })
+            .catch(function (err) {
+                console.error(err);
+            })
+            .catch(next);
+    },
+
+
+
+    //post get all Partners
+    getPartner: function(req, res, next) {
+        console.log('[ API ] getPartner :: Call invoked: req.body: ');
+        console.log(req.body);
+        Promise.props({
+            partner: PartnerPackage.find().execAsync(),
+            count: PartnerPackage.count().execAsync()
+        })
+        .then(function (results) {
+            if (results) {
+                console.log('[ API ] getPartner :: Partner(s) found: TRUE');
+                res.locals.results = results;
+                res.locals.status = '200';
+            }
+            else {
+                console.log('[ API ] getPartner :: Partner(s) found: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
+    //post - GET (Retrieve) partners and leaders associated to that project
+    getSummaryPartners: function(req, res, next) {
+        //console.log(req.body);
+        //var projectId =  ObjectId(req.params.id) ||req.params.id || req.body.projectId;                    
+        console.log('[ API ] getSummaryPartners :: Call invoked');
+
+        //res.locals.docId = projectId;
+
+        // var projectId = String(req.body.projectId);
+        var resArray = [];
+
+        Promise.props({
+            allPartners: PartnerPackage.find().sort({ "org_name": 1 }).execAsync(),
+            pCount: PartnerPackage.count().execAsync(),
+            assocPartners: ProjectSummaryPackage.find({ projectId: { $exists: true } }).execAsync()
+        })
+        .then(function (assocRes) {
+            
+            if (assocRes) {
+            var allPartners = assocRes.allPartners;                             //Array of Objects
+
+            var unAssocArray = assocRes.allPartners;  
+            var uIDs = [];
+
+            var asso = assocRes.assocPartners.length;
+            console.log("RR1", asso);
+
+              var assocPartners = assocRes.assocPartners[0].assocPartners || null;        //An array of IDS
+                console.log('[ API ] getSummaryPartners :: item(s) found: TRUE');
+
+                console.log("Partner Associations Result: " + assocPartners);
+                var m; 
+                var allCnt;
+                var aCnt;
+                var k;
+            for (k = 0; k < asso; k++) {
+                assocPartners = assocRes.assocPartners[k].assocPartners || null;   
+              if (assocPartners) {  
+                for (aCnt = 0; aCnt < assocPartners.length; aCnt++) {
+                    for (allCnt=0; allCnt < allPartners.length; allCnt++) {    
+                        if (allPartners[allCnt]._id == assocPartners[aCnt]) {
+                                m = assocRes.assocPartners[k].projectId;
+                                if (resArray[m]) {
+                                    resArray[m].push(allPartners[allCnt].org_name);
+                                } else {
+                                    resArray[m] = [];
+                                    resArray[m].push(allPartners[allCnt].org_name);
+                                }
+                                //break;
+
+                        } 
+                        else if (allCnt + 1 == allPartners.length) {
+                            uIDs.push(assocPartners[aCnt]);
+                        }
+                    }
+                }
+              }
+            }
+                    // var filtered = unAssocArray.filter(customFilter);
+
+                    // function customFilter(eachObj) {
+                    //     var isFound = false;
+                    //     for (var aCnt = 0; aCnt < assocPartners.length; aCnt++) {
+                    //         if (eachObj._id == assocPartners[aCnt]) {
+                    //             isFound = true; 
+                    //         } 
+                    //     }
+                    //     return (! isFound);
+                    // }
+
+
+            var sendRes =   { 
+                                pAll:   allPartners, 
+                                // aCount: assocRes.pCount, 
+                                pAssoc: resArray,
+                                // aIDs:   assocPartners,
+                               // uAssoc: filtered,
+                             //   projectId: projectId
+                                // uCount: filtered.length,
+                                // uIDs:   uIDs
+                            };
+            req.partnerTime = sendRes;
+            res.locals.results.part = sendRes;
+            // req.partnerTime = sendRes;
+            res.locals.status = '200';
+            } else {
+                console.log('[ API ] getProjPartnersLeaders :: item(s) found: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
+
+
+    //post - GET (Retrieve) partners and leaders associated to that project
+    getProjPartnersLeaders: function(req, res, next) {
+        //console.log(req.body);
+        
+        var projectId =  ObjectId(req.params.id) ||req.params.id || req.body.projectId;                    
+        console.log('[ API ] getProjPartnersLeaders :: Call invoked for: ' + projectId);
+
+        res.locals.docId = projectId;
+
+        // var projectId = String(req.body.projectId);
+        var resArray = [];
+        //var unAssocArray = [];
+
+
+        Promise.props({
+            allPartners: PartnerPackage.find().sort({ "org_name": 1 }).execAsync(),
+            pCount: PartnerPackage.count().execAsync(),
+            assocPartners: ProjectSummaryPackage.find({"projectId": projectId }).execAsync()
+            // assocPartners: ProjectSummaryPackage.findAllAndUpdate(
+            //                 {"projectId": projectId },
+            //                 { $setOnInsert: {"projectId": projectId } }, 
+            //                 { returnOriginal: false,
+            //                           upsert: true   }
+            // ).execAsync()
+        })
+        .then(function (assocRes) {
+            
+            var allPartners = assocRes.allPartners;                             //Array of Objects
+
+            var unAssocArray = assocRes.allPartners;  
+            var uIDs = [];
+
+            if (! assocRes.assocPartners[0]) {
+
+                console.log('[ API ] getProjPartner createPartner :: Call invoked');
+                // console.log(req.body);
+
+                // var empty = [];
+                // var newBody = {    "projectId": projectId 
+                //               };
+
+                var item = new ProjectSummaryPackage({"projectId": projectId });
+
+                item.saveAsync(function (err, note, numAffected) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    else  {
+                        console.log('[ API ] getProjPartner createPartner :: New Partner created with _id: ' + item._id);
+                        console.log(item);
+
+                        var newSendRes =   { 
+                                            pAll:   allPartners, 
+                                            pAssoc: {},
+                                            uAssoc: allPartners,
+                                            projectId: projectId
+                                        };
+
+                        console.log("\nCREATED Blank Document-Partner Association ----->\n");
+                        console.log(newSendRes);
+
+                        res.locals.results.part = newSendRes;
+                        req.partnerTime = newSendRes;
+                        res.locals.status = '200';
+                    }
+                });
+
+
+            } 
+
+
+
+            else if (assocRes) {
+              var assocPartners = assocRes.assocPartners[0].assocPartners || null;        //An array of IDS
+                console.log('[ API ] getProjPartnersLeaders :: item(s) found: TRUE');
+
+                console.log("Partner Associations Result: " + assocPartners);
+                
+                for (var aCnt = 0; aCnt < assocPartners.length; aCnt++) {
+                    for (var allCnt=0; allCnt < allPartners.length; allCnt++) {    
+                        if (allPartners[allCnt]._id == assocPartners[aCnt]) {
+                                resArray.push(allPartners[allCnt]);
+                                //break;
+
+                        } 
+                        else if (allCnt + 1 == allPartners.length) {
+                            uIDs.push(assocPartners[aCnt]);
+                        }
+                    }
+                }
+
+                    var filtered = unAssocArray.filter(customFilter);
+
+                    function customFilter(eachObj) {
+                        var isFound = false;
+                        for (var aCnt = 0; aCnt < assocPartners.length; aCnt++) {
+                            if (eachObj._id == assocPartners[aCnt]) {
+                                isFound = true; 
+                            } 
+                        }
+                        return (! isFound);
+                    }
+
+            
+
+
+                if (resArray.length > 0) {
+                    console.log(resArray.length);
+                }
+            //res.locals.results = results;
+            // res.locals.results = { ans: JSON.stringify(resArray) };
+            // res.locals.results = assocRes.allPartners;
+
+            var sendRes =   { 
+                                pAll:   allPartners, 
+                                // aCount: assocRes.pCount, 
+                                pAssoc: resArray,
+                                // aIDs:   assocPartners,
+                                uAssoc: filtered,
+                                projectId: projectId
+                                // uCount: filtered.length,
+                                // uIDs:   uIDs
+                            };
+            req.partnerTime = sendRes;
+            res.locals.results.part = sendRes;
+            // req.partnerTime = sendRes;
+            res.locals.status = '200';
+            } else {
+                console.log('[ API ] getProjPartnersLeaders :: item(s) found: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
+
+    //post - SET (Store) partners and leaders associated to that project
+    setProjPartnersLeaders: function(req, res, next) {
+        
+        console.log("**Setting Doc-Partner Association with body: **");
+        console.log(req.body);
+
+        //console.log(req.body);
+        var projectId = req.body.projectId || res.locals.docId;       
+        console.log('[ API ] setProjPartnersLeaders :: Call invoked for: ' + projectId);
+        // var item = new ProjectSummaryPackage(req.body);
+
+        Promise.props({
+            updateStatus:   ProjectSummaryPackage.update(
+                                {"projectId": projectId },           //Query
+                                {  $set: {
+                                            "assocPartners": req.body.assocArray
+                                          }
+                                },   
+                                { 
+                                    upsert: true,
+                                    new: true
+                                }
+                            ).execAsync()
+        })
+        .then(function (thisRes) {
+            if (thisRes) {
+                console.log('[ API ] setProjPartnersLeaders :: item UPDATED: TRUE');
+                console.log(thisRes.updateStatus);
+
+            res.locals.results = thisRes;
+            res.locals.status = '200';
+            } else {
+                console.log('[ API ] setProjPartnersLeaders :: item UPDATED: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
+
     /**
      * Description: add a vetting note to the database
      * Type: POST
@@ -1181,6 +2264,50 @@ module.exports = {
 
     },
 
+    postProjectNote: function(req, res, next) {
+        console.log('[ API ] postProjectNote :: call invoked');
+		console.log(req.body);
+		var userID = req.body.user.toString();
+		Promise.props({
+            user: UserPackage.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
+        })
+            .then(function(results) {
+				console.log(results);
+                if (!results) {
+                    console.log('[ API ] postProjectNote :: User package found: FALSE');
+                }
+                else {
+                    console.log('[ API ] postProjectNote :: User package found: TRUE');
+					var note = new ProjectNotePackage(req.body);
+					var firstName = results.user.contact_info.user_name.user_first;
+					console.log('first name');
+					console.log(firstName);
+					note.projectPlanner = results.user.contact_info.user_name.user_first + " " + results.user.contact_info.user_name.user_last;
+					console.log(note.projectPlanner);
+
+					note.saveAsync(function (err, note, numAffected) {
+						if (err) {
+							console.error(err);
+						}
+						else if (numAffected == 1) {
+							console.log('[ API ] postVettingNote :: Note created with _id: ' + note._id);
+							//send note ID so it can be referenced without page refresh
+							res.send( { status : 200, noteId: note._id, projectPlanner: note.projectPlanner } );
+						}
+					})
+
+
+
+				}
+			})
+            .catch(function(err) {
+                console.error(err);
+            })
+            .catch(next);
+
+
+    },
+
 	//post new work item
 	addWorkItem: function(req, res, next) {
         console.log('[ API ] addWorkItem :: Call invoked');
@@ -1200,6 +2327,7 @@ module.exports = {
         });
 
     },
+
 
     /**
      * Description: remove a vetting note from the database
@@ -1227,6 +2355,40 @@ module.exports = {
             }
             else {
                 console.log('[ API ] removeVettingNote :: Note found: FALSE');
+            }
+            next();
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    },
+
+    /**
+     * Description: remove a vetting note from the database
+     * Type: POST
+     * Params: _id of Vetting Note
+     * Address: api.removeVettingNote
+     * Returns: confirmation of delete
+     */
+    removeProjectNote: function(req, res, next) {
+        console.log('[ API ] removeProjectNote :: Call invoked');
+		//console.log(req.locals.status);
+        Promise.props({
+            note: ProjectNotePackage.remove(
+                {
+                    _id: req.body.noteId
+                }
+            ).execAsync()
+        })
+        .then(function (results) {
+            if (results) {
+                console.log('[ API ] removeProjectNote :: Note found: TRUE');
+                res.locals.results = results;
+                //sending a status of 200 for now
+                res.locals.status = '200';
+            }
+            else {
+                console.log('[ API ] removeProjectNote :: Note found: FALSE');
             }
             next();
         })
@@ -1327,14 +2489,77 @@ module.exports = {
             .catch(next);
     },
 
+    updateProjectNote: function(req, res, next) {
+        // Log the _id, name, and value that are passed to the function
+        console.log('[ API ] updateProjectNote :: Call invoked with note _id: ' + req.body.id
+            + ' | description: ' + req.body.description);
+
+        var updates = {};
+        updates.description = req.body.description;
+
+        //filters
+        var conditions = {};
+        conditions['_id'] = req.body.id;
+        console.log("Search Filter:");
+        console.log(conditions);
+        console.log("Update:");
+        console.log(updates);
+
+        Promise.props({
+            note: ProjectNotePackage.findOneAndUpdate(
+                // Condition
+                conditions,
+                // Updates
+                {
+                    // $set: {name: value}
+                    $set: updates
+                },
+                // Options
+                {
+                    // new - defaults to false, returns the modified document when true, or the original when false
+                    new: true,
+                    // runValidators - defaults to false, make sure the data fits the model before applying the update
+                    runValidators: true
+                }
+                // Callback if needed
+                // { }
+            ).execAsync()
+        })
+            .then(function (results) {
+                console.log(results);
+                if (results.note != null) {
+                    console.log('[ API ] updateProjectNote :: Note found: TRUE');
+                    res.locals.status = '200';
+                }
+                else {
+                    console.log('[ API ] updateProjectNote :: Note found: FALSE');
+                    res.locals.status = '500';
+                }
+                res.locals.results = results;
+
+                // If we are at this line all promises have executed and returned
+                // Call next() to pass all of this glorious data to the next express router
+                next();
+            })
+            .catch(function (err) {
+                console.error(err);
+            })
+            .catch(next);
+    },
+
 
 
 	updateWorkItem: function(req, res, next) {
         // Log the _id, name, and value that are passed to the function
         //console.log('[ API ] WorkItem :: Call invoked with item _id: ' + req.body.id
        //     + ' | description: ' + req.body.description);
-		console.log("role in function");
+		console.log("role in old function");
 		console.log(res.locals.role);
+        console.log("role in new function")
+        console.log(res.locals.user_roles.indexOf('PROJECT_MANAGEMENT') !== -1);
+        console.log(res.locals.user_roles == 'PROJECT_MANAGEMENT');
+        console.log("all locals");
+        console.log(res.locals);
 		//res.locals.status = 200;
 		//next();
         var updates = {};
@@ -1345,24 +2570,93 @@ module.exports = {
 		}
 		updates.cost = req.body.cost;
 		updates.updated = Date.now();
-		
-		if(res.locals.role == "ADMIN") {
+ 
+        if(req.body.siteComments != null) {
+            updates.siteComments = req.body.siteComments;
+        }
+        if(req.body.vettingComments != null) {
+            updates.vettingComments = req.body.vettingComments;
+        }
+        if(req.body.projectComments != null)
+        {
+            updates.projectComments = req.body.projectComments;
+        }
+
+        if(res.locals.role === undefined || res.locals.role==='')
+        {
+            if(req.body.siteComments != null) {
+                updates.siteComments = req.body.siteComments;
+            }
+        }
+       // else
+       // {
+		if(res.locals.user_roles.indexOf("ADMIN") !== -1) {
+            console.log("Yes, User has an ADMIN Role");
 			if(req.body.siteComments != null) {
 				updates.siteComments = req.body.siteComments;
 			}
 			if(req.body.vettingComments != null) {
 				updates.vettingComments = req.body.vettingComments;
+            }
+            if(req.body.projectComments != null)
+            {
+                updates.projectComments = req.body.projectComments;
+            }
+		}
+        // else if(res.locals.role == "ADMIN") {
+        //     if(req.body.siteComments != null) {
+        //         updates.siteComments = req.body.siteComments;
+        //     }
+        //     if(req.body.vettingComments != null) {
+        //         updates.vettingComments = req.body.vettingComments;
+        //     }
+        //     if(req.body.projectComments != null)
+        //     {
+        //         updates.projectComments = req.body.projectComments;
+        //     }
+        // }
+        if(res.locals.user_roles.indexOf("PROJECT_MANAGEMENT") !== -1) {
+            console.log("Yes, User has a PROJECT_MANAGEMENT Role");
+            if(req.body.projectComments != null) {
+                updates.projectComments = req.body.projectComments;
+            }
+        }
+        else if(res.locals.role == "PROJECT_MANAGEMENT") {
+            console.log("Yes, User has a PROJECT_MANAGEMENT (older) Role");
+            if(req.body.projectComments != null) {
+                updates.projectComments = req.body.projectComments;
+            }
+           
+        }
+		if(res.locals.user_roles.indexOf("SITE") !== -1) {
+            console.log("Yes, User has a SITE Role");
+            if(req.body.siteComments != null) {
+				updates.siteComments = req.body.siteComments;
 			}
+
+            // if(req.body.projectComments != null)
+            // {
+            //     updates.projectComments = req.body.projectComments;
+            // }
 		}
-		
-		else if(res.locals.role == "SITE") {
-			updates.siteComments = req.body.siteComments;
-		}
+        if(res.locals.user_roles.indexOf("VET") !== -1) {
+            if(req.body.vettingComments != null) {
+                updates.vettingComments = req.body.vettingComments;
+            }
+        }
+
         else {
 			if(req.body.vettingComments != null) {
-				updates.vettingComments = req.body.vettingComments;
-			}
-		}
+                updates.vettingComments = req.body.vettingComments;
+                
+            }
+           
+        }
+        
+        if(req.body.siteComments != null) {
+            updates.siteComments = req.body.siteComments;
+        }
+  // }
         //filters
         var conditions = {};
         conditions['_id'] = req.body.id;
@@ -1415,6 +2709,124 @@ module.exports = {
 
 
 	},
+
+
+  // Create / Update Assessment Checklist record
+  saveAssessmentDocument: function(req, res, next) {
+    console.log('saving assessment')
+
+    Promise.props({
+      assessment: AssessmentPackage.findOneAndUpdate(
+          { applicationId: req.body.applicationId },
+          { $set: req.body },
+          { new: true,
+            upsert: true,
+            runValidators: true,
+            setDefaultsOnInsert: true
+          }
+      ).execAsync()
+    }).then(function (results) {
+      console.log(results);
+      if (results.assessment !== null) {
+        console.log('[ API ] saveAssessmentDocument :: Assessment found: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveAssessmentDocument :: Assessment found: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
+  // Create / Update Project Plan record
+  saveProjectPlanDocument: function(req, res, next) {
+    console.log('saving project plan');
+    console.log(req.body);
+    Promise.props({
+      projectPlan: ProjectPlanPackage.findOneAndUpdate(
+        { applicationId: req.body.applicationId },
+        { $set: req.body },
+        { new: true,
+          upsert: true,
+          runValidators: true,
+          setDefaultsOnInsert: true
+        }
+      ).execAsync()
+    }).then(function (results) {
+      console.log(results);
+      if (results.projectPlan !== null) {
+        console.log('[ API ] saveProjectPlanDocument :: Assessment found: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveProjectPlanDocument :: Assessment found: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
+  // Save Custom Checklist Note
+  saveCustomChecklist: function(req, res, next) {
+    console.log('saving custom checklist note');
+    console.log(req.body);
+
+    var n = req.body.name || "custom";
+    var upName = n + ".note";
+    var updates = {};
+    //updates[n] = {"note": req.body.value};
+    //var q = {};
+    updates[upName] = req.body.value;
+    //const key = `${n}.newProp`;
+    //updates[n].note = req.body.value;
+    //console.log(updates);
+
+    console.log("Saving Custom Checklist: ", upName, "value: ", req.body.value);
+    //var applId = req.body.applicationId || 
+    //req.body.applicationId = 
+
+    Promise.props({
+      plan: ProjectPlanPackage.findOneAndUpdate(
+        { applicationId: req.params.id },
+        { $set: updates },
+        { new: true,
+          upsert: true,
+          runValidators: false,
+          setDefaultsOnInsert: false
+        }
+      ).execAsync()
+    }).then(function (results) {
+      console.log("Returned results: ");
+      console.log(results);
+      if (results.plan !== null) {
+        console.log('[ API ] saveCustomChecklist :: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveCustomChecklist :: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
+
 
 	//update financial package
 	updateFinance: function(req, res, next) {
@@ -1842,4 +3254,350 @@ module.exports = {
             })
             .catch(next);
     },
+
+    //Project Summary  get docs for view
+    getDocProjectSummaryStatus: function (req, res, next) {
+        // Log the api call we make along with the _id used by it
+        console.log('[ API ] getDocProjectSummaryStatus :: ');
+        
+        // Use results.ProjectSummaryPackage.<whatever you need> to access the information
+        Promise.props({
+            //document: ProjectSummaryPackage.findById(req.params.id).lean().execAsync()
+            handleToBeAssigned: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "handleToBeAssigned"}},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+            
+            handleAssigned: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "handleAssigned" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+            
+            complete: ProjectSummaryPackage.aggregate(          //Depleted, not being used
+                [
+                {$match: { status: "handleCompleted" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+
+            handleCompleted: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "handleAssigned" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+            
+            projectUpcoming: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "projectUpcoming" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+            
+            projectInProgress: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "projectInProgress" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+
+            projectGoBacks: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "projectGoBacks" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync(),
+
+            projectCompleted: ProjectSummaryPackage.aggregate(
+                [
+                {$match: { status: "projectCompleted" }},
+                    { $redact: {
+                        $cond: {
+                            if: { $eq: [ "$level", 5 ] },
+                            then: "$$PRUNE",
+                            else: "$$DESCEND"
+                        }
+                    }}
+                    
+                ]
+            ).execAsync()
+        })
+            .then(function(results) {
+                console.log("results");
+                
+                
+                console.log(results);
+                if (!results) {
+                    console.log('[ API ] getDocProjectSummaryStatus :: Project Summary package found: FALSE');
+                }
+                else {
+                    console.log('[ API ] getDocProjectSummaryStatus :: Project Summary found: TRUE');
+
+                }
+
+                res.locals.results = results;
+
+                // If we are at this line all promises have executed and returned
+                // Call next() to pass all of this glorious data to the next express router
+                next();
+            })
+            .catch(function(err) {
+                console.error(err);
+            })
+            .catch(next);
+    },
+
+      // Create / Update Assessment Checklist record
+  saveProjectSummaryStatus: function(req, res, next) {
+    console.log('Saving Project Summary Status for: ' + req.body.applicationId);
+
+    Promise.props({
+      assessment: AssessmentPackage.findOneAndUpdate(
+          { applicationId: req.body.applicationId },
+          { $set: req.body },
+          { new: true,
+            upsert: true,
+            runValidators: true,
+            setDefaultsOnInsert: true
+          }
+      ).execAsync()
+    }).then(function (results) {
+      console.log(results);
+      if (results.assessment !== null) {
+        console.log('[ API ] saveProjectSummaryStatus :: Project found: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveProjectSummaryStatus :: Project found: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+
+    
+  },
+
+  // Find all users that may be assigned tasks.
+  getAssignableUsers: function (req, res, next) {
+    Promise.props({
+      assignableUsers: UserPackage.find({ assign_tasks: true }).execAsync()
+
+    }).then(function (results) {
+      res.locals.assignableUsers = results.assignableUsers;
+      next();
+
+    }).catch(next);
+  },
+
+  // Find the wrap-up document for a project.
+  getWrapUpDoc: function (req, res, next) {
+    Promise.props({
+      wrapUp: ProjectWrapUpPackage.find({ applicationId: ObjectId(req.params.id) }).execAsync()
+
+    }).then(function (results) {
+      if (results.wrapUp.length <= 0) {
+        console.log('Req Params [getWrapUpDoc] ', req.params);
+        // Create new wrapUp and set that as new wrapUp.
+        ProjectWrapUpPackage.create(
+          ProjectWrapUpPackage.empty( ObjectId(req.params.id) ),
+          function(err, wrapUp) {
+            if (err) {
+              next(err)
+            } else {
+              res.locals.wrapUp = wrapUp
+              next()
+            }
+          })
+      } else {
+        // Just set the existing wrapUp
+        res.locals.wrapUp = results.wrapUp[0]
+        next();
+      }
+
+    }).catch(next);
+  },
+
+  // Create / Update Project WrapUp record
+  saveProjectWrapUp: function(req, res, next) {
+    console.log('Saving Project Summary Status for: ' + req.body.applicationId);
+
+    Promise.props({
+      projectWrapUp: ProjectWrapUpPackage.findOneAndUpdate(
+        { applicationId: req.body.applicationId },
+        { $set: req.body },
+        { new: true,
+          upsert: true,
+          runValidators: true,
+          setDefaultsOnInsert: true
+        }
+      ).execAsync()
+    }).then(function (results) {
+      console.log(results);
+      if (results.projectWrapUp !== null) {
+        console.log('[ API ] saveProjectWrapUp :: Project found: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveProjectWrapUp :: Project found: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
+  // Find the project plan document for a project.
+  getProjectPlanDoc: function (req, res, next) {
+    Promise.props({
+      plan: ProjectPlanPackage.find({ applicationId: ObjectId(req.params.id) }).execAsync()
+
+    }).then(function (results) {
+      if (results.plan.length <= 0) {
+        console.log('Req Params [getProjectPlanDoc] ', req.params);
+        // Create new ProjectPlan and set that as new ProjectPlan.
+        ProjectPlanPackage.create(
+          ProjectPlanPackage.empty( ObjectId(req.params.id) ),
+          function(err, plan) {
+            if (err) {
+              next(err)
+            } else {
+              res.locals.plan = plan
+              next()
+            }
+          })
+      } else {
+        // Just set the existing ProjectPlan
+        res.locals.plan = results.plan[0]
+        next();
+      }
+    }).catch(next);
+  },
+
+  // Create / Update Project Plan record
+  saveProjectPlan: function(req, res, next) {
+    console.log('Saving Project Plan Status for: ' + req.body.applicationId);
+    console.log(req.body);
+    Promise.props({
+      plan: ProjectPlanPackage.findOneAndUpdate(
+        { applicationId: req.body.applicationId },
+        { $set: req.body },
+        { new: true,
+          upsert: true,
+          runValidators: true,
+          setDefaultsOnInsert: true
+        }
+      ).execAsync()
+    }).then(function (results) {
+      console.log(results);
+      if (results.plan !== null) {
+        console.log('[ API ] saveProjectPlan :: Project found: TRUE');
+        res.locals.status = '200';
+      } else {
+        console.log('[ API ] saveProjectPlan :: Project found: FALSE');
+        res.locals.status = '500';
+      }
+      res.locals.results = results
+
+      next();
+
+    }).catch(function (err) {
+      console.error(err)
+      
+    }).catch(next);
+  },
+
+  getLeadtimeDefaults: function (req, res, next) {
+    LeadtimeDefaults.findOne(null, function(err, lt) {
+      if (typeof lt === 'object' && lt !== null) {
+        res.locals.leadtime = lt
+        next()
+
+      } else {
+        LeadtimeDefaults.findOneAndUpdate({}, {}, {
+          'new': true,
+          upsert: true,
+          setDefaultsOnInsert: true
+        }, function (err, lt) {
+          res.locals.leadtime = lt
+          next()
+        })
+      }
+    })
+  },
+
+  setLeadtimeDefaults: function (req, res, next) {
+    console.log('Finding with criteria: ', req.body)
+    LeadtimeDefaults.findOneAndUpdate({}, { $set: req.body }, {
+      'new': true,
+      upsert: true,
+      setDefaultsOnInsert: true
+    }, function (err, lt) {
+      console.log('Lead time updated: ', lt)
+      res.locals.leadtime = lt
+      next()
+    })
+  }
+
 };

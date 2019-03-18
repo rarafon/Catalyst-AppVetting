@@ -7,6 +7,12 @@
 -->
 
 <link rel="stylesheet" type="text/css" href="/stylesheets/formStyle.css">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+
 
 <h1>Registration</h1>
 
@@ -185,15 +191,19 @@
       </div>
 
     </div>
-    <div class="col-xs-12 col-sm-4">
-      <h5>Roles</h5>
-      <p>Roles selected will appear in blue.</p>
-      <div class="btn-group-vertical btn-block" id="role-selector" name="user_role">
-        {{#each roles}}
-          {{#if_not_eq role_name 'ADMIN'}}
-            <button class="btn btn-secondary" value="{{ role_name }}">{{ role_display }}</button>
-          {{/if_not_eq}}
-        {{/each}}
+    <div class="col-xs-12 col-sm-4">      
+           
+     <dt class="col-xs-4">Roles</dt>
+      <dd class="col-xs-8">
+        <select class="selectpicker showtick" id="user_roles" title="{{user.user_roles}}" multiple>
+          <option value="VET">Vetting Agent</option>
+          <option value="SITE">Site Assement</option>
+          <option value="PROJECT_MANAGEMENT">Project Managment</option>
+          <option value="ADMIN">Admin</option>          
+        </select>
+      </dd>
+          
+      
       </div>
     </div>
   </form>

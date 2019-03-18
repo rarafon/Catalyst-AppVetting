@@ -20,64 +20,64 @@ Promise.promisifyAll(mongoose); // Convert mongoose API to always return promise
 //Need ObjectID to search by ObjectID
 var ObjectId = require('mongodb').ObjectID;
 module.exports = function(passport) {
-router.route('/add') 
+  router.route('/add') 
 	
-    .get(isLoggedIn, function(req, res) {
-		
-		var payload = {};
-		
-		payload.user_email = res.locals.email;
-		payload.user_role = res.locals.role;
-		res.locals.layout = 'applicationlayout';        // Changes default from layout.hbs to b3-layout.hbs
-        res.render('applicationform', payload);
-    })
-    .post(api.postDocument, function(req, res) {
-        res.json(res.locals);
-    })
+        .get(isLoggedIn, function(req, res) {
+		      
+		      var payload = {};
+		      
+		      payload.user_email = res.locals.email;
+		      payload.user_role = res.locals.role;
+		      res.locals.layout = 'applicationlayout';        // Changes default from layout.hbs to b3-layout.hbs
+          res.render('applicationform', payload);
+        })
+        .post(api.postDocument, function(req, res) {
+          res.json(res.locals);
+        })
 
-router.get('/success', function(req, res) {
+  router.get('/success', function(req, res) {
     //render the success page
     res.render('applicationsuccess');
-});
+  });
 
-/* GET ALL DOCUMENTS AND PRINT TO CONSOLE */
-/* BONUS HANDLEBARS TEMPLATE EXAMPLE */
-router.get('/show', function(req, res) {
+  /* GET ALL DOCUMENTS AND PRINT TO CONSOLE */
+  /* BONUS HANDLEBARS TEMPLATE EXAMPLE */
+  router.get('/show', function(req, res) {
     // Static list is passed and referenced in rest-list.hbs
     var staticList = { restname: ['mcdonald', 'burger king', 'subway'] };
 
     // Load in the application model
     var query = Application.find({}, function(err, docs) {
-        if (err) throw err;
-        console.log(docs);
-        return docs;
+      if (err) throw err;
+      console.log(docs);
+      return docs;
     });
 
     res.render('rest-list', staticList);
-});
+  });
 
-/* GET ALL DOCUMENTS AND RETURN A JSON FILE */
-router.get('/show-all', function(req, res) {
+  /* GET ALL DOCUMENTS AND RETURN A JSON FILE */
+  router.get('/show-all', function(req, res) {
     Application.find(function(err, docs) {
-        if (err)
-            res.send(err);
-        res.json(docs);
+      if (err)
+        res.send(err);
+      res.json(docs);
     });
-});
+  });
 
-/* USING HELP QUERY FROM /mongoose/query-helpers.js */
-/* THIS EXAMPLE SEARCHES BY LAST NAME */
-/* Last names in DB: fitzpatrick, washington, west */
-router.get('/helper-last-name', function(req, res) {
+  /* USING HELP QUERY FROM /mongoose/query-helpers.js */
+  /* THIS EXAMPLE SEARCHES BY LAST NAME */
+  /* Last names in DB: fitzpatrick, washington, west */
+  router.get('/helper-last-name', function(req, res) {
     Application.findLastName("West", function(err, docs) {
-        if (err) console.error(err);
-        console.log(docs);
-        res.json(docs);
+      if (err) console.error(err);
+      console.log(docs);
+      res.json(docs);
     })
-});
+  });
 
-/* INSERT */
-router.post('/insert_user', function(req, res) {
+  /* INSERT */
+  router.post('/insert_user', function(req, res) {
     // get the db instance
     var db = req.db;
 
@@ -93,48 +93,48 @@ router.post('/insert_user', function(req, res) {
     var restid = req.body.restaurant_id;
 
     console.log('POST VALUES: ' + '\n' + building + '\n' + coord1 + '\n' + coord2
-        + '\n' + street + '\n' + zip + '\n' + borough + '\n' + cuisine + '\n' +
-        name  + '\n' + restid + '\n');
+              + '\n' + street + '\n' + zip + '\n' + borough + '\n' + cuisine + '\n' +
+                name  + '\n' + restid + '\n');
 
     res.send("Insert a new rest (C)");
-});
-return router;
-//module.exports = router;
+  });
+  return router;
+  //module.exports = router;
 }
 
 
 //check to see if user is logged in
 function isLoggedIn(req, res, next) {
-		if(req.isAuthenticated()) {
-			var userID = req.user._id.toString();
-			var ObjectId = require('mongodb').ObjectID;
-			Promise.props({
-				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
-			})
-			.then(function (results) {
-					if (!results) {
-						//res.redirect('/user/logout');
-						next();
-					}
-					else {
-							
-							//format user data to send to front end
-							res.locals.email = results.user.contact_info.user_email;
-							res.locals.role = results.user.user_role;
-							res.locals.user = results.user._id;
+	if(req.isAuthenticated()) {
+		var userID = req.user._id.toString();
+		var ObjectId = require('mongodb').ObjectID;
+		Promise.props({
+			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
+		})
+			     .then(function (results) {
+					   if (!results) {
+						   //res.redirect('/user/logout');
+						   next();
+					   }
+					   else {
+							 
+							 //format user data to send to front end
+							 res.locals.email = results.user.contact_info.user_email;
+							 res.locals.role = results.user.user_role;
+							 res.locals.user = results.user._id;
+               res.locals.assign_tasks = results.user.assign_tasks;
+							 return next();
+						   
+					   }
 
-							return next();
-						
-					}
 
 
+			     })
 
-			})
-
-		.catch(function(err) {
-                console.error(err);
-        })
-         .catch(next);
+		       .catch(function(err) {
+             console.error(err);
+           })
+           .catch(next);
 		}
 		else {
 			console.log("no user id");

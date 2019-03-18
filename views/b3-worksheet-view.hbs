@@ -17,7 +17,7 @@
 
 <a href="/view" class="btn btn-primary">Back to Vetting Home</a>
 <a href="/view/{{doc._id}}" class="btn btn-primary">Back to Application View</a>
-<a id="csvExportButton" class="btn btn-primary">Export to CSV</a>
+<!-- <a id="csvExportButton" class="btn btn-primary">Export to CSV</a> -->
 
 
 <div class="container col-xs-12">
@@ -218,6 +218,10 @@
 							<label class="form-control-label">Cost</label>
 							<input type="cost" class="form-control" name="cost">
 						</div>
+						<div class="form-group">
+							<label class="form-control-label">Handle-it</label>
+							<input type="checkbox" name="isHandle" id="checkbox1" style="margin-left: 10px; !important" value="true" name="isHandle" checked>
+                 	 	</div>
 					</p>
 					<a href="#" class="btn btn-primary card-link work-item-new">Save</a>
 					<a href="#" class="btn btn-danger card-link work-item-clear">Clear</a>
@@ -247,12 +251,18 @@
 							<br/> {{siteComments}}
 							<br/>
 							<br/>
+							<strong>Project comments:</strong>
+							<br/> {{projectComments}}
+							<br/>
+							<br/>
 							<strong>Cost:</strong>
 							<br/>
 							<span name="{{_id}}.cost">{{cost}}</span>
 						</p>
 						<a href="#" class="btn btn-primary card-link work-item-edit">Edit</a>
 						<a href="#" class="btn btn-danger card-link work-item-delete">Delete</a>
+					    <input class="isHandle card-link" type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
+
 					</div>
 				</div>
 			</div>
@@ -788,6 +798,25 @@
 
 
 
+<div>
+	<button class="btn btn-info" id="exportBtn" style="margin-left: 25%; position: relative;">Export PDFs</button>
+</div>
+
+<script type="text/javascript">
+$(function(){
+    $('#exportBtn').click(function(){
+        if(!$('#iframe').length) {
+                $('#iframeHolder').html('<iframe id="iframe" src="/vettingworksheet/exportPDF/{{doc._id}}" frameborder="0" width="100%" height="75"></iframe>');
+				$('#exportBtn').hide();
+        }
+    });   
+});
+</script>
+
+<div id="iframeHolder"></div>
+
+
+
 <script src="/javascript/serviceArea.js" type="text/javascript"></script>
 
 	<script src="/javascript/addItem.js" type="text/javascript"></script>
@@ -892,7 +921,8 @@
 						{ value: 'declined', text: 'Declined' },
 						{ value: 'withdrawnooa', text: 'Withdrawn - Outside Service Area' },
 						{ value: 'withdrawn', text: 'Withdrawn' },
-						{ value: 'project', text: 'Approved Project' }
+						{ value: 'project', text: 'Approved Project' },
+						{value: 'waitlist', text: 'Waitlist'}
                     ]
         });
         $('#owns_home').editable({
@@ -1036,6 +1066,63 @@
 			var fpb = new FinacialPackageBuilder();
 			fpb.populateHtml();
 			fpb.getData();
+
+
+			$("#checkbox1").on('change', function() {
+			if ($(this).is(':checked')) {
+				$(this).attr('value', 'true');
+			} else {
+				$(this).attr('value', 'false');
+			}
+
+			});
+
+			$(".isHandle").on('change', function() {
+			if ($(this).is(':checked')) {
+				$(this).attr('value', 'true');
+
+				var id = $(this).attr('dataID');
+				console.log("ID is: ", id);
+
+				var postUrl = '/edit/work/' + id;
+
+				console.log("POST URL is: ", postUrl);
+
+				var update = { "name": "isHandle", "value": true };
+
+				xhr(update, 'POST', postUrl, function(err, data) {
+					if (err) { alert('Could not Save, please refresh page.') }
+					else {
+				console.log("Checked - Success!");
+						}
+					
+				})
+				
+			} else {
+				$(this).attr('value', 'false');
+
+				var id = $(this).attr('dataID');
+				console.log("ID is: ", id);
+
+				var postUrl = '/edit/work/' + id;
+
+				console.log("POST URL is: ", postUrl);
+
+				var update = { "name": "isHandle", "value": false };
+
+				xhr(update, 'POST', postUrl, function(err, data) {
+					if (err) { alert('Could not Save, please refresh page.') }
+					else {
+				console.log("Unchecked - Success!");
+						}
+					
+				})
+
+			}
+			
+			});
+
+
 		});
 
 	/* Finacial Package Builder - Dave Martinez, Feb. 7, 2017
@@ -1607,6 +1694,14 @@
 		.text(data.siteComments).appendTo(cardText)
 		$('<br></br>').appendTo(cardText)
 
+		
+		$('<strong>Project Comments:</strong>').appendTo(cardText)
+		$('<br></br>').appendTo(cardText)
+
+		$('<p></p>')
+		.text(data.projectComments).appendTo(cardText)
+		$('<br></br>').appendTo(cardText)
+
 		$('<strong>Cost:</strong>').appendTo(cardText)
 		$('<br></br>').appendTo(cardText)
 
@@ -1642,7 +1737,7 @@
 		var xhrData = JSON.parse(JSON.stringify(data))
 		xhrData.id = id
 
-		xhr(xhrData, 'POST', '/site/updateitem', function(err) {
+		xhr(xhrData, 'POST', '/vettingworksheet/updateitem', function(err) {
 			if (err) {
 				// TODO: If error, flip the value back and show an error message to the user
 				// alert('Value did not save, please reload the page')
@@ -1671,11 +1766,20 @@
     	var newWorkItem = {}, error = false
 
 		$('input, textarea', e.target.parentNode).each(function(idx) {
-			if (this.value.length === 0 && this.name !== 'cost') {
+			if (this.value.length === 0 && this.name !== 'cost' && this.name !=='isHandle') {
 				$(this.parentNode).addClass('has-error')
 				error = true
 			} else {
 				newWorkItem[this.name] = this.value
+
+				if ($('#checkbox1').is(':checked')) {
+				newWorkItem["isHandle"] = true
+				} else {
+				newWorkItem["isHandle"] = false
+				}
+				//var aChk =  $('#checkbox1').val()
+
+
 				$(this.parentNode).removeClass('has-error')
 			}
 		})
@@ -1693,6 +1797,8 @@
       $(this).val('')
       $(this.parentNode).removeClass('has-error')
     })
+
+	$("#checkbox1").prop('checked', true);
   }
 
   function createNewWorkItem(w, next) {
@@ -1703,7 +1809,7 @@
     w.updated = rightNow
     w.applicationId = id
 
-    xhr(w, 'POST', '/site/additem', function(err, data) {
+    xhr(w, 'POST', '/vettingworksheet/additem', function(err, data) {
       // TODO: Handle error
       if (err) { alert('There was an error saving your work item') }
       w._id = data.itemId
@@ -1754,13 +1860,19 @@
     $('<strong>Vetting Comments:</strong>').appendTo(cardText)
     // $('<br></br>').appendTo(cardText)
 
-    $('<p></p>').text(w.vettingComments).appendTo(cardText)
+    $('<p></p>').attr('name', w._id + '.vettingComments').text(w.vettingComments).appendTo(cardText)
     $('<br></br>').appendTo(cardText)
 
     $('<strong>Site Comments:</strong>').appendTo(cardText)
     // $('<br></br>').appendTo(cardText)
 
     $('<p></p>').text(w.siteComments).appendTo(cardText)
+    $('<br></br>').appendTo(cardText)
+
+	$('<strong>Project Comments:</strong>').appendTo(cardText)
+    // $('<br></br>').appendTo(cardText)
+
+    $('<p></p>').text(w.projectComments).appendTo(cardText)
     $('<br></br>').appendTo(cardText)
 
     $('<strong>Cost:</strong>').appendTo(cardText)
@@ -1785,8 +1897,65 @@
 		.on('click', showWorkItemDeleteConfirm)
 		.appendTo(cardBlock)
 
+console.log("Output", w)
+
+
+  $('<input>&nbsp;Handle-it</input>').prop('checked', w.isHandle)
+                              .attr('type', 'checkbox')
+                              .attr('dataID', w._id)
+                              .attr('data-name', "isHandle")
+                              .addClass('isHandle').addClass('card-link')
+                              .on('change',  function() {
+                                    if ($(this).is(':checked')) {
+                                      $(this).attr('value', 'true');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": true };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Checked - Success!");
+                                        }
+                                      
+                                    })
+                                      
+                                    } else {
+
+                                      $(this).attr('value', 'false');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": false };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Unchecked - Success!");
+                                        }
+                                      
+                                    })
+
+                                    }
+                                    
+                                  })
+                              .appendTo(cardBlock)
+
+
     return cardBlock
   }
+
 
 	function showWorkItemDeleteConfirm(e) {
 		e.preventDefault()
@@ -1837,38 +2006,38 @@
 		})
 	}
 
-$('#csvExportButton').on('click', function(e) {
-	var urlParts = window.location.pathname.split('/')
-  var applicationID = urlParts[urlParts.length-1]
-	var firstname = '{{{doc.application.name.first}}}';
-	var lastname = '{{{doc.application.name.last}}}';
-  var payload = {
-		application: applicationID,
-		firstname: firstname,
-		lastname: lastname
-    }
-    var csvRequest = $.ajax({
-      	type: 'POST',
-        url: '/vettingworksheet/csvExport',
-        dataType: 'json',
-        contentType: 'application/json; chartset=UTF-8',
-        data: JSON.stringify(payload)
-      })
-      csvRequest.done(function(xhr) {
-        if (xhr.status === 'success') {
-          // TODO: Set window.location.href equal to the download file
+// $('#csvExportButton').on('click', function(e) {
+// 	var urlParts = window.location.pathname.split('/')
+//   var applicationID = urlParts[urlParts.length-1]
+// 	var firstname = '{{{doc.application.name.first}}}';
+// 	var lastname = '{{{doc.application.name.last}}}';
+//   var payload = {
+// 		application: applicationID,
+// 		firstname: firstname,
+// 		lastname: lastname
+//     }
+//     var csvRequest = $.ajax({
+//       	type: 'POST',
+//         url: '/vettingworksheet/csvExport',
+//         dataType: 'json',
+//         contentType: 'application/json; chartset=UTF-8',
+//         data: JSON.stringify(payload)
+//       })
+//       csvRequest.done(function(xhr) {
+//         if (xhr.status === 'success') {
+//           // TODO: Set window.location.href equal to the download file
 
-		window.location.href = '/vettingworksheet/file/' + '{{{doc.application.name.last}}}' + '-' + '{{{doc.application.name.first}}}' + '-' + applicationID + '-' + 'VettingWorksheet' + '.csv'
+// 		window.location.href = '/vettingworksheet/file/' + '{{{doc.application.name.last}}}' + '-' + '{{{doc.application.name.first}}}' + '-' + applicationID + '-' + 'VettingWorksheet' + '.csv'
 
-        } else {
-			console.log(xhr.status);
-        }
-      })
-      csvRequest.fail(function(data) {
-		console.log(data.status)
-        debugger
-      })
-    })
+//         } else {
+// 			console.log(xhr.status);
+//         }
+//       })
+//       csvRequest.fail(function(data) {
+// 		console.log(data.status)
+//         debugger
+//       })
+//     })
 
 
 

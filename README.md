@@ -11,7 +11,7 @@ In order for people to request help, they need to fill out an application form. 
 * Application View - available to Catalyst Vetting Agents
 * Vetting Worksheet - for vetting agents to work through with the client, and keep track of financial documentation, and initial work items needed by the client.
 * Site Assessment View - available to Site Assessors to take notes regarding the potential work-site, verify existing work items, and add new ones if necessary.
-* *Future Development:* A Project View - which would summarize work items and other necessary data, allow Project Managers to keep track of materials needed, costs, among many other things yet to be determined by the Catalyst staff. 
+* Project View - summarizes work items and other necessary data, allowing Project Managers to keep track of materials needed, costs, project date, checklists, partners, leaders and other things needed for project management.
 
 ## Building the Software
 * If you wish to mess around with this software, AND/OR

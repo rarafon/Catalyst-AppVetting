@@ -2,19 +2,15 @@ $(document).ready(init)
 
 function init() {
 	// Add event listeners to buttons
-	$('button', '#role-selector').on('click', function(e) {
-		if (e) e.preventDefault()
-
-		$(this).siblings().each(function(idx) {
-			$(this).removeClass('btn-primary')
-			$(this).addClass('btn-secondary')
-		})
-
-		$(this).toggleClass('btn-secondary')
-		$(this).toggleClass('btn-primary')
-
-	})
-
+	$('#user_roles').selectpicker();
+	$('.bootstrap-select').click(function(e)
+	{
+	$(this).addClass('open');
+	//console.log('hit');
+	e.stopPropagation();
+	});
+	console.log("123");
+	
 	$('#userRegistration').submit(function (event) {
 		event.preventDefault();
 
@@ -45,9 +41,16 @@ function init() {
 
 		jsonToSend.user_created = new Date().getTime()
 
-		var selectedRole = $('.btn-primary', '#role-selector')
-		if (selectedRole.length > 0) { jsonToSend.user_role = selectedRole[0].value }
 
+		var vals = [];
+  		var $sel = $('#user_roles').find('option:selected');
+  		console.log($sel);
+    	for(var i=0; i < $sel.length; i++) {
+      	vals[i]= $sel.eq(i).val();
+  		}
+		
+		 jsonToSend.user_roles = vals ;
+		 jsonToSend.user_role = "";
 		jsonToSend = JSON.stringify(jsonToSend);
 
 		//post to database

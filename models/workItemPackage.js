@@ -29,8 +29,10 @@ var WorkItemSchema = new Schema({
     description: String,
 	vettingComments: String,
 	siteComments: String,
+	projectComments: String, 
 	cost: String,
-	applicationId: { type: ObjectId }
+	applicationId: { type: ObjectId },
+	isHandle: { type: Boolean }				//New Boolean for Handle-it Checkbox for PDF handle export purposes
 });
 
 var WorkItemPackage = mongoose.model('WorkItemPackage', WorkItemSchema);

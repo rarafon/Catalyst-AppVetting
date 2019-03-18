@@ -1,0 +1,2330 @@
+<!-- Project View (once clicked on it)  
+   -- Should have Client Name and address at the top (as in the mock up)
+   -- The following Tabs:
+     * Project Assessment Form 
+     * Work Items  
+     * Partners (needs new data base fields for Org Name, Org Address, Contact Name, Contact Phone, Contact email) 
+     * Wrap Up (using the Wrap Up Form for contents)  -->
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script>
+// Shorten a string to less than maxLen characters without truncating words.
+function shorten(str, maxLen, separator = ' ') {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, str.lastIndexOf(separator, maxLen));
+}
+
+//helper function to get current date in a nice format
+function getCurrentDate() {
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Day = ( "00" + date.getDate()).slice(-2);
+    var Mon = ("00" + (date.getMonth()+1)).slice(-2);
+    return Mon + "/" + Day + "/" + Year;
+}
+</script>
+<script src="/javascript/xedit.js" type="text/javascript"></script>
+<script src="/javascript/addProjectNote.js" type="text/javascript"></script>
+<style>
+ button.btn.btn-primary.btn-sm.editable-submit {
+   width: 35px;
+   height: 35px;
+ }
+
+ button.btn.btn-primary.btn-sm.editable-submit:after {
+   content:  "\2713 ";
+   font-size: 24px;
+ }
+
+ button.btn.btn-default.btn-sm.editable-cancel {
+   width: 35px;
+   height: 35px;
+ }
+ button.btn.btn-default.btn-sm.editable-cancel:after {
+   content:  "\2190 ";
+   font-size: 24px;
+ }
+
+ select.task-owner {
+   min-width: 12em;
+ }
+
+ select.task-owner.unassigned {
+   
+ }
+
+
+.btnEditDrive {
+  font-size: 14px;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  margin-top: -3px;
+}
+</style>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <h5 style="padding-left: 21px;">Project View
+      <!-- <button id="pafB" class="btn btn-success" style="margin-left: 5%" onclick="exportPAFtoPDF()">Export PAF Report</button>
+      <button id="hanB" class="btn btn-success" style="margin-left: 3%" onclick="exportHandletoPDF()">Export Handle-It Report</button> -->
+      <!-- <div> -->
+        <button class="btn btn-info" id="exportBtn" style="margin-left: 5%;">Export PDFs</button>
+      <!-- </div> -->
+    </h5><div id="iframeHolder"></div>
+    
+    <nav class="navbar">
+      <div class="input-group">
+        <input type="text" id="note" class="form-control" placeholder="Enter Project Planning Note Here...">
+        <span class="input-group-btn">
+          <button id="addNote" class="btn btn-primary" type="submit">Add Note</button>
+        </span>
+      </div>
+    </nav>
+    {{#each results.doc}}
+      <div class="row">
+        <div class="col-xs-12">
+          <h1 style="display:inline-block;">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.middle}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.middle}} {{application.name.last}}{{/if}}</h1>
+          <h4 style="float:center;margin-left:50px;display:inline-block;">{{application.address.line_1}}{{#if_not_eq application.address.line_2 ''}}, {{application.address.line_2}}{{/if_not_eq}}, {{application.address.city}}, {{application.address.state}} {{application.address.zip}}</h4> 
+          <h3 style="float:right;display:inline-block;" class="text-muted">#{{app_name}}</h3>
+        </div>
+      </div>
+      <h5>Status: <a href="#" id="status" data-type="select" data-pk="{{_id}}" data-url="/edit/project/{{_id}}" data-name="status" data-title="Select status"></a></h5>
+    {{/each}}
+
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#projectInfo" role="tab">Project Info</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#work" role="tab">Work Item Status</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#leaders" role="tab">Leaders</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#planning" role="tab">Planning</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#partners" role="tab">Partners</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#wrapUp" role="tab">Wrap Up</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#notes" role="tab">Notes</a>
+      </li>
+    </ul>
+
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="projectInfo" role="tabpanel">
+        <br /> 
+        {{#each results.doc}}
+          <div class="row">
+            <div class="col-xs-12 col-sm-6" style="float:left;">
+              
+              <h4>Property Information</h4>
+              <table class="table">
+
+                <tr>
+                  <th class="col-sm-3">Property Type</th>
+                  <td class="col-sm-9">{{property.home_type}}</td>
+                </tr>
+                <tr>
+                  <th class="col-sm-3">Year Constructed</th>
+                  <td class="col-sm-9">{{property.year_constructed}}</td>
+                </tr>
+                
+                <tr> 
+                </tr>
+              </table>
+
+
+              <h5>Address and contact</h5>
+              <table class="table">
+                <tr>
+                  <th class="col-xs-3">Address</th>
+                  <td class="col-xs-9">
+                    {{application.address.line_1}}<br/>
+                    {{#if_not_eq application.address.line_2 ''}}
+                      {{application.address.line_2}}<br/>
+                    {{/if_not_eq}}
+                    {{application.address.city}}, {{application.address.state}} {{application.address.zip}}<br/>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Phone</th>
+                  <td class="col-xs-9">{{application.phone.preferred}}</td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Email</th>
+                  <td class="col-xs-9">
+                    {{#if_not_eq application.email ''}}
+                      <a href="mailto:{{application.email}}">{{application.email}}</a>
+        {{else}}
+                      None
+                    {{/if_not_eq}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Advocate Info</th>
+                  <td class="col-xs-9">
+                    {{#if advocate.is_advocate}}
+                      {{advocate.name}}<br/>
+                      {{advocate.phone}}<br/>
+                      {{advocate.relationship}}, {{advocate.organization_name}}<br/>
+                      {{#if advocate.npo}}Non-profit<br/>{{/if}}
+                      {{#if advocate.gov}}Government<br/>{{/if}}
+                    {{else}}
+                      None
+                    {{/if}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Emergency Contact</th>
+                  <td class="col-xs-9">
+                    {{application.emergency_contact.name}}<br/>
+                    {{application.emergency_contact.relationship}}<br/>
+                    {{application.emergency_contact.phone}}
+                  </td>
+                </tr>
+
+              </table>
+
+              <h5>Applicant information</h5>
+              <table class="table">
+                <tr>
+                  <th class="col-xs-3">Age</th>
+                  <td class="col-xs-9">{{ageAndBirthday application.dob.date}}</td>
+                </tr>
+
+
+                <tr>
+                  <th class="col-xs-3">Owns home</th>
+                  <td class="col-xs-9">{{#if application.owns_home}}Yes{{else}}No{{/if}}</td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Spouse</th>
+                  <td class="col-xs-9">
+                    {{#if_not_eq application.marital.spouse ''}}
+                      {{application.marital.spouse}}, {{application.marital.status}}
+                    {{else}}
+                      None
+                    {{/if_not_eq}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Other residents</th>
+                  <td class="col-xs-9">{{otherResidents application.other_residents}}</td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Veteran Status</th>
+                  <td class="col-xs-9">{{#if application.veteran}}Veteran{{else}}None{{/if}}</td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Language</th>
+                  <td class="col-xs-9">{{application.language}}</td>
+                </tr>
+
+                <tr>
+                  <th class="col-xs-3">Heard About</th>
+                  <td class="col-xs-9">
+                    {{#if_not_eq application.heard_about ''}}
+                      {{application.heard_about}}
+                    {{else}}
+                      No answer
+                    {{/if_not_eq}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-6" style="float:left;">
+
+            <!-- HBS - IF NO DRIVE LINK  - then show this. -->
+               <span id="noDrive" style="display: inline-flex;">
+                  <h4>Drive URL:&nbsp;&nbsp;</h4>
+                  <a href="#" onclick="showDriveDone()" id="drive_url" data-type="text" data-pk="{{_id}}" data-url="/edit/project/{{_id}}" data-name="drive_url" data-title="Drive Link">{{drive.drive_url}}</a>&nbsp;&nbsp; 
+                  <button class="btn btn-success" id="driveDoneBtn" style="display: none;" onclick="window.location.reload(true)">Collapse</button>
+                 
+               </span>
+                 </br>
+
+
+            <!-- HBS - IF LINK EXISTS - then show this. -->
+
+
+               <span id="yesDrive" style="display: inline-flex;">
+                  <a id="driveHref" target="_blank" href="{{drive.drive_url}}"><h4>Google Drive</h4></a>
+                  <button class="btn btnEditDrive" onclick="editDriveURL()">Edit</button>
+               </span>
+
+               <br/>
+               
+           <!--     <h4>Summary</h4>
+               <br/> -->
+              {{#if notes.vet_summary}}
+              <h4>Vetting Summary</h4>
+              <p>
+                  {{notes.vet_summary}}
+                
+              </p>
+               {{/if}}
+               {{#if notes.site_summary}}
+               <!--  <div class="col-xs-12 col-sm-6"> -->
+                <h4>Site Assessment Summary</h4>
+              <p>
+                  {{notes.site_summary}}
+                
+              </p>
+               {{/if}}
+                
+               <!--  </div> -->
+
+
+                  <h4 style="padding-top: 15px;">Map</h4>
+                   <iframe width="100%" height="350" frameborder="0" style="border:0"
+                   src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD2CmgnSECdg_g-aFgp95NUBv2QUEidDvs&q={{googleMapAddr application.address}}"></iframe>
+            </div>
+          </div>
+        {{/each}}
+  </div><!-- end #projectInfo -->
+
+
+      <!-- Partners (needs new data base fields for Org Name, Org Address, Contact Name, Contact Phone, Contact email)  -->
+      <div class="tab-pane" id="partners" role="tabpanel"><!-- start #partners -->
+      <h5></h5>
+        {{> partners}}
+
+        <div class="col-xs-12 col-sm-6">
+          <!--VETTING NOTES-->
+          <h3>Project Notes</h3>
+          <div class="form-group">
+            <form method="post">
+              <input type="hidden" value="{{doc._id}}" id="appId"/>
+              <input type="hidden" value="{{user}}" id="userId"/>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Note</th>
+                    <th>Submitted By</th>
+                    <th >Date</th>
+                 </tr>
+                </thead>
+                <tbody id="notes-body" class="notes-body-container">
+                  {{#if projectNotes}}
+                    {{#each projectNotes}}
+                      <tr>
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>                       
+                      </tr>
+                    {{/each}}
+                  {{else}}
+                    <tr>
+                      <td id="empty-notes" class="alert-danger danger empty-notes-container" colspan="3">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> No Notes To Display
+                      </td>
+                    </tr>
+                  {{/if}}
+
+                  <tr><!--THIS EMPTY ROW IS NECESSARY FOR addProjectNote.js TO WORK ON MULTIPLE PAGES--></tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div><!-- end #partners -->
+      
+
+      <div class="tab-pane" id="planning" role="tabpanel"><!-- start #planning -->
+        <br />
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <h4>Planning Info</h4>
+              <table class="table">
+        {{#each results.assessment}}       
+                <tr>
+                  <th class="col-sm-3">Lead: </th>
+                  <td class="col-sm-9">{{hazard_safety.has_lead}}</td>
+                </tr>
+                <tr>
+                  <th class="col-sm-3">Asbestos: </th>
+                  <td class="col-sm-9">{{hazard_safety.has_asbestos}}</td>
+                </tr>
+              {{#if hazard_safety.safety_plan}}
+                <tr>
+                  <th class="col-sm-3">Safety Plan: </th>
+                  <td class="col-sm-9">{{hazard_safety.safety_plan}}</td>
+                </tr>
+              {{/if}}
+              {{#if subcontractors}}
+                <tr>
+                  <th class="col-sm-3">Subcontractors: </th>
+                  <td class="col-sm-9">{{subcontractors}}</td>
+                </tr>
+              {{/if}}
+
+              {{#if estimates.volunteers_needed}}
+                <tr>
+                  <th class="col-sm-3">Req. Volunteers: </th>
+                  <td class="col-sm-9">{{estimates.volunteers_needed}}</td>
+                </tr>
+              {{/if}}
+
+              {{#if materials}}
+                <tr>
+                  <th class="col-sm-3">Materials Required: </th>
+                  <td class="col-sm-9">{{materials}}</td>
+                </tr>
+              {{/if}}
+
+              {{#if tool_rentals}}
+                <tr>
+                  <th class="col-sm-3">Tool Rentals: </th>
+                  <td class="col-sm-9">{{tool_rentals}}</td>
+                </tr>
+              {{/if}}
+
+
+              {{#if estimates.total_cost}}
+                <tr>
+                  <th class="col-sm-3">Est. Total Cost: </th>
+                  <td class="col-sm-9">{{estimates.total_cost}}</td>
+                </tr>
+              {{/if}}
+     
+
+ 
+
+          
+                <tr>
+                  <th class="col-sm-3">Waste Req.</th>
+                  <td class="col-sm-9" class="wasteDetail">{{other_costs.waste_dumpster.required}}{{#if other_costs.waste_dumpster.cost}}   (${{other_costs.waste_dumpster.cost}}){{/if}}</td>
+                </tr>
+
+                <tr>
+                  <th class="col-sm-3">Portapotty Req.</th>
+                  <td class="col-sm-9" class="portaDetail">{{other_costs.porta_pottie.required}}{{#if_not_eq other_costs.porta_pottie.cost ''}}   (${{other_costs.porta_pottie.cost}}){{/if_not_eq}}</td>
+                </tr>
+
+      {{/each}}
+      {{#each results.doc}}                
+                <tr>
+                  <th class="col-sm-3">Client Can Contribute</th>
+                  <td class="col-sm-9">{{#if property.client_can_contribute.value}}Yes - {{property.client_can_contribute.description}}{{else}} No {{/if}}</td>
+                </tr>
+                <tr>
+                  <th class="col-sm-3">Associates Can Contribute</th>
+                  <td class="col-sm-9">{{#if property.associates_can_contribute.value}}Yes - {{property.associates_can_contribute.description}}{{else}} No{{/if}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="col-sm-3">Final Volunteer Count</th>
+                  <td class="col-sm-9"><a href="#" id="actual_volunteer_count" data-type="text" data-pk="{{_id}}" data-url="/edit/project/{{_id}}" data-name="actual_volunteer_count" data-title="Actual Volunteer Count">{{project.actual_volunteer_count}}</a></td>
+                </tr>
+                <tr>
+                  <th class="col-sm-3">Final Labor-Hrs Count</th>
+                  <td class="col-sm-9"><a href="#" id="actual_labor_count" data-type="text" data-pk="{{_id}}" data-url="/edit/project/{{_id}}" data-name="actual_labor_count" data-title="Actual Labor Hrs Count">{{project.actual_labor_count}}</a></td>
+                </tr>
+                
+        {{/each}}
+          </table>
+            </div>
+            
+        <div class="col-xs-12 col-sm-6">
+          <!--VETTING NOTES-->
+          <h3>Project Notes</h3>
+          <div class="form-group">
+            <form method="post">
+              <input type="hidden" value="{{doc._id}}" id="appId"/>
+              <input type="hidden" value="{{user}}" id="userId"/>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Note</th>
+                    <th>Submitted By</th>
+                    <th >Date</th>
+                 </tr>
+                </thead>
+                <tbody id="notes-body" class="notes-body-container">
+                  {{#if projectNotes}}
+                    {{#each projectNotes}}
+                      <tr>
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>  
+                        <td>{{dateToLocaleDate this.date}}</td>                     
+                      </tr>
+                    {{/each}}
+                  {{else}}
+                    <tr>
+                      <td id="empty-notes" class="alert-danger danger empty-notes-container" colspan="3">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> No Notes To Display
+                      </td>
+                    </tr>
+                  {{/if}}
+
+                  <tr><!--THIS EMPTY ROW IS NECESSARY FOR addProjectNote.js TO WORK ON MULTIPLE PAGES--></tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+          </div>
+
+      <br />
+      <h4>Project Plan Checklist</h4>
+      <table class="table">
+        <tr>
+          <th class="col-xs-12 col-sm-6">Start Date</th>
+          <td class="col-xs-6 col-sm-6">
+            <input type="date" name="project.project_start" class="project_start"
+                   {{#each results.doc}}value="{{dateToLocaleDate project.project_start }}"{{/each}} />
+          </td>
+        </tr>
+        <tr>
+          <th class="col-xs-12 col-sm-6">End Date</th>
+          <td colspan="2" class="col-xs-6 col-sm-6">
+            <input type="date" name="project.project_end" class="project_end"
+                   {{#each results.doc}}value="{{dateToLocaleDate project.project_end }}"{{/each}} />
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Contract postal mailed to client</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'contract' }}">
+              <input type="checkbox" name="contract" value=""
+                     {{#if plan.contract.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="contract"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Create project webpage, calendar event, and volunteer schedule in Endis</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'create_page_event_schedule' }}">
+              <input type="checkbox" name="create_page_event_schedule" value=""
+                     {{#if plan.create_page_event_schedule.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="create_page_event_schedule"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Send out initial email requesting volunteers. Register into Website/DB.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'volunteer_request_initial' }}">
+              <input type="checkbox" name="volunteer_request_initial" value=""
+                     {{#if plan.volunteer_request_initial.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="volunteer_request_initial"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Project activation call to client</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'activated' }}">
+              <input type="checkbox" name="activated" value=""
+                     {{#if plan.activated.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="activated"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Planning visit completed</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'planning_visit' }}">
+              <input type="checkbox" name="planning_visit" value=""
+                     {{#if plan.planning_visit.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="planning_visit"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Create list of materials, rentals &amp; supplies needed. Send to Darrell.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'report_materials_supplies' }}">
+              <input type="checkbox" name="report_materials_supplies" value=""
+                     {{#if plan.report_materials_supplies.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="report_materials_supplies"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Verify site resources needed</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'verify_site_resources' }}">
+              <input type="checkbox" name="verify_site_resources" value=""
+                     {{#if plan.verify_site_resources.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="verify_site_resources"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Arrange for purchase &amp; delivery of all materials, rentals, supplies, etc.</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'arrange_purchase_delivery' }}">
+              <input type="checkbox" name="arrange_purchase_delivery" value=""
+                     {{#if plan.arrange_purchase_delivery.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="arrange_purchase_delivery"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Rent porta-pottie</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'rent_porta_pottie' }}">
+              <input type="checkbox" name="rent_porta_pottie" value=""
+                     {{#if plan.rent_porta_pottie.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="rent_porta_pottie"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Rent waste bin</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'rent_waste_dumpster' }}">
+              <input type="checkbox" name="rent_waste_dumpster" value=""
+                     {{#if plan.rent_waste_dumpster.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="rent_waste_dumpster"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Check the weather forecast and make plans accordingly</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'check_weather_forecast' }}">
+              <input type="checkbox" name="check_weather_forecast" value=""
+                     {{#if plan.check_weather_forecast.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="check_weather_forecast"></select>
+          </td>
+        </tr>
+
+
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Verify number of volunteers signed up</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'verify_volunteer_count' }}">
+              <input type="checkbox" name="verify_volunteer_count" value=""
+                     {{#if plan.verify_volunteer_count.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="verify_volunteer_count"></select>
+          </td>
+        </tr>
+
+
+        <tr>
+          <th class="col-xs-12 col-sm-6">Send final email to signed up volunteers 3-5 days before project</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'volunteer_request_final' }}">
+              <input type="checkbox" name="volunteer_request_final" value=""
+                     {{#if plan.volunteer_request_final.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="volunteer_request_final"></select>
+          </td>
+        </tr>
+
+        <tr>
+          <!-- <th class="col-xs-12 col-sm-6">Send follow-up emails requesting volunteers</th> -->
+          <th class="col-xs-12 col-sm-6">Send follow-up emails to volunteers via Endis as needed</th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'volunteer_request_followup' }}">
+              <input type="checkbox" name="volunteer_request_followup" value=""
+                     {{#if plan.volunteer_request_followup.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="volunteer_request_followup"></select>
+          </td>
+        </tr>
+
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom" data-title="custom">{{plan.custom.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom' }}">
+              <input type="checkbox" name="custom" value=""
+                     {{#if plan.custom.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom1" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom1" data-title="custom1">{{plan.custom1.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom1' }}">
+              <input type="checkbox" name="custom1" value=""
+                     {{#if plan.custom1.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom1"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom2" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom2" data-title="custom2">{{plan.custom2.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom2' }}">
+              <input type="checkbox" name="custom2" value=""
+                     {{#if plan.custom2.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom2"></select>
+          </td>
+        </tr>
+        
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom3" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom3" data-title="custom3">{{plan.custom3.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom3' }}">
+              <input type="checkbox" name="custom3" value=""
+                     {{#if plan.custom3.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom3"></select>
+          </td>
+        </tr>
+
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom4" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom4" data-title="custom4">{{plan.custom4.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom4' }}">
+              <input type="checkbox" name="custom4" value=""
+                     {{#if plan.custom4.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom4"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom5" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom5" data-title="custom5">{{plan.custom5.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom5' }}">
+              <input type="checkbox" name="custom5" value=""
+                     {{#if plan.custom5.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom5"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom6" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom6" data-title="custom6">{{plan.custom6.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom6' }}">
+              <input type="checkbox" name="custom6" value=""
+                     {{#if plan.custom6.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom6"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom7" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom7" data-title="custom7">{{plan.custom7.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom7' }}">
+              <input type="checkbox" name="custom7" value=""
+                     {{#if plan.custom7.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom7"></select>
+          </td>
+        </tr>
+
+        <tr class="customRow">
+          <th class="col-xs-12 col-sm-6">
+            <a href="#" id="custom8" class="customEdit" data-type="text" data-pk="{{plan.applicationId}}" data-url="/edit/customnote/{{plan.applicationId}}" data-name="custom8" data-title="custom8">{{plan.custom8.note}}</a>
+          </th>
+          <td class="col-xs-6 col-sm-2">
+            <label data-toggle="tooltip"
+                   title="{{getCompletedDate plan 'custom8' }}">
+              <input type="checkbox" name="custom8" value=""
+                     {{#if plan.custom8.complete}} checked {{/if}}
+              />
+              Complete
+            </label>
+          </td>
+          <td class="col-xs-6 col-sm-4">
+            Owner
+            <select class="task-owner plan" data-owner-of="custom8"></select>
+          </td>
+        </tr>
+
+      </table>
+      <button class="btn btn-info" id="customBtn" onclick="customBtn()" style="margin-left: 3%;" disabled='true'>Add custom task</button>
+      </div><!-- end #planning -->
+
+<!-- start #leaders -->
+      <div class="tab-pane" id="leaders" role="tabpanel">
+        <br />      
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <h4>Leaders Info</h4>
+              <table class="table">
+
+                <tr>
+                  <th class="col-sm-3">Crew Chief</th>
+                  <td class="col-sm-9">
+                    <a href="#" id="crew_chief" data-type="text" data-pk="{{doc._id}}" data-url="/edit/project/{{doc._id}}" data-name="crew_chief" data-title="Crew Chief">{{doc.project.crew_chief}}</a>
+                </tr>
+
+                <tr>
+                  <th class="col-sm-3">Project Advocate</th>
+                  <td class="col-sm-9">
+                    <a href="#" id="project_advocate" data-type="text" data-pk="{{doc._id}}" data-url="/edit/project/{{doc._id}}" data-name="project_advocate" data-title="Project Advocate">{{doc.project.project_advocate}}</a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="col-sm-3">Site Host</th>
+                  <td class="col-sm-9">
+                    <a href="#" id="site_host" data-type="text" data-pk="{{doc._id}}" data-url="/edit/project/{{doc._id}}" data-name="site_host" data-title="Site Host">{{doc.project.site_host}}</a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+           
+        <div class="col-xs-12 col-sm-6">
+          <!--VETTING NOTES-->
+          <h3>Project Notes</h3>
+          <div class="form-group">
+            <form method="post">
+              <input type="hidden" value="{{doc._id}}" id="appId"/>
+              <input type="hidden" value="{{user}}" id="userId"/>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Note</th>
+                    <th>Submitted By</th>
+                    <th>Date</th>
+                 </tr>
+                </thead>
+                <tbody id="notes-body" class="notes-body-container">
+                  {{#if projectNotes}}
+                    {{#each projectNotes}}
+                      <tr>
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>                       
+                      </tr>
+                    {{/each}}
+                  {{else}}
+                    <tr>
+                      <td id="empty-notes" class="alert-danger danger empty-notes-container" colspan="3">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> No Notes To Display
+                      </td>
+                    </tr>
+                  {{/if}}
+
+                  <tr><!--THIS EMPTY ROW IS NECESSARY FOR addProjectNote.js TO WORK ON MULTIPLE PAGES--></tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+          </div>
+        
+      </div>
+      <!-- end #leaders -->
+
+
+      <div class="tab-pane" id="wrapUp" role="tabpanel"><!-- start #wrapUp -->
+        <br /> 
+        <div class="col-xs-12 col-sm-12"><!--  <div class="row"> -->
+          <h4>Wrap up Info</h4>
+          <table class="table">
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Return volunteer sign-up sheet to office</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'signup_sheet_office' }}">
+                  <input type="checkbox" name="signup_sheet_office" value=""
+                         {{#if wrapUp.signup_sheet_office.complete}} checked {{/if}}
+                  />
+                  Complete
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="signup_sheet_office"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Record volunteer hours / info</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'record_volunteer_info' }}">
+                  <input type="checkbox" name="record_volunteer_info" value=""
+                         {{#if wrapUp.record_volunteer_info.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="record_volunteer_info"></select>
+              </td>
+            </tr>
+
+<!--             <tr>
+              <th class="col-xs-12 col-sm-6">In-kind donations info</th>
+              <td class="col-xs-6 col-sm-2">
+                TODO
+              </td>
+              <td class="col-xs-6 col-sm-4">
+              </td>
+            </tr> -->
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Schedule porta pottie pickup
+                <span class="wrapup-required"></span>
+              </th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'porta_pottie_pickup' }}">
+                  <input type="checkbox" name="porta_pottie_pickup" value=""
+                         {{#if wrapUp.porta_pottie_pickup.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="porta_pottie_pickup"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Schedule waste bin pickup office</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'waste_dumpster_pickup' }}">
+                  <input type="checkbox" name="waste_dumpster_pickup" value=""
+                         {{#if wrapUp.waste_dumpster_pickup.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="waste_dumpster_pickup"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Arrange for disposal of waste</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'waste_disposal_arrangement' }}">
+                  <input type="checkbox" name="waste_disposal_arrangement" value=""
+                         {{#if wrapUp.waste_disposal_arrangement.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="waste_disposal_arrangement"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Return materials and rentals</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{ getCompletedDate wrapUp 'return_materials_rentals' }}">
+                  <input type="checkbox" name="return_materials_rentals" value=""
+                         {{#if wrapUp.return_materials_rentals.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="return_materials_rentals"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Turn in receipts and expenses to office</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'turn_in_receipts' }}">
+                  <input type="checkbox" name="turn_in_receipts" value=""
+                         {{#if wrapUp.turn_in_receipts.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="turn_in_receipts"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Process reimbursement checks</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'process_reimbursement_checks' }}">
+                  <input type="checkbox" name="process_reimbursement_checks" value=""
+                         {{#if wrapUp.process_reimbursement_checks.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="process_reimbursement_checks"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Submit photos to Flickr album or send to office</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{ getCompletedDate wrapUp 'upload_photos_flickr' }}">
+                  <input type="checkbox" name="upload_photos_flickr" value=""
+                         {{#if wrapUp.upload_photos_flickr.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="upload_photos_flickr"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Project report form submitted to office</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{ getCompletedDate wrapUp 'report_form_submission' }}">
+                  <input type="checkbox" name="report_form_submission" value=""
+                         {{#if wrapUp.report_form_submission.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="report_form_submission"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Update the project webpage</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{ getCompletedDate wrapUp 'update_project_webpage' }}">
+                  <input type="checkbox" name="update_project_webpage" value=""
+                         {{#if wrapUp.update_project_webpage.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="update_project_webpage"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Call client to ask how project went</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'client_phone_followup' }}">
+                  <input type="checkbox" name="client_phone_followup" value=""
+                         {{#if wrapUp.client_phone_followup.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="client_phone_followup"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Send volunteer thank you email</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'send_thank_you_email' }}">
+                  <input type="checkbox" name="send_thank_you_email" value=""
+                         {{#if wrapUp.send_thank_you_email.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="send_thank_you_email"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Determine if follow-up is needed</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'determine_followup_required' }}">
+                  <input type="checkbox" name="determine_followup_required" value=""
+                         {{#if wrapUp.determine_followup_required.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="determine_followup_required"></select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="col-xs-12 col-sm-6">Send closing recipient letter</th>
+              <td class="col-xs-6 col-sm-2">
+                <label data-toggle="tooltip"
+                       title="{{getCompletedDate wrapUp 'send_closing_letter' }}">
+                  <input type="checkbox" name="send_closing_letter" value=""
+                         {{#if wrapUp.send_closing_letter.complete}} checked {{/if}}
+                  />
+                  Complete <span class="wrapup-completed-on"></span>
+                </label>
+              </td>
+              <td class="col-xs-6 col-sm-4">
+                Owner
+                <select class="wrapup task-owner" data-owner-of="send_closing_letter"></select>
+              </td>
+            </tr>
+
+
+          </table>
+        </div>
+      </div><!-- end #wrapUp -->
+
+
+      <div class="tab-pane" id="work" role="tabpanel">
+        <!-- START #work -->
+        <br />    
+        <div class="row" id="workItemCards">
+          <div class="panel-group col-md-12 my-1">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                 <h3 class="panel-title">
+                  <a data-toggle="collapse" href="#add-work-item-collapse">Click to Add a Work Item</a>
+                  <!--  <a data-toggle="collapse" href="#add-work-item-collapse" class="btn btn-info" style="margin-left: 14px" onclick="hideWorkAddBtn()" id="workAddBtn">Click to Add a Work Item</a> -->
+                   </h3>
+              </div>
+            
+          
+            <div id="add-work-item-collapse" class="panel panel-collapse collapse work-item col-md-12" name="new">
+              <div class="panel-body">
+                <h4 class="card-title">New Work Item</h4>
+                <p class="card-text">
+                  <div class="form-group">
+                    <label class="form-control-label">Name*</label>
+                    <input type="text" class="form-control" name="name">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Description*</label>
+                    <textarea class="form-control" name="description" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Project Comments*</label>
+                    <textarea class="form-control" name="projectComments" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Cost</label>
+                    <input type="cost" class="form-control" name="cost">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Handle-it</label>
+                    <input type="checkbox" name="isHandle" id="checkbox1" style="margin-left: 10px; !important" value="true" name="isHandle" checked>
+                  </div>
+                </p>
+                <a href="#" class="btn btn-primary card-link work-item-new">Save</a>
+                <a href="#" class="btn btn-danger card-link work-item-clear">Clear</a>
+              </div>
+            </div>
+          </div>
+            </div>
+                      
+         
+            {{#each results.work}}
+            <div class="col-xs-12 col-sm-6">
+              <div class="card work-item" name="{{_id}}">
+                <div class="card-block">
+                  <h4 class="card-title" name="{{_id}}.name">{{name}}</h4>
+                  <p class="text-muted">{{date}}</p>
+                  <p class="card-text">
+                    <strong>Description:</strong>
+                    <br/>
+                    <span name="{{_id}}.description">{{description}}</span>
+                    <br/>
+                    <br/>
+                    <strong>Vetting comments:</strong>
+                    <br/>
+                    <span style="white-space: pre-wrap" name="{{_id}}.vettingComments">{{vettingComments}}</span>
+                    <br/>
+                    <br/>
+                    <strong>Site comments:</strong>
+                    <br/>
+                    <span style="white-space: pre-wrap" name="{{_id}}.siteComments">{{siteComments}}</span>
+                    <br/>
+                    <br/>
+                    <strong>Project comments:</strong>
+                    <br/>
+                    <span style="white-space: pre-wrap" name="{{_id}}.projectComments">{{projectComments}}</span>
+                    <br/>
+                    <br/>
+                    <strong>Cost:</strong>
+                    <br/>
+                    <span name="{{_id}}.cost">{{cost}}</span>
+                    <br/>
+
+
+                  </p>
+                  <a href="#" class="btn btn-primary card-link work-item-comment">Edit</a>
+                  <a href="#" class="btn btn-warning card-link work-item-delete">Delete</a>
+                  <input class="isHandle card-link" type="checkbox"{{#if_eq isHandle true}} checked{{/if_eq}} dataID="{{_id}}" data-name="isHandle">&nbsp;Handle-it</input>
+      
+                </div>
+              </div> 
+            </div>
+            {{/each}}
+          
+        </div>
+      </div>
+        <!-- END #work --><div class="tab-pane" id="notes" role="tabpanel">
+        <div class="col-xs-12 col-sm-12">
+          <!--VETTING NOTES-->
+          <h3>Project Notes</h3>
+          <div class="form-group">
+            <form method="post">
+              <input type="hidden" value="{{doc._id}}" id="appId"/>
+              <input type="hidden" value="{{user}}" id="userId"/>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Note</th>
+                    <th>Submitted By</th>
+                    <th >Date</th>
+                  </tr>
+                </thead>
+                <tbody id="notes-body" class="notes-body-container note-editor-container">
+                  {{#if projectNotes}}
+                    {{#each projectNotes}}
+                      <tr>
+                        <td class="note-descrip" style="white-space: pre-wrap">{{this.description}}</td>
+                        <td class="note-vetAgent">{{this.projectPlanner}}</td>
+                        <td>{{dateToLocaleDate this.date}}</td>
+                        <td>
+                          <form>
+                            <input type="hidden" value="{{this._id}}" name="noteId" />
+                            <input type="submit" class="update-note btn btn-info" value="Update Note"/>
+                            <input type="submit" class="delete-button2 btn btn-danger" value="Delete Note"/>
+                          </form>
+                        </td>
+                      </tr>
+                    {{/each}}
+                  {{else}}
+                    <tr>
+                      <td id="empty-notes" class="alert-danger danger empty-notes-container" colspan="3">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> No Notes To Display
+                      </td>
+                    </tr>
+                  {{/if}}
+
+                  <tr><!--THIS EMPTY ROW IS NECESSARY FOR addProjectNote.js TO WORK ON MULTIPLE PAGES--></tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+ var workItems = {{{stringify results.work}}};
+ var docs = {{{stringify results.doc}}};
+ var assignableUsers = {{{ stringify assignableUsers }}};
+ var wrapUp = {{{ stringify wrapUp }}};
+ var plan = {{{ stringify plan }}};
+ var leadtime = {{{ stringify leadtime }}}
+
+$(function(){
+    $('#exportBtn').click(function(){
+        if(!$('#iframe').length) {
+                $('#iframeHolder').html('<iframe id="iframe" src="/projectview/exportPDF/{{doc._id}}" frameborder="0" width="100%" height="75"></iframe>');
+				$('#exportBtn').hide();
+        }
+    });   
+});
+
+
+   $(document).ready(function() {
+     $('.work-item-comment').each(watchEditButton)   
+     $('.work-item-delete').on('click', showWorkItemDeleteConfirm)
+     $('.work-item-new').on('click', handleNewWorkItemSubmission)
+     $('.work-item-clear').on('click', handleNewWorkItemClear)
+     
+     $('#drive_url').editable();
+
+     $('.customEdit').editable();
+
+     $('#crew_chief').editable();
+     $('#project_advocate').editable();
+     $('#site_host').editable();
+
+     $('#actual_volunteer_count').editable();
+     $('#actual_labor_count').editable();
+
+     yesDriveLoaded();
+
+     $('#status').editable({
+       value: docs[0].project.status,     //POST to /edit/project will update this status in project.status field.
+       source: [
+         {value: 'handleAssigned', text: 'Handle-It - Assigned'},
+         {value: 'handle', text: 'Handle-It - To Be Assigned'},         //handleToBeAssigned
+         {value: 'projectGoBacks', text: 'Project - Go Backs'},
+         {value: 'projectInProgress', text: 'Project - In Progress'},
+         {value: 'project', text: 'Project - Upcoming'},                //projectUpcoming
+         {value: 'handleCompleted', text: 'Completed handle-it task'},
+         {value: 'projectCompleted', text: 'Completed project'},
+         {disabled: true, text: '- - - - - - - - - - - - - - - - - - - - -'},
+         {value: 'nostatus', text: 'Send to Yellow Bin'},
+         {value: 'projWithdrawn', text: 'Withdrawn'},
+         {value: 'projDeclined', text: 'Declined'}
+       ]
+     });
+        hideEmptyCustom();
+
+     // Enable tooltips.
+     $('[data-toggle="tooltip"]').tooltip();
+     
+     $('#wrapUp input:checkbox').change(updateWrapup);
+     $('#planning input:checkbox').change(updatePlan);
+     $('#planning .project_start, #planning .project_end').change(updateProjectDates);
+     
+     // Populate the owner dropdown boxes with assignable users. Save them when changed.
+     $('#wrapUp .task-owner').each(function () {
+       populateOwners($(this), wrapUp, updateWrapup);
+     });
+     $('#planning .task-owner').each(function () {
+       populateOwners($(this), plan, updatePlan);
+     });
+
+     if($('.customRow').children('a.filled-text').length > 0) {
+        console.log("Found");
+     }
+
+      if (window.location.hash == "#partners") {
+          $('a[href="#partners"]').trigger('click');
+          window.location.hash = "";
+      }
+
+      if (window.location.hash == "#partnersModify") {
+        $('a[href="#partners"]').trigger('click');
+        $('.accessAssocPartners').trigger('click');
+        window.location.hash = "";
+
+      }
+      
+      if (window.location.hash == "#partnersDB") {
+        $('a[href="#partners"]').trigger('click');
+        $('.goToNewDbBtn').trigger('click');
+        window.location.hash = "";
+      }
+
+      
+
+   });
+
+
+$("#checkbox1").on('change', function() {
+  if ($(this).is(':checked')) {
+    $(this).attr('value', 'true');
+  } else {
+    $(this).attr('value', 'false');
+  }
+
+});
+
+$(".isHandle").on('change', function() {
+  if ($(this).is(':checked')) {
+    $(this).attr('value', 'true');
+
+    var id = $(this).attr('dataID');
+    console.log("ID is: ", id);
+
+    var postUrl = '/edit/work/' + id;
+
+    console.log("POST URL is: ", postUrl);
+
+    var update = { "name": "isHandle", "value": true };
+
+	  xhr(update, 'POST', postUrl, function(err, data) {
+		 if (err) { alert('Could not Save, please refresh page.') }
+		 else {
+       console.log("Checked - Success!");
+			 }
+		 
+	 })
+    
+  } else {
+    $(this).attr('value', 'false');
+
+    var id = $(this).attr('dataID');
+    console.log("ID is: ", id);
+
+    var postUrl = '/edit/work/' + id;
+
+    console.log("POST URL is: ", postUrl);
+
+    var update = { "name": "isHandle", "value": false };
+
+	  xhr(update, 'POST', postUrl, function(err, data) {
+		 if (err) { alert('Could not Save, please refresh page.') }
+		 else {
+       console.log("Unchecked - Success!");
+			 }
+		 
+	 })
+
+  }
+  
+});
+
+
+function hideEmptyCustom() {
+    var custR = document.getElementsByClassName("customRow");
+    //var custE = custR.getElementsByClassName("customEdit");
+    
+    var cnt = 0;
+
+    for (var i = 0; i < custR.length; i++) {
+      if (custR[i].getElementsByClassName("customEdit")[0].outerText == "" || custR[i].getElementsByClassName("customEdit")[0].outerText == "Empty") {
+          custR[i].style.display = 'none';
+          document.getElementById("customBtn").disabled = '';
+      } 
+    }
+}
+
+function customBtn() {
+    var custR = document.getElementsByClassName("customRow");
+    //var custE = custR.getElementsByClassName("customEdit");
+    
+    for (var i = 0; i < custR.length; i++) {
+        if (custR[i].getElementsByClassName("customEdit")[0].outerText == "" || custR[i].getElementsByClassName("customEdit")[0].outerText == "Empty") {
+            //alert("a");
+            custR[i].style.display = 'block';
+
+            if (i == custR.length-1) {
+                //alert("b");
+                document.getElementById("customBtn").disabled = 'true';
+            }
+            //alert("c");
+            return;
+        }
+    }
+}
+
+ function populateOwners($select, checklist, onChange) {
+   var taskName = $select.data('owner-of');
+   $select.empty();
+   $select.append('<option value="">Unassigned</option>');
+   $.each(assignableUsers, function (i, user) {
+     var fullName = user.contact_info.user_name.user_first + ' ' +
+                    user.contact_info.user_name.user_last;
+     $option = $('<option value="' + user._id + '">' + fullName + '</option>');
+     if (typeof checklist[taskName] !== 'undefined' &&
+         checklist[taskName].owner === user._id) {
+       $option.prop('selected', 'selected')
+     }
+     $select.append($option);
+   });
+
+   $select.change(onChange);
+ }
+ 
+ function handleSiteSummaryInput(e) {
+   if (window.siteSummaryTimeout) {
+     window.clearTimeout(window.siteSummaryTimeout)
+   }
+   // TODO: set this URL
+   window.siteSummaryTimeout = window.setTimeout(function() {
+     xhr(
+       { id: docs[0]._id, name: 'notes.site_summary', value: this.val },
+       'POST',
+       '/site/updatesummary',
+       function(err, data) {
+         console.info('site summary saved')
+       }
+     )
+   }.bind({val: e.target.value}), 500)
+ }
+
+ // Used with $(*).each
+ function watchEditButton(idx) {
+   $(this).on('click', showWorkItemEditForm)
+ }
+
+ function editDriveURL() {
+    //Toggle = show edit span, and hide current span
+    document.getElementById("yesDrive").style.display = "none";
+    document.getElementById("noDrive").style.display = "inline-flex";
+
+ }
+
+ function showDriveDone() {
+    document.getElementById("driveDoneBtn").style.display = "inline-flex";
+ }
+
+ function yesDriveLoaded() {
+     //alert(document.getElementById("driveHref").href);
+     //alert(window.location.hostname);
+
+     var webUrl = "{{{escape doc.drive.drive_url}}}";
+
+     //alert(webUrl);
+     //alert(document.getElementById("driveHref").href + "#");
+    if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location || document.getElementById("driveHref").href + "#" == window.location) {
+        document.getElementById("yesDrive").style.display = "none";
+        document.getElementById("noDrive").style.display = "inline-flex";
+    } else {
+        if (document.getElementById("driveHref") && document.getElementById("driveHref").href) {
+          //var sWith = document.getElementById("driveHref").href;
+          //alert(sWith);
+
+          var webUrl = "{{{escape doc.drive.drive_url}}}";
+          //alert(webUrl);
+          //alert(! webUrl.startsWith('http'));
+          if (! webUrl.startsWith('http')) {
+              document.getElementById("driveHref").href = 'http://' + webUrl;
+          }
+        }
+
+        document.getElementById("yesDrive").style.display = "inline-flex";
+        document.getElementById("noDrive").style.display = "none";
+    }
+ }
+
+ function showWorkItemEditForm(e) {
+   e.preventDefault()
+   var workItemParent = this.parentElement
+   var workItemContainer = $(workItemParent)
+   var workItemId = $(workItemParent.parentElement).attr('name')
+
+   var currentData = {}
+   $('[name*="' + workItemId + '"]', workItemContainer).each(function(idx) {
+     var path = $(this).attr('name').replace(workItemId + '.', '')
+     currentData[path] = this.innerText
+   })
+
+   $(this).toggle();
+   $(this).siblings('.work-item-delete').toggle();
+   //workItemContainer.empty()
+
+   var fields = [
+     {field: 'name', text:'Name', type: 'textarea'},        
+     {field: 'description', text:'Description', type: 'textarea'},   
+     {field: 'projectComments', text:'Project Comments', type: 'textarea'},
+     {field: 'cost', text:'Cost', type: 'text'},
+     
+   ]
+
+   fields.forEach(function(f) {
+     var formGroup = $('<div class="form-group"></div>')
+     $('<label>' + f.text + '</label>').appendTo(formGroup)
+     if (f.type && f.type === 'textarea') {
+       $('<textarea></textarea>')
+         .addClass('form-control')
+         .attr('name', workItemId + '.' + f.field)
+         .attr('rows', 5)
+         .val(currentData[f.field])
+         .appendTo(formGroup)
+     } else {
+       $('<input></input>')
+         .addClass('form-control')
+         .attr('name', workItemId + '.' + f.field)
+         .val(currentData[f.field])
+         .appendTo(formGroup)
+     }
+
+     workItemContainer.append(formGroup)
+   })
+
+   $('<button></button>')
+         .text('Save')
+         .addClass('btn').addClass('btn-primary')
+         .addClass('card-link')
+         .on('click', function(e) {
+           saveWorkItem(workItemContainer)
+         })
+         .appendTo(workItemContainer)
+
+   $('<button></button>')
+         .text('Cancel')
+         .addClass('btn').addClass('btn-danger')
+         .addClass('card-link')
+         .on('click', function(e) {
+           for (let i=0; i<workItems.length; i++) {
+             if (workItems[i]._id === workItemId) {
+               showWorkItem(workItems[i], workItemContainer)
+             }
+           }
+         })
+         .appendTo(workItemContainer)
+ }
+
+ function showWorkItem(data, node) {
+   node.empty()
+
+   var cardBlock = node
+
+   $('<h4></h4>').addClass('card-title')
+                 .attr('name', data._id + '.name')
+                 .text(data.name)
+                 .appendTo(cardBlock)
+
+   $('<p></p>').addClass('text-muted')
+                 .text(new Date(data.date).toString())
+                 .appendTo(cardBlock)
+
+   var cardText = $('<p></p>').addClass('card-text')
+                              .appendTo(cardBlock)
+
+   $('<strong>Description:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', data._id + '.description')
+                              .text(data.description)
+                              .appendTo(cardText)
+
+   $('<br></br>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Vetting Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').attr('name', data._id + '.vettingComments')
+                              .text(data.vettingComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Site Comments:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+   
+   
+
+   $('<p></p>').attr('name', data._id + '.siteComments')
+                              .text(data.siteComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Project Comments:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText) 
+   
+
+   $('<p></p>').attr('name', data._id + '.projectComments')
+                              .text(data.projectComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+
+   $('<strong>Cost:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', data._id + '.cost')
+                              .text(data.cost)
+                              .appendTo(cardText)
+
+   $('<a></a>').addClass('btn').addClass('btn-primary')
+                              .addClass('card-link').addClass('work-item-comment')
+                              .text('Edit')
+                              .attr('href', '#')
+                              .on('click', showWorkItemEditForm)
+                              .appendTo(cardBlock)
+
+   
+   $('<a></a>').addClass('btn').addClass('btn-warning')
+                              .addClass('card-link').addClass('work-item-comment')
+                              .text('Delete')
+                              .attr('href', '#')
+                              .on('click', deleteWorkItem)
+                              .appendTo(cardBlock)
+ }
+
+
+
+ function showWorkItemDeleteConfirm(e) {
+   e.preventDefault()
+   var workItemParent = this.parentElement
+   var workItemContainer = $(workItemParent)
+   var workItemId = $(workItemParent.parentElement).attr('name')
+
+   var currentData = {}
+   $('[name*="' + workItemId + '"]', workItemContainer).each(function(idx) {
+     var path = $(this).attr('name').replace(workItemId + '.', '')
+     currentData[path] = this.innerText
+   })
+
+   workItemContainer.empty()
+
+   $('<h4>Are you sure?</h4>').appendTo(workItemParent)
+   $('<p>You are about to delete this work item. After selecting confirm, you '
+   + 'will be unable to recover the item.</p>').appendTo(workItemParent)
+
+   $('<a>Continue</a>').addClass('btn').addClass('btn-primary')
+                                                       .appendTo(workItemParent)
+                                                       .on('click', function(e) {
+                                                         deleteWorkItem(workItemId, workItemParent)
+                                                       })
+
+   $('<a>Cancel</a>').addClass('btn').addClass('btn-danger')
+                                                       .appendTo(workItemParent)
+                                                       .on('click', function(e) {
+                                                         e.preventDefault()
+                                                         for (let i=0; i<workItems.length; i++) {
+                                                           if (workItems[i]._id === workItemId) {
+                                                             showWorkItem(workItems[i], workItemContainer)
+                                                           }
+                                                         }
+                                                       })
+ }
+
+
+ function saveWorkItem(node) {
+   var data = {}, id = false
+   $('input, textarea', node).each(function(idx) {
+     var path = this.name.split('.')[1]
+     data[path] = this.value
+     if (!id) id = this.name.split('.')[0]
+   })
+
+   // XHR here
+   var xhrData = JSON.parse(JSON.stringify(data))
+   xhrData.id = id
+   console.log('updating now');
+   xhr(xhrData, 'POST', '/pm/updateitem', function(err) {
+     if (err) {
+       // TODO: If error, flip the value back and show an error message to the user
+       alert('Value did not save, please reload the page')
+     }
+
+     for (var i=0; i<workItems.length; i++) {
+       if (workItems[i]._id === id) {
+         Object.keys(data).forEach(function(k) {
+           workItems[i][k] = data[k]
+         })
+
+         showWorkItem(workItems[i], node)
+         //$('.work-items-comment').toggle();
+       }
+     }
+   })
+
+
+
+
+
+
+ }
+
+ function xhr(data, method, url, next) {
+   //post to database
+
+   var posting = $.ajax({
+     type : method,
+     url : url,
+     dataType : 'json',
+     contentType : 'application/json; charset=UTF-8',
+     data : JSON.stringify(data)
+   });
+
+   //check for error
+   posting.done(function (xhr) {
+     console.log(xhr);
+     if(xhr.status === 'success' || xhr.status === 200 || xhr.status ==='200') {
+       next(null, xhr)
+     } else {
+       next(new Error('Could not complete xhr'))
+     }
+   });
+
+   posting.fail(function (res) {
+     console.log(res);
+     next(new Error('Could not complete xhr'))
+   });
+ }
+
+ function deleteWorkItem(id, node) {
+   console.log(id);
+   console.log({itemId: id});
+	 xhr({itemId: id}, 'POST', '/pm/deleteitem', function(err, data) {
+		 if (err) { alert('Unable to delete item') }
+		 else {
+			 var workItemRoot = $('[name="' + id + '"]')
+			 workItemRoot.remove()
+			 for (var i=0; i<workItems.length; i++) {
+				 if (workItems[i]._id == id) { workItems.splice(i, 1) }
+			 }
+		 }
+	 })
+ }
+
+ function handleNewWorkItemSubmission(e) {
+   var newWorkItem = {}, error = false
+
+   $('input, textarea', e.target.parentNode).each(function(idx) {
+     if (this.value.length === 0 && this.name !== 'cost' && this.name !=='isHandle') {
+       $(this.parentNode).addClass('has-danger')
+       error = true
+     } else {
+       newWorkItem[this.name] = this.value
+
+        if ($('#checkbox1').is(':checked')) {
+          newWorkItem["isHandle"] = true
+        } else {
+          newWorkItem["isHandle"] = false
+        }
+       //var aChk =  $('#checkbox1').val()
+
+
+       $(this.parentNode).removeClass('has-danger')
+     }
+   })
+
+   if (error === false) {
+     createNewWorkItem(newWorkItem, function(err) {
+       handleNewWorkItemClear()
+     })
+   }
+ }
+
+ function handleNewWorkItemClear(e, node) {
+   $('input, textarea', (e ? e.target.parentNode : node)).each(function(idx) {
+     $(this).val('')
+     $(this.parentNode).removeClass('has-danger')
+   });
+   $('#add-work-item-collapse').collapse('hide');
+
+   //document.getElementById("workAddBtn").style.display = "block";  
+   $("#checkbox1").prop('checked', true);
+ }
+
+ function createNewWorkItem(w, next) {
+   var id = docs[0]._id
+   var rightNow = new Date()
+
+   w.date = rightNow
+   w.updated = rightNow
+   w.applicationId = id
+
+   xhr(w, 'POST', '/pm/additem', function(err, data) {
+     // TODO: Handle error
+     if (err) { alert('There was an error saving your work item') }
+
+     w._id = data.itemId
+     workItems.push(w)
+     var newNode = addWorkItem(w)
+     handleNewWorkItemClear(null, $('[name="new"]'))
+
+   })
+ }
+
+ function addWorkItem(w) {
+   var cardContainer = $('#workItemCards')
+
+   var cardDiv = $('<div></div>').addClass('col-xs-12').addClass('col-sm-6')
+                                 .appendTo(cardContainer)
+
+   var card = $('<div></div>').addClass('card').addClass('work-item')
+                              .attr('name', w._id)
+                              .appendTo(cardDiv)
+
+   var cardBlock = $('<div></div>').addClass('card-block')
+                                   .appendTo(card)
+
+
+   $('<h4></h4>').addClass('card-title')
+                                   .attr('name', w._id + '.name')
+                                   .text(w.name)
+                                   .appendTo(cardBlock)
+
+   $('<p></p>').addClass('text-muted')
+                                   .text(w.date.toString())
+                                   .appendTo(cardBlock)
+
+   var cardText = $('<p></p>').addClass('card-text')
+                              .appendTo(cardBlock)
+
+   $('<strong>Description:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', w._id + '.description')
+                              .text(w.description)
+                              .appendTo(cardText)
+
+   $('<br></br>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Vetting Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(w.vettingComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Site Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(w.siteComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   
+   $('<strong>Project Comments:</strong>').appendTo(cardText)
+   // $('<br></br>').appendTo(cardText)
+
+   $('<p></p>').text(w.projectComments).appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<strong>Cost:</strong>').appendTo(cardText)
+   $('<br></br>').appendTo(cardText)
+
+   $('<span></span>')
+                              .attr('name', w._id + '.cost')
+                              .text(w.cost)
+                              .appendTo(cardText)
+
+   $('<a></a>').addClass('btn').addClass('btn-primary')
+                              .addClass('card-link').addClass('work-item-edit')
+                              .text('Edit')
+                              .attr('href', '#')
+                              .on('click', showWorkItemEditForm)
+                              .appendTo(cardBlock)
+
+   $('<a></a>').addClass('btn').addClass('btn-warning')
+                              .addClass('card-link').addClass('work-item-delete')
+                              .text('Delete')
+                              .attr('href', '#')
+                              .on('click', showWorkItemDeleteConfirm)
+                              .appendTo(cardBlock)
+
+  console.log("Output", w)
+
+
+  $('<input>&nbsp;Handle-it</input>').prop('checked', w.isHandle)
+                              .attr('type', 'checkbox')
+                              .attr('dataID', w._id)
+                              .attr('data-name', "isHandle")
+                              .addClass('isHandle').addClass('card-link')
+                              .on('change',  function() {
+                                    if ($(this).is(':checked')) {
+                                      $(this).attr('value', 'true');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": true };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Checked - Success!");
+                                        }
+                                      
+                                    })
+                                      
+                                    } else {
+
+                                      $(this).attr('value', 'false');
+
+                                      var id = $(this).attr('dataID');
+                                      console.log("ID is: ", id);
+
+                                      var postUrl = '/edit/work/' + id;
+
+                                      console.log("POST URL is: ", postUrl);
+
+                                      var update = { "name": "isHandle", "value": false };
+
+                                      xhr(update, 'POST', postUrl, function(err, data) {
+                                      if (err) { alert('Could not Save, please refresh page.') }
+                                      else {
+                                        console.log("Unchecked - Success!");
+                                        }
+                                      
+                                    })
+
+                                    }
+                                    
+                                  })
+                              .appendTo(cardBlock)
+
+   return cardBlock
+ }
+
+
+
+ 
+ function updateWrapup () {
+   $('#wrapUp input:checkbox').each(function () {
+     var $this = $(this);
+     var name = $this.attr('name')
+     
+     wrapUp[name].complete = $this.prop('checked');
+     if (wrapUp[name].complete && !wrapUp[name].completed_on) {
+       wrapUp[name].completed_on = Date.now();
+     } else if (!wrapUp[name].complete) {
+       wrapUp[name].completed_on = null;
+     }
+   });
+
+   $('#wrapUp select.task-owner').each(function () {
+     var $this = $(this);
+     wrapUp[ $this.data('owner-of') ]. owner = $this.val() || null;
+   });
+
+   // Strip the MongoDB version field from the record (so that it saves).
+   if (typeof wrapUp.__v !== 'undefined') {
+     delete wrapUp.__v;
+   }
+
+   // Save the new record to the database.
+   $.ajax({
+     url: '/projectview/wrapup',
+     method: 'POST',
+     dataType: 'json',
+     contentType: 'application/json; charset=utf8',
+     data: JSON.stringify(wrapUp),
+     success: function (data) {
+       var w = data.results.projectWrapUp;
+
+       // Update the checkboxes.
+       $('#wrapUp input:checkbox').each(function () {
+         var $this = $(this);
+         var name = $this.attr('name')
+
+         $this.prop('checked', w[name].complete);
+
+         var completeDate = '';
+         if (w[name].complete && w[name].completed_on !== null) {
+           var completeDate = new Date(w[name].completed_on).toLocaleDateString();
+         }
+         $this.parent('label').attr('data-original-title', completeDate);
+       });
+
+       // Update the dropdowns.
+       $('#wrapUp select.task-owner').each(function () {
+         var $this = $(this);
+         if (w[$this.data('owner-of')] && w[$this.data('owner-of')].owner !== null) {
+           $this.val(w[$this.data('owner-of')].owner)
+         } else {
+           $this.val('');
+         }
+       });
+     }
+   });
+ }
+
+ function updatePlan() {
+
+   /* plan.start_date = $('#planning .start_date').val();
+    * plan.end_date = $('#planning .end_date').val();
+    * console.log('Start: ', plan.start_date, ', End: ', plan.end_date); */
+   
+   $('#planning input:checkbox').each(function () {
+     var $this = $(this);
+     var name = $this.attr('name');
+
+     //alert(name);
+     console.log(name, plan[name]);
+
+     if (! plan[name]) {
+        plan[name] = {};
+       // plan[name].complete = null;
+       // plan[name].completed_on = null;
+       // plan[name].note = null;
+     }
+
+     if (name.startsWith("custom")) {
+
+        var n = document.getElementById(name);
+        console.log("Rohin");
+        console.log(n);
+
+        plan[name].note = n.outerText;
+     }
+
+
+     plan[name].complete = $this.prop('checked');
+     if (plan[name].complete && !plan[name].completed_on) {
+       plan[name].completed_on = Date.now();
+     } else if (!plan[name].complete) {
+       plan[name].completed_on = null;
+     }
+   });
+
+   $('#planning select.task-owner').each(function () {
+     var $this = $(this);
+     plan[ $this.data('owner-of') ].owner = $this.val() || null;
+   });
+
+   // Strip the MongoDB version field from the record (so that it saves).
+   if (typeof plan.__v !== 'undefined') {
+     delete plan.__v;
+   }
+
+   //if (plan[name].note == null) {
+     //alert("its null");
+   //}
+   console.log('sending post to save: ', plan);
+
+   // Save the new record to the database.
+   $.ajax({
+     url: '/projectview/plan',
+     method: 'POST',
+     dataType: 'json',
+     contentType: 'application/json; charset=utf8',
+     data: JSON.stringify(plan),
+     success: function (data) {
+       var p = data.results.plan;
+
+       // Update the checkboxes.
+       $('#planning input:checkbox').each(function () {
+         var $this = $(this);
+         var name = $this.attr('name')
+
+         $this.prop('checked', p[name].complete);
+
+         var completeDate = '';
+         if (p[name].complete && p[name].completed_on !== null) {
+           var completeDate = new Date(p[name].completed_on).toLocaleDateString();
+         }
+         $this.parent('label').attr('data-original-title', completeDate);
+       });
+
+       // Update the dropdowns.
+       $('#planning select.task-owner').each(function () {
+         var $this = $(this);
+         if (p[$this.data('owner-of')] && p[$this.data('owner-of')].owner !== null) {
+           $this.val(p[$this.data('owner-of')].owner)
+         } else {
+           $this.val('');
+         }
+       });
+     }
+   });
+ }
+
+ function updateProjectDates() {
+   var $this = $(this);
+   var data = {
+     name: $this.attr('name'),
+     value: $this.val()
+   };
+
+   $.ajax({
+     {{#each results.doc}}
+     url: '/edit/project/{{_id}}',
+     {{/each}}
+     method: 'POST',
+     dataType: 'json',
+     contentType: 'application/json; charset=utf8',
+     data: JSON.stringify(data),
+     success: function (data) {
+       console.log(arguments);
+     }
+   });
+ }
+
+     // function hideWorkAddBtn() {
+     //      document.getElementById("workAddBtn").style.display = "none";
+     // }
+</script>

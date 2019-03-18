@@ -101,111 +101,211 @@ router.get('/:id', isLoggedIn, function(req, res) {
         });
 });
 
+router
+.get('/exportPAF/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders,
+	 api.getAssignableUsers, api.getWrapUpDoc, api.getProjectPlanDoc,
+	 api.getLeadtimeDefaults,
+	 function(req, res, next) {
+	   //Checking what's in params
+	   //console.log("Rendering application " + ObjectId(req.params.id));
 
-//Insert CSV export route here
+		 console.log("rendering test application");
+	   var payload = {};
+
+		 payload.doc = res.locals.results.doc[0];
+		 payload.work = res.locals.results.work;
+		 payload.user = req.user._id;
+		 payload.user_email = res.locals.email;
+			 payload.user_role = res.locals.role;
+			 payload.user_roles = res.locals.user_roles;
+		 payload.projectNotes = res.locals.results.projectNotes;
+	   payload.assignableUsers = res.locals.assignableUsers;
+	   payload.wrapUp = res.locals.wrapUp ? res.locals.wrapUp : ProjectWrapUpPackage.empty(req.params.id);
+		 payload.part = res.locals.results.part||req.partnerTime;			//Data for Partners Tab Partial
+	   payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
+	   payload.leadtime = res.locals.leadtime;
+		 payload.partDocId = res.locals.results.doc[0]._id;
+		 console.log("results");
+	   console.log(payload);
+	   
+		 // res.render('siteassessmenttool', payload);
+		 res.render('exportPAF', payload);
+
+	 });
+
+router
+.get('/exportHandle/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders,
+	api.getAssignableUsers, api.getWrapUpDoc, api.getProjectPlanDoc,
+	api.getLeadtimeDefaults,
+	function(req, res, next) {
+	//Checking what's in params
+	//console.log("Rendering application " + ObjectId(req.params.id));
+
+		console.log("rendering test application");
+	var payload = {};
+
+		payload.doc = res.locals.results.doc[0];
+		payload.work = res.locals.results.work;
+		payload.user = req.user._id;
+		payload.user_email = res.locals.email;
+			payload.user_role = res.locals.role;
+			payload.user_roles = res.locals.user_roles;
+		payload.projectNotes = res.locals.results.projectNotes;
+	payload.assignableUsers = res.locals.assignableUsers;
+	payload.wrapUp = res.locals.wrapUp ? res.locals.wrapUp : ProjectWrapUpPackage.empty(req.params.id);
+		payload.part = res.locals.results.part||req.partnerTime;			//Data for Partners Tab Partial
+	payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
+	payload.leadtime = res.locals.leadtime;
+		payload.partDocId = res.locals.results.doc[0]._id;
+		console.log("results");
+	console.log(payload);
+	
+		// res.render('siteassessmenttool', payload);
+		res.render('exportPAF', payload);
+
+	});
+
+
+	router
+	.get('/exportPDF/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders,
+		api.getAssignableUsers, api.getWrapUpDoc, api.getProjectPlanDoc,
+		api.getLeadtimeDefaults,
+		function(req, res, next) {
+		//Checking what's in params
+		//console.log("Rendering application " + ObjectId(req.params.id));
+	
+			console.log("Export to PDF Called");
+		var payload = {};
+	
+			payload.doc = res.locals.results.doc[0];
+			payload.work = res.locals.results.work;
+			payload.user = req.user._id;
+			payload.user_email = res.locals.email;
+				payload.user_role = res.locals.role;
+				payload.user_roles = res.locals.user_roles;
+			payload.projectNotes = res.locals.results.projectNotes;
+		payload.assignableUsers = res.locals.assignableUsers;
+		payload.wrapUp = res.locals.wrapUp ? res.locals.wrapUp : ProjectWrapUpPackage.empty(req.params.id);
+			payload.part = res.locals.results.part||req.partnerTime;			//Data for Partners Tab Partial
+		payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
+		payload.leadtime = res.locals.leadtime;
+			payload.partDocId = res.locals.results.doc[0]._id;
+			console.log("results - export as PDF");
+		console.log(payload);
+		
+			// res.render('siteassessmenttool', payload);
+			res.render('exportPDF', payload);
+	
+		});
+// //Insert CSV export route here
+// router.post('/csvExport', isLoggedInPost, function(req, res){
+
+
+//   var applicationID = req.body.application;
+//   var firstname = req.body.firstname;
+//   var lastname = req.body.lastname;
+//   var query =  "{'applicationId' : ObjectId("+"'"+applicationID+"'"+")}";
+//   var filename = lastname + '-' + firstname + '-' + applicationID;
+// 	const execFile = require('child_process').execFile;
+// 	const exec = require('child_process').exec;
+// 	const mongoexport_child = execFile('mongoexport', ['-d', 'catalyst',
+// 	'-c', 'workitempackages', '--type=csv', '--fields', 'name,description,cost,vettingComments', '-q', query, '-o', 'public/exports/'+filename+'-'+'VettingView'+'.csv', '--port', config.mongo.port],
+// 	function(error, stdout, stderr) {
+// 		if(error){
+// 			console.error('stderr', stderr);
+// 			throw error;
+// 		}
+// 		else{
+// 			console.log('stdout', stdout);
+// 		}
+// 	});
+
+// 	mongoexport_child.on('exit', function(code,signal){
+
+// 		const rename_child = exec('cd public/exports; var="Work Item,Description,Cost,Vetting Comments"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'VettingView' + '.csv' + "'",
+// 			function(error, stdout, stderr){
+// 					if(error){
+// 						console.error('stderr', stderr);
+// 						throw error;
+// 					}
+// 					else{
+// 						console.log('stdout', stdout);
+// 					}
+// 		})
+
+//     rename_child.on('exit', function(code,signal){
+//       const export_notes = execFile('mongoexport', ['-d', 'catalyst', '-c', 'notes', '--type=csv', '--fields', 'vetAgent,description', '-q', query, '-o', 'public/exports/'+filename+'-'+'notes'+'.csv', '--port', config.mongo.port],
+//       function(error,stdout,stderr){
+//         if(error){
+//           console.error('stderr', stderr);
+//           throw error;
+//         }
+//         else{
+//           console.log('stdout', stdout);
+//         }
+//       });
+
+//       export_notes.on('exit', function(code, signal){
+//         const edit_notes_header = exec('cd public/exports; var="Vetting Agent,Description"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'notes' + '.csv'  + "'" + ';cat ' + filename + '-' + 'VettingView' + '.csv' + ' ' + filename + '-'+'notes' + '.csv' + ' > ' + filename + '-' + 'VettingWorksheet' + '.csv',
+//         function(error, stdout, stderr){
+//           if(error){
+//             console.error('stderr', stderr);
+//           }
+//           else{
+//             console.log('stdout', stdout);
+//           }
+//         });
+//         edit_notes_header.on('exit', function(code,signal){
+
+//           if(fs.existsSync('public/exports/'+filename+'-VettingView'+'.csv') && fs.existsSync('public/exports/'+filename+'-notes'+'.csv')){
+
+//             fs.unlinkSync('public/exports/'+filename+'-VettingView'+'.csv');
+//             fs.unlinkSync('public/exports/'+filename+'-notes'+'.csv');
+
+//           }
+
+
+//       		if(code !== 0){
+//       			res.status(500).send("Export failed: Code 500");
+//       			debugger
+//       		}
+//       		else{
+//       			res.status(200).send({status: 'success'});
+
+
+
+//       		}
+//       	});
+//       });
+//     });
+// 	});
+// });
+
 router.post('/csvExport', isLoggedInPost, function(req, res){
-
-
-  var applicationID = req.body.application;
-  var firstname = req.body.firstname;
-  var lastname = req.body.lastname;
-  var query =  "{'applicationId' : ObjectId("+"'"+applicationID+"'"+")}";
-  var filename = lastname + '-' + firstname + '-' + applicationID;
-	const execFile = require('child_process').execFile;
-	const exec = require('child_process').exec;
-	const mongoexport_child = execFile('mongoexport', ['-d', 'catalyst',
-	'-c', 'workitempackages', '--type=csv', '--fields', 'name,description,cost,vettingComments', '-q', query, '-o', 'public/exports/'+filename+'-'+'VettingView'+'.csv', '--port', config.mongo.port],
-	function(error, stdout, stderr) {
-		if(error){
-			console.error('stderr', stderr);
-			throw error;
-		}
-		else{
-			console.log('stdout', stdout);
-		}
-	});
-
-	mongoexport_child.on('exit', function(code,signal){
-
-		const rename_child = exec('cd public/exports; var="Work Item,Description,Cost,Vetting Comments"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'VettingView' + '.csv' + "'",
-			function(error, stdout, stderr){
-					if(error){
-						console.error('stderr', stderr);
-						throw error;
-					}
-					else{
-						console.log('stdout', stdout);
-					}
-		})
-
-    rename_child.on('exit', function(code,signal){
-      const export_notes = execFile('mongoexport', ['-d', 'catalyst', '-c', 'notes', '--type=csv', '--fields', 'vetAgent,description', '-q', query, '-o', 'public/exports/'+filename+'-'+'notes'+'.csv', '--port', config.mongo.port],
-      function(error,stdout,stderr){
-        if(error){
-          console.error('stderr', stderr);
-          throw error;
-        }
-        else{
-          console.log('stdout', stdout);
-        }
-      });
-
-      export_notes.on('exit', function(code, signal){
-        const edit_notes_header = exec('cd public/exports; var="Vetting Agent,Description"; sed -i "1s/.*/$var/" ' + "'" + filename + '-' + 'notes' + '.csv'  + "'" + ';cat ' + filename + '-' + 'VettingView' + '.csv' + ' ' + filename + '-'+'notes' + '.csv' + ' > ' + filename + '-' + 'VettingWorksheet' + '.csv',
-        function(error, stdout, stderr){
-          if(error){
-            console.error('stderr', stderr);
-          }
-          else{
-            console.log('stdout', stdout);
-          }
-        });
-        edit_notes_header.on('exit', function(code,signal){
-
-          if(fs.existsSync('public/exports/'+filename+'-VettingView'+'.csv') && fs.existsSync('public/exports/'+filename+'-notes'+'.csv')){
-
-            fs.unlinkSync('public/exports/'+filename+'-VettingView'+'.csv');
-            fs.unlinkSync('public/exports/'+filename+'-notes'+'.csv');
-
-          }
-
-
-      		if(code !== 0){
-      			res.status(500).send("Export failed: Code 500");
-      			debugger
-      		}
-      		else{
-      			res.status(200).send({status: 'success'});
-
-
-
-      		}
-      	});
-      });
-    });
-	});
+	console.log("** MONGOEXPORT CALLED FROM vettingworksheet.js **");
 });
 
 router.get('/file/:name', function(req, res, next){
-var fileName = req.params.name;
-	var options = {
-		root: './public/exports',
-		dotfiles: 'deny',
-		headers: {
-			'x-sent': true,
-			'Content-Disposition':'attachment;filename=' + fileName
-		}
-	};
+	console.log("** MONGOEXPORT CALLED FROM vettingworksheet.js **");
+// var fileName = req.params.name;
+// 	var options = {
+// 		root: './public/exports',
+// 		dotfiles: 'deny',
+// 		headers: {
+// 			'x-sent': true,
+// 			'Content-Disposition':'attachment;filename=' + fileName
+// 		}
+// 	};
 
 
-	res.sendFile(fileName, options, function(err){
-		if(err){
-			next(err);
-		}
-		else{
-			console.log('Sent:', fileName);
-		}
-	});
+// 	res.sendFile(fileName, options, function(err){
+// 		if(err){
+// 			next(err);
+// 		}
+// 		else{
+// 			console.log('Sent:', fileName);
+// 		}
+// 	});
 
 
 });
@@ -298,10 +398,20 @@ function isLoggedIn(req, res, next) {
 					if (!results) {
 						res.redirect('/user/login');
 					}
-					else {
-						if(results.user.user_role == "VET" || results.user.user_role == "ADMIN") {
+				else {
+          res.locals.assign_tasks = results.user.assign_tasks;
+					if(results.user.user_role == "VET" || results.user.user_role == "ADMIN") {
+							
+							res.locals.role = results.user.user_role;
+							res.locals.user_roles = results.user.user_roles;
 							return next();
 
+						}
+						else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('VET') >-1)
+						{
+							res.locals.role = results.user.user_role;
+							res.locals.user_roles = results.user.user_roles;
+							return next();
 						}
 						else {
 							console.log("user is not vet");
@@ -346,8 +456,15 @@ function isLoggedInPost(req, res, next) {
 
 						if(results.user.user_role == "VET" || results.user.user_role == "ADMIN") {
 							res.locals.role = results.user.user_role;
+							res.locals.user_roles = results.user.user_roles;
 							return next();
 
+						}
+						else if (results.user.user_roles !== undefined && results.user.user_roles.indexOf('VET') >-1)
+						{
+							res.locals.role = results.user.user_role;
+							res.locals.user_roles = results.user.user_roles;
+							return next();
 						}
 						else {
 							//user is not a vetting agent or admin, route to error handler

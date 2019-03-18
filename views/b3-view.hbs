@@ -1,6 +1,6 @@
 <a href="/view" class="btn btn-primary">Back to Vetting Home</a>
 <a href="/vettingworksheet/{{doc._id}}" class="btn btn-primary">Vetting Worksheet</a>
-<a id="csvExportButton" class="btn btn-primary">Export to CSV</a>
+<!-- <a id="csvExportButton" class="btn btn-primary">Export to CSV</a> -->
 
 <div class="container">
     <div class="row">
@@ -500,7 +500,8 @@
                         {value: 'declined', text: 'Declined'},
                         {value: 'withdrawnooa', text: 'Withdrawn - Outside Service Area'},
                         {value: 'withdrawn', text: 'Withdrawn'},
-                        {value: 'project', text: 'Approved Project'}
+                        {value: 'project', text: 'Approved Project'},
+                        {value: 'waitlist', text: 'Waitlist'}
                     ]
         });
         $('#owns_home').editable({
@@ -641,36 +642,36 @@
         $('[id="notes.vet_summary"]').editable()
     });
 
-    $('#csvExportButton').on('click', function(e) {
-	var urlParts = window.location.pathname.split('/')
-    var applicationID = urlParts[urlParts.length-1]
-	var firstname = '{{{doc.application.name.first}}}';
-	var lastname = '{{{doc.application.name.last}}}';
-    var payload = {
-      	application: applicationID,
-		firstname: firstname,
-		lastname: lastname
-    }
-    var csvRequest = $.ajax({
-      	type: 'POST',
-        url: '/view/csvExport',
-        dataType: 'json',
-        contentType: 'application/json; chartset=UTF-8',
-        data: JSON.stringify(payload)
-      })
-      csvRequest.done(function(xhr) {
-        if (xhr.status === 'success') {
-          // TODO: Set window.location.href equal to the download file
+ //    $('#csvExportButton').on('click', function(e) {
+	// var urlParts = window.location.pathname.split('/')
+ //    var applicationID = urlParts[urlParts.length-1]
+	// var firstname = '{{{doc.application.name.first}}}';
+	// var lastname = '{{{doc.application.name.last}}}';
+ //    var payload = {
+ //      	application: applicationID,
+	// 	firstname: firstname,
+	// 	lastname: lastname
+ //    }
+ //    var csvRequest = $.ajax({
+ //      	type: 'POST',
+ //        url: '/view/csvExport',
+ //        dataType: 'json',
+ //        contentType: 'application/json; chartset=UTF-8',
+ //        data: JSON.stringify(payload)
+ //      })
+ //      csvRequest.done(function(xhr) {
+ //        if (xhr.status === 'success') {
+ //          // TODO: Set window.location.href equal to the download file
 
-		window.location.href = '/view/file/' + '{{{doc.application.name.last}}}' + '-' + '{{{doc.application.name.first}}}' + '-' + applicationID + '.csv'
+	// 	window.location.href = '/view/file/' + '{{{doc.application.name.last}}}' + '-' + '{{{doc.application.name.first}}}' + '-' + applicationID + '.csv'
 
-        } else {
-			console.log(xhr.status);
-        }
-      })
-      csvRequest.fail(function(data) {
-		console.log(data.status)
-        debugger
-      })
-    })
+ //        } else {
+	// 		console.log(xhr.status);
+ //        }
+ //      })
+ //      csvRequest.fail(function(data) {
+	// 	console.log(data.status)
+ //        debugger
+ //      })
+ //    })
 </script>
