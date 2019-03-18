@@ -1963,7 +1963,7 @@ getDocumentPlanning: function (req, res, next) {
             var asso = assocRes.assocPartners.length;
             console.log("RR1", asso);
 
-              var assocPartners = assocRes.assocPartners[0].assocPartners || null;        //An array of IDS
+              var assocPartners;
                 console.log('[ API ] getSummaryPartners :: item(s) found: TRUE');
 
                 console.log("Partner Associations Result: " + assocPartners);

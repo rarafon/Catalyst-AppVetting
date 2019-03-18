@@ -60,10 +60,12 @@ var workItems = [];
  
  {{#if results.work}}
    {{#each results.work}}
-workItems.push("-     " + "Name:  {{{escape name}}}\n");
-workItems.push("-     " + "Description:  {{{escape description}}}\n");
-workItems.push("-     " + "Site Comments:  {{{escape siteComments}}}\n");
-workItems.push("-     " + "COST:  {{{escape cost}}}\n\n");
+    {{#if_not_eq isHandle true}}
+      workItems.push("-     " + "Name:  {{{escape name}}}\n");
+      workItems.push("-     " + "Description:  {{{escape description}}}\n");
+      workItems.push("-     " + "Site Comments:  {{{escape siteComments}}}\n");
+      workItems.push("-     " + "COST:  {{{escape cost}}}\n\n");
+    {{/if_not_eq}}
    {{/each}}
  {{/if}}
 
