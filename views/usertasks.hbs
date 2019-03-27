@@ -27,18 +27,19 @@
     </div>
     <div id="myTasks" class="" role="tabpanel" aria-labelledby="headingTwo">
       <div class="card-block">
-        <table class="table table-sm table-bordered table-hover">
+        <table class="table table-sm table-bordered table-hover orderTable0">
           <thead>
             <tr>
-              <th class="col-md-3">Application</th>
-              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Due Date</th>
-              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Project Start</th>
-              <th class="col-md-7">Task</th>
+              <th onclick="orderTable('orderTable0', 0)" class="col-md-3">Application</th>
+              <th onclick="orderTable('orderTable0', 1)" class="col-md-1" style="white-space: pre; overflow: hidden;">Due Date</th>
+              <th onclick="orderTable('orderTable0', 2)" class="col-md-1" style="white-space: pre; overflow: hidden;">Project Start</th>
+              <th onclick="orderTable('orderTable0', 3)" class="col-md-7">Task</th>
             </tr>
           </thead>
           <tbody>
 
             {{#each plan}}
+            {{#if (getAppNameForPlan ../applications applicationId)}}
               <tr class="row row-eq-height" >
                 <td class="col-md-3" style="height: 120px; overflow: hidden">
                   <a href="/projectview/{{applicationId}}" target="_new">{{
@@ -52,6 +53,7 @@
                   getPlanTaskAssignments this ../userId ../applications applicationId
                   }}</td>
               </tr>
+              {{/if}}
             {{/each}}
 
           </tbody>
@@ -69,18 +71,19 @@
     </div>
     <div class="" role="tabpanel" aria-labelledby="headingTwo">
       <div class="card-block">
-        <table class="table table-sm table-bordered table-hover" style="table-layout: fixed">
+        <table class="table table-sm table-bordered table-hover orderTable1" style="table-layout: fixed">
           <thead>
             <tr>
-              <th class="col-md-3">Application</th>
-              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Due Date</th>
-              <th class="col-md-1" style="white-space: pre; overflow: hidden;">Project Start</th>
-              <th class="col-md-7">Hot Tasks</th>
+              <th onclick="orderTable('orderTable1', 0)" class="col-md-3">Application</th>
+              <th onclick="orderTable('orderTable1', 1)" class="col-md-1" style="white-space: pre; overflow: hidden;">Due Date</th>
+              <th onclick="orderTable('orderTable1', 2)" class="col-md-1" style="white-space: pre; overflow: hidden;">Project Start</th>
+              <th onclick="orderTable('orderTable1', 3)" class="col-md-7">Hot Tasks</th>
             </tr>
           </thead>
           <tbody>
 
             {{#each open}}
+            {{#if (getAppNameForPlan ../openApplications applicationId)}}
               <tr >
                 <td class="col-md-3">
                   <a href="/projectview/{{applicationId}}" target="_new">{{
@@ -96,6 +99,7 @@
                   getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 
                   }}</td>
               </tr>
+            {{/if}}
             {{/each}}
 
           </tbody>
@@ -108,9 +112,62 @@
 </div>
 </div>
 
+<script>
+// SORT TABLE CODE --------------------------------------------------
+function orderTable(inTableClass, colmn) {
+    var switchCnt = 0, rows, reverse;
+
+    var curr = "ascending";
+    var thisTable = document.getElementsByClassName(inTableClass)[0];
+    var switching = true;
+    
+    var i, x, y;
+    while (switching) {
+        switching = false;
+        rows = thisTable.getElementsByTagName("tr");
+        
+        for (i = 1; i < (rows.length - 1); i++) {
+            reverse = false;
+            x = rows[i].getElementsByTagName("td")[colmn];
+            y = rows[i + 1].getElementsByTagName("td")[colmn];
+            if (curr == "ascending") {
+                if (x.innerText.toLowerCase() > y.innerText.toLowerCase()) {
+                    reverse = true;
+                    break;
+                }
+            } else if (curr == "descending") {
+                if (x.innerText.toLowerCase() < y.innerText.toLowerCase()) {
+                    reverse = true;
+                    break;
+                }
+            }
+        }
+
+        if (reverse) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchCnt++;      
+        } else {
+            if (switchCnt == 0 && curr == "ascending") {
+            curr = "descending";
+            switching = true;
+            }
+        }
+    }
+}
+// -------------------------------------------------- END SORT TABLE CODE 
+
+    jQuery(document).ready(function($) {
+      orderTable('orderTable0', 1);
+      orderTable('orderTable1', 1);
+      orderTable('orderTable1', 1);
+      console.log("Sorting Tasks by - Due Date");
+    });
+</script>
+
+
 <style>
 .taskTable {
   border-bottom: 0px !important;
 }
-
 </style>
