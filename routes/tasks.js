@@ -46,11 +46,19 @@ module.exports = function(passport) {
 						console.log(res.locals.assignableUsers);
 						var apps = {}
 						for (var i = 0; i < applications.length; i++) {
-							apps[ applications[i]._id ] = applications[i]
+							if (applications[i].project && applications[i].project.status){
+								if (applications[i].project.status == "projectInProgress" || applications[i].project.status == "projectGoBacks") {
+									apps[ applications[i]._id ] = applications[i]
+								}
+							}
 						}
 						var openApps = {}
 						for (var i = 0; i < openApplications.length; i++) {
-							openApps[ openApplications[i]._id ] = openApplications[i]
+							if (openApplications[i].project && openApplications[i].project.status){
+								if (openApplications[i].project.status == "projectInProgress" || openApplications[i].project.status == "projectGoBacks") {
+									openApps[ openApplications[i]._id ] = openApplications[i]
+								}
+							}
 						}
 
 						// console.log("1P");
