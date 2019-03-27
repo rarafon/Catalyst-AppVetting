@@ -546,7 +546,7 @@ getDocumentPlanning: function (req, res, next) {
                         project: DocumentPackage.find({"project.status": "project"}).sort({ "project.project_start": 1 }).lean().execAsync(),
 
                         handleToBeAssigned: DocumentPackage.find({"project.status": "handleToBeAssigned"}).sort({ "project.project_start": 1 }).lean().execAsync(),
-                        projectUpcoming: DocumentPackage.find({"project.status": "projectUpcoming"}).sort({ "project.project_start": 1 }).lean().execAsync(),
+                        projectUpcoming: DocumentPackage.find({"project.status": "projectUpcoming"}).sort({ "application.name.last": 1 }).lean().execAsync(),
                         
                         handleAssigned: DocumentPackage.find({"project.status": "handleAssigned"}).sort({ "project.project_start": 1 }).lean().execAsync(),
                         projectInProgress: DocumentPackage.find({"project.status": "projectInProgress"}).sort({ "project.project_start": 1 }).lean().execAsync(),
