@@ -2787,7 +2787,14 @@ getDocumentPlanning: function (req, res, next) {
     var updates = {};
     //updates[n] = {"note": req.body.value};
     //var q = {};
-    updates[upName] = req.body.value;
+
+    var bVal = "";
+
+    if (req.body.value !== 'Empty') {
+        bVal = req.body.value;
+    } 
+
+    updates[upName] = bVal;
     //const key = `${n}.newProp`;
     //updates[n].note = req.body.value;
     //console.log(updates);

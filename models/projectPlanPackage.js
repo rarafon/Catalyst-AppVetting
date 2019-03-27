@@ -480,7 +480,7 @@ ProjectPlanPackageSchema.statics.getOnlyAssigned = function (plan, userId) {
         // } else {
         //     assigned.push(Object.assign({}, plan[name], { label: labels[name] }));
         // }
-        if (plan[name].note) {
+        if (plan[name].note && plan[name].note !== "Empty") {
                 assigned.push(Object.assign({}, plan[name], { label: plan[name].note }, {labelKey: name}));
         } else {
             if (labels[name] !== "Custom Task") {
@@ -503,7 +503,7 @@ var count = 0;
     
 
       if (plan[name].complete === false) {
-        if (plan[name].note) {
+        if (plan[name].note && plan[name].note !== "Empty") {
                 open.push(Object.assign({}, plan[name], { label: plan[name].note }, {labelKey: name}));
         } else {
             if (labels[name] !== "Custom Task") {
