@@ -40,7 +40,7 @@
 
             {{#each plan}}
             {{#if (getAppNameForPlan ../applications applicationId)}}
-              {{#if (getPlanTaskAssignments this ../userId ../applications applicationId)}}
+              {{#if_not_eq (getPlanTaskAssignments this ../userId ../applications applicationId) "None"}}
               <tr class="row row-eq-height" >
                 <td class="col-md-3" style="height: 120px; overflow: hidden">
                   <a href="/projectview/{{applicationId}}" target="_new">{{
@@ -54,7 +54,7 @@
                   getPlanTaskAssignments this ../userId ../applications applicationId
                   }}</td>
               </tr>
-              {{/if}}
+              {{/if_not_eq}}
                 {{/if}}
             {{/each}}
 
@@ -86,7 +86,7 @@
 
             {{#each open}}
             {{#if (getAppNameForPlan ../openApplications applicationId)}}
-              {{#if (getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers)}}
+              {{#if_not_eq (getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers) "None"}}
               <tr >
                 <td class="col-md-3">
                   <a href="/projectview/{{applicationId}}" target="_new">{{
@@ -102,7 +102,7 @@
                   getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 
                   }}</td>
               </tr>
-            {{/if}}
+            {{/if_not_eq}}
                {{/if}}
             {{/each}}
 
