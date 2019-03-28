@@ -40,7 +40,7 @@
 
             {{#each plan}}
             {{#if (getAppNameForPlan ../applications applicationId)}}
-              {{#if_not_eq (getPlanTaskAssignments this ../userId ../applications applicationId) "None"}}
+              {{!-- {{#if_not_eq (getPlanTaskAssignments this ../userId ../applications applicationId) "None"}} --}}
               <tr class="row row-eq-height" >
                 <td class="col-md-3" style="height: 120px; overflow: hidden">
                   <a href="/projectview/{{applicationId}}" target="_new">{{
@@ -54,7 +54,7 @@
                   getPlanTaskAssignments this ../userId ../applications applicationId
                   }}</td>
               </tr>
-              {{/if_not_eq}}
+              {{!-- {{/if_not_eq}} --}}
                 {{/if}}
             {{/each}}
 
@@ -86,7 +86,7 @@
 
             {{#each open}}
             {{#if (getAppNameForPlan ../openApplications applicationId)}}
-              {{#if_not_eq (getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers) "None"}}
+              {{!-- {{#if (getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers)}} --}}
               <tr >
                 <td class="col-md-3">
                   <a href="/projectview/{{applicationId}}" target="_new">{{
@@ -98,12 +98,12 @@
                 </td>
                 <td class="col-md-1">{{dateToLocaleDate (getApplicationDueDate ../openApplications applicationId ../ldTime)}}<br/>&nbsp; <br/>&nbsp;</td>
                 <td class="col-md-1">{{dateToLocaleDate (getApplicationStartTime ../openApplications applicationId)}}<br/>&nbsp; <br/>&nbsp;</td>
-                <td class="col-md-7">{{
+                <td class="col-md-7 pTask">{{
                   getPlanTop3Tasks this ../openApplications applicationId ../assignableUsers 
                   }}</td>
               </tr>
-            {{/if_not_eq}}
-               {{/if}}
+            {{/if}}
+               {{!-- {{/if}} --}}
             {{/each}}
 
           </tbody>
@@ -161,7 +161,16 @@ function orderTable(inTableClass, colmn) {
 }
 // -------------------------------------------------- END SORT TABLE CODE 
 
-    jQuery(document).ready(function($) {
+       $(document).ready(function() {
+         
+      var e = document.getElementsByClassName("pTask");
+
+      for (var v=0; v < e.length; v++) {
+        if (! e[v].innerText) {
+          e[v].parentNode.style.display = 'none';
+        }
+      }
+
       orderTable('orderTable0', 1);
       orderTable('orderTable1', 1);
       orderTable('orderTable1', 1);
