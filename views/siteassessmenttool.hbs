@@ -346,7 +346,7 @@
 
       <!-- Assessment Checklist -->
       <div class="tab-pane" id="checklist" role="tabpanel">
-        <form>
+        <!-- form -->
           {{#each assessment}}
           <ul class="assessment-checklist">
             <br />
@@ -424,38 +424,38 @@
                 <p>
                   <strong>Permit</strong>
                   <br/>
-                  <textarea name="permit_name" class="permit_name"></textarea>
+                  <textarea name="permit_name" class="permit_name">{{#if other_costs}}{{other_costs.permit.name}}{{/if}}</textarea>
                   <br/>
                   <label>Total Cost:
-                    <input type="number" name="permit_cost" class="permit_cost" value="0.00">
+                    <input type="number" name="permit_cost" class="permit_cost"{{#if other_costs}} value="{{other_costs.permit.cost}}"{{/if}}>
                   </label>
                 </p>
                 <p>
                   <strong>Portapottie</strong><br/>
                   <label>
                     <input type="checkbox" name="porta_pottie_required"
-                           class="porta_pottie_required" />
+                           class="porta_pottie_required"{{#if_eq other_costs.porta_pottie.required true}} checked{{/if_eq}}/>
                     <span>Required</span>
                   </label>
                   <br/>
                   <label>
                     Cost:
                     <input type="number" name="porta_pottie_cost"
-                           class="porta_pottie_cost" value="0.00" />
+                           class="porta_pottie_cost"{{#if other_costs}} value="{{other_costs.porta_pottie.cost}}"{{/if}}/>
                   </label>
                 </p>
                 <p>
                   <strong>Waste / Dump Trailer</strong><br/>
                   <label>
                     <input type="checkbox" name="waste_dumpster_required"
-                           class="waste_dumpster_required" />
+                           class="waste_dumpster_required"{{#if_eq other_costs.waste_dumpster.required true}} checked{{/if_eq}}/>
                     <span>Required</span>
                   </label>
                   <br/>
                   <label>
                     Cost:
                     <input type="number" name="waste_dumpster_cost"
-                           class="waste_dumpster_cost" value="0.00" />
+                           class="waste_dumpster_cost"{{#if other_costs}} value="{{other_costs.waste_dumpster.cost}}"{{/if}}/>
                   </label>
                 </p>
               </fieldset>
@@ -468,14 +468,14 @@
                   <label>
                     <strong>Total Cost</strong><br>
                     <input type="number" name="estimates_total_cost"
-                           class="estimates_total_cost" value="0.00" />
+                           class="estimates_total_cost"{{#if estimates}} value="{{estimates.total_cost}}"{{/if}}/>
                   </label>
                 </p>
                 <p>
                   <label>
                     <strong>Volunteers Needed</strong><br>
                     <input type="number" name="estimates_volunteers_needed"
-                           class="estimates_volunteers_needed" value="0" />
+                           class="estimates_volunteers_needed"{{#if estimates}} value="{{estimates.volunteers_needed}}"{{/if}}/>
                   </label>
                 </p>
               </fieldset>
@@ -488,14 +488,14 @@
                   <label>
                     <strong>Start Date</strong>
                     <input type="date" name="proposed_dates_start"
-                           class="proposed_dates_start" />
+                           class="proposed_dates_start"{{#if proposed_dates.start_date}} value="{{dateToLocaleDate proposed_dates.start_date}}"{{/if}}/>
                   </label>
                 </p>
                 <p>
                   <label>
                     <strong>End Date</strong>
                     <input type="date" name="proposed_dates_end"
-                           class="proposed_dates_end" />
+                           class="proposed_dates_end"{{#if proposed_dates.end_date}} value="{{dateToLocaleDate proposed_dates.end_date}}"{{/if}}/>
                   </label>
                 </p>
               </fieldset>
@@ -503,7 +503,7 @@
             
           </ul>
           {{/each}}
-        </form>  
+         <!-- form -->
       </div><!-- end #checklist -->
       
     </div>
