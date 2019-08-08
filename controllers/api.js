@@ -481,13 +481,13 @@ getDocumentPlanning: function (req, res, next) {
                 {
                     status: "handle" ,
                     // app_year : year,
-                    project:  { $exists: false } ,
+                    project: { $exists: false },
                 
                 },
                 // Updates
                 {
-                    // $set: {name: value}
-                    $set: {"project.status": "handle"},
+                    // $set: {"project.status": "handle"},
+                    $set: {"project": {status: "handle"}},
                 },
                 // Options
                 {
@@ -503,13 +503,14 @@ getDocumentPlanning: function (req, res, next) {
                 {
                     status: "project" ,
                     // app_year : year,
-                    project:  { $exists: false } ,
-                
+                    project: { $exists: false },
+
                 },
                 // Updates
                 {
-                    // $set: {name: value}
-                    $set: {"project.status": "project"},
+                    // $set: {"project.status": "project"},
+                    $set: {"project": {status: "project"}},
+
                 },
                 // Options
                 {
