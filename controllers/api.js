@@ -487,7 +487,7 @@ getDocumentPlanning: function (req, res, next) {
                 // Updates
                 {
                     // $set: {name: value}
-                    $set: {"project": {status: "handle"}},
+                    $set: {"project.status": "handle"},
                 },
                 // Options
                 {
@@ -509,7 +509,7 @@ getDocumentPlanning: function (req, res, next) {
                 // Updates
                 {
                     // $set: {name: value}
-                    $set: {project: {status: "project"}},
+                    $set: {"project.status": "project"},
                 },
                 // Options
                 {
@@ -956,7 +956,6 @@ getDocumentPlanning: function (req, res, next) {
         // Log the _id, name, and value that are passed to the function
         console.log('[ API ] putUpdateDocument :: Call invoked with _id: ' + req.params.id
             + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
-        console.log(req.body.name + ' + ' + req.body.value);
 		var updates = {};
 		var id;
 		if(res.locals.role == "SITE") {
@@ -965,19 +964,27 @@ getDocumentPlanning: function (req, res, next) {
 			}
 			else if(req.body.name == "status") {
                 if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
-                    var inStatus = { status: req.body.value };
-                    updates.project = inStatus;
+                    // var inStatus = { status: req.body.value };
+                    // updates.project = inStatus;
+                    updates = { 
+                                "project.status": req.body.value,
+                                "status": req.body.value 
+                              };     
                 }
-				updates['status'] = req.body.value;
+				// updates['status'] = req.body.value;
 			}
 			id = req.body.id;
 		}
         else if (req.body.name == "status") {
                 if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
-                    var inStatus = { status: req.body.value };
-                    updates.project = inStatus;
+                    // var inStatus = { status: req.body.value };
+                    // updates.project = inStatus;
+                    updates = { 
+                        "project.status": req.body.value,
+                        "status": req.body.value 
+                      };   
+                    // updates['status'] = req.body.value;                
                 }
-                updates['status'] = req.body.value;
 
                 if(req.params.id != null) {
                     id = req.params.id;
