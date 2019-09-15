@@ -486,8 +486,7 @@ getDocumentPlanning: function (req, res, next) {
                 },
                 // Updates
                 {
-                    // $set: {"project.status": "handle"},
-                    $set: {"project": {status: "handle"}},
+                    $set: {"project.status": "handle"},
                 },
                 // Options
                 {
@@ -508,9 +507,7 @@ getDocumentPlanning: function (req, res, next) {
                 },
                 // Updates
                 {
-                    // $set: {"project.status": "project"},
-                    $set: {"project": {status: "project"}},
-
+                    $set: {"project.status": "project"},
                 },
                 // Options
                 {
@@ -525,17 +522,6 @@ getDocumentPlanning: function (req, res, next) {
 
             console.log("New handle-its since last refresh: " + firstRes.updatedHandle );
             console.log("New projects since last refresh: " + firstRes.updatedProject );
-            // for (var i=0; i < firstRes.handle.length; i++) {
-            //     if ((typeof firstRes.handle[i].project.status === 'undefined') && (firstRes.handle[i].status == "handle" || firstRes.handle[i].status == "project")){
-            //         DocumentPackage.find({project: {status: "handleAssigned"}}).lean().execAsync();
-            //     }
-            // }
-
-            // for (var j=0; j < firstRes.project.length; j++) {
-            //     if ((typeof firstRes.project[j].project.status === 'undefined') && (firstRes.project[j].status == "project")) {
-            //         DocumentPackage.find({project: {status: "handleAssigned"}}).lean().execAsync();
-            //     }
-            // }            
 
                     Promise.props({
                         // approval: DocumentPackage.find({status: "approval"}).lean().execAsync(),
@@ -994,22 +980,7 @@ getDocumentPlanning: function (req, res, next) {
                     id = req.body.id;
                 }
             }
-        // else if (req.body.name == "drive_url") {
-        //         console.log("[ API ] putUpdateDocument :: Save Google drive URL Called");
-                
-        //         if (req.body.value) {
-        //             var inStatus = { drive_url: req.body.value };
-        //             updates.drive = inStatus;
-        //         }
-        //        // updates['status'] = req.body.value;
 
-        //         if(req.params.id != null) {
-        //             id = req.params.id;
-        //         }
-        //         else {
-        //             id = req.body.id;
-        //         }
-        // }
 		else {
 		
 			if(req.params.id != null) {
@@ -1089,12 +1060,6 @@ getDocumentPlanning: function (req, res, next) {
         console.log(req.body.name + ' + ' + req.body.value);
         var updates = {};
         var id;
-        // if(res.locals.role == "SITE") {
-        //     if(req.body.name == "notes.site_summary") {
-        //         updates['notes.site_summary'] = req.body.value;
-        //     }
-        //     id = req.body.id;
-        // }
         if(req.body.name == "status") {
 
             if (req.body.value == 'projWithdrawn') {
@@ -1111,8 +1076,6 @@ getDocumentPlanning: function (req, res, next) {
             } else {
                 updates = {"project.status":req.body.value };
             }
-
-            //updates = {project: {"status": req.body.value}};
         }
         else if (req.body.name == "crew_chief") {
                 updates = {"project.crew_chief":req.body.value };
@@ -1138,28 +1101,6 @@ getDocumentPlanning: function (req, res, next) {
                 updates = {"drive.drive_url":req.body.value };
         }   
 
-        // else {
-        
-        //     if(req.params.id != null) {
-        //         id = req.params.id;
-        //     }
-        //     else {
-        //         id = req.body.id;
-        //     }
-        //     // Build the name:value pairs to be updated
-        //     // Since there is only one name and one value, we can use the method below
-            
-        //     updates[req.body.name] = req.body.value;
-        //     // Record Update time
-        //     //filters
-        // }
-
-        // if(req.params.id != null) {
-        //         id = req.params.id;
-        //     }
-        // else {
-        //         id = req.body.id || null;
-        //     }
         var conditions = {};
         conditions['_id'] = req.params.id || mongoose.Types.ObjectId(id);
         console.log("Search Filter:");
