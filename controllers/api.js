@@ -486,7 +486,8 @@ getDocumentPlanning: function (req, res, next) {
                 },
                 // Updates
                 {
-                    $set: {"project.status": "handle"},
+                    // $set: {"project.status": "handle"},
+                    $set: {"project": {status: "handle"}},
                 },
                 // Options
                 {
@@ -507,7 +508,8 @@ getDocumentPlanning: function (req, res, next) {
                 },
                 // Updates
                 {
-                    $set: {"project.status": "project"},
+                    // $set: {"project.status": "project"},
+                    $set: {"project": {status: "project"}},
                 },
                 // Options
                 {
