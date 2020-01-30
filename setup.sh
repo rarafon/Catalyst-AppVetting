@@ -1,19 +1,33 @@
-#! /bin/sh
+#! /bin/bash
+set -e 
 
-# Setup Script for Catalyst AppVetting Tool v0.1.0 by Rohin Adalja
+TITLE="\e[96mSetup Script for Catalyst AppVetting Tool v0.1.0 by Rohin Adalja\e[0m"
+SETUP="\e[93mSETUP\e[0m"
+EXEC="" #sudo
 
+# ssh ubuntu@18.237.199.143 -i /Users/rohin/Downloads/CatalystDevelopment.pem 
+# Pre-requisites: 
+#   sudo apt-get update && sudo apt-get install git -y && \
+#   cd /usr/src && \
+#   sudo git clone https://github.com/dandahle/Catalyst-AppVetting.git && \
+#   cd Catalyst-AppVetting/ && \
+#   sudo git checkout update-setup && \
+#   sudo bash setup.sh
 
-# Make initial app directories
-cd /home/Ubuntu
-sudo mkdir CorvusDev
-cd CorvusDev
-sudo mkdir db_backups
-sudo mkdir logs
+cd ..
+echo -e "\n$TITLE\n"
+echo -e "$SETUP: Running in $(pwd)"
+
+exit 0
+ 
+echo -e "$SETUP: Making initial app directories..."
+$EXEC mkdir db_backups
+$EXEC mkdir logs
 
 
 # Install Pre-Requisite Packages [git, aws-cli]
-sudo apt-get update && sudo apt-get upgrade -y
-sudo apt install awscli
+$EXEC apt-get update && sudo apt-get upgrade -y
+$EXEC apt install awscli
 
 # Install Node v12.x.x
 echo "

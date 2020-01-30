@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
 COPY setup.sh setup.sh
 
