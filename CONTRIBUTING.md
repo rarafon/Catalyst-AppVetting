@@ -37,6 +37,7 @@ As you work through this process, suggestions are always welcome.  [Email Mike](
 * Type `cd Catalyst-AppVetting/` to change to the folder where the files are located. You will be on the master branch.
 * *If you have a console that does NOT tell you what folder you are in and what branch you are on, it is recommended you find one that does.*
 * Type `git checkout develop` to get to the working development branch.
+* Type `npm install` to get all the dependencies.  Ignore warnings for now.
 
 We'll come back to how to name branches and merge changes later.
 
