@@ -2,10 +2,9 @@
 set -e 
 
 TITLE="\e[96mSetup Script for Catalyst AppVetting Tool v0.1.0 by Rohin Adalja\e[0m"
-SETUP="\e[93mSETUP\e[0m"
+SETUP="\n\e[93mSETUP\e[0m"
 EXEC="" #sudo
 
-# ssh ubuntu@18.237.199.143 -i /Users/rohin/Downloads/CatalystDevelopment.pem 
 # Pre-requisites: 
 #   sudo apt-get update && sudo apt-get install git -y && \
 #   cd /usr/src && \
@@ -15,66 +14,51 @@ EXEC="" #sudo
 #   sudo bash setup.sh
 
 cd ..
-echo -e "\n$TITLE\n"
+echo -e "\n$TITLE"
 echo -e "$SETUP: Running in $(pwd)"
 
-exit 0
- 
+# Create folders under /usr/src
 echo -e "$SETUP: Making initial app directories..."
+echo -e "$SETUP: Creating 'db_backups' folder"
 $EXEC mkdir db_backups
+echo -e "$SETUP: Creating 'logs' folder"
 $EXEC mkdir logs
+ 
+echo -e "$SETUP: Updating Ubuntu OS 18.04 Packages..."
+$EXEC apt-get update
+$EXEC apt-get upgrade -y
+$EXEC apt-get install -y git gnupg curl 
 
-
-# Install Pre-Requisite Packages [git, aws-cli]
-$EXEC apt-get update && sudo apt-get upgrade -y
-$EXEC apt install awscli
+# Install AWS Command Line Interface
+echo -e "$SETUP: Installing AWS CLI..."
+$EXEC apt-get install -y awscli
 
 # Install Node v12.x.x
-echo "
--------------------------------
-  ==> INSTALLING NODE v12.x.x
--------------------------------
-"
-
-    # fetch nodejs 12 personal package archive from nodesource
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-
-    # install nodejs and npm
-sudo apt-get install -y nodejs
-
-
+echo -e "$SETUP: Installing Node v12..."
+$EXEC curl -sL https://deb.nodesource.com/setup_12.x | bash -
+$EXEC apt-get install -y nodejs
 
 # Install MongoDB v4.x.x
-echo "
--------------------------------
-  ==> INSTALLING MONGODB v4.x.x
--------------------------------
-"
-
-    # import mongodb 4.0 public gpg key
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
-
+echo -e "$SETUP: Installing MongoDB v4..."
+    # import mongoDB 4.0 public gpg key
+$EXEC apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
     # create the /etc/apt/sources.list.d/mongodb-org-4.0.list file for mongodb
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-
-    # reload local package database
-sudo apt-get update
-
-    # install the latest version of mongodb
-sudo apt-get install -y mongodb-org
-
-    # start mongodb
-sudo systemctl start mongod
-
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | $EXEC tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    # install mongoDB
+$EXEC apt-get update && $EXEC DEBIAN_FRONTEND=noninteractive apt-get install -y mongodb-org
     # Enable systemctl: mongod service - set mongodb to start automatically on system startup
-sudo systemctl enable mongod
+echo -e "$SETUP: Starting MongoDB... (automated startup)"
+$EXEC systemctl enable mongod
 
+# # Fetch Catalyst AppVetting program files from GitHub Repo
+# git clone https://github.com/dandahle/Catalyst-AppVetting.git 
 
-# Fetch Catalyst AppVetting program files from GitHub Repo
-git clone https://github.com/dandahle/Catalyst-AppVetting.git 
-    # Ask for branch [Default: master; other options: develop, or custom branch name]
-git checkout develop  # Change to variable
+# Ask for branch [Default: master; other options: develop, or custom branch name]
 
+git checkout update-setup  # Change to variable
+
+pwd
+exit 0
 
 # Install Node Modules from package.json
 sudo npm install --global

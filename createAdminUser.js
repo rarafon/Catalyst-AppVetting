@@ -55,4 +55,4 @@ var adminUser = {
   "user_roles": ["ADMIN"]
 }
 
-api.postUser({ body: adminUser }, { send: () => {} }, () => {})
+api.postUser({ body: adminUser }, { send: () => {} }, () => { process.exit(0); });
