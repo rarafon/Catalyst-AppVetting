@@ -61,7 +61,7 @@ pwd
 exit 0
 
 # Install Node Modules from package.json
-sudo npm install --global
+sudo npm install -g
     # Install Global NPM modules Such as [Forever]
 
 # Ask if Wanting to set up Production or Development environment 
