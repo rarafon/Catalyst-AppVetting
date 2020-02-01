@@ -3,6 +3,8 @@
 DB_BACKUPS_DIR=/usr/src/db_backups
 cd $DB_BACKUPS_DIR
 
+echo $AWS_S3_BUCKET
+
 aws s3 cp s3://catalyst-application-db/db_backups/devInstance . --recursive
 
 folder=$1
