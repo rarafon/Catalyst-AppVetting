@@ -1,7 +1,6 @@
+#!/bin/bash
 
-mongod --dbpath /usr/src/db/ --logpath /usr/src/logs/init-mongod.log &
-
-sleep 1
+./script/start-mongod.sh
 
 mongo admin <<EOF
 use admin;
@@ -9,7 +8,7 @@ db.createUser({ user: '$DB_USERNAME', pwd: '$DB_PASSWORD', roles: [{role:'userAd
 exit
 EOF
 
-node createAdminUser &
+node ./script/createAdminUser &
 
 sleep 1
 

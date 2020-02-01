@@ -1,5 +1,3 @@
-#!/usr/bin/node
-
 /*
 
 createAdminUser -- creates an admin user in the mongo db
@@ -12,9 +10,9 @@ createAdminUser: {
 
 */
 
-var createInitialUsers = require('./controllers/createInitialUsers')
+var createInitialUsers = require('../controllers/createInitialUsers')
 
-var config = require('./config').createAdminUser
+var config = require('../config').createAdminUser
 
 var adminUser = {
   "contact_info": {

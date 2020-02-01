@@ -31,13 +31,13 @@ RUN npm install -g
 COPY ./controllers/createInitialUsers.js ./controllers/createInitialUsers.js
 COPY ./models/userPackage.js ./models/userPackage.js
 COPY ./mongoose/connection.js ./mongoose/connection.js
-COPY .env createServiceUsers.sh createAdminUser.js config.js ./
+COPY ./script/ ./script/
+COPY .env config.js ./
 
 ARG AVT_ENVIRONMENT=${AVT_ENVIRONMENT}
 ARG AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 ARG AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-ARG AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
-ARG AWS_REGION=${AWS_REGION}
+ARG AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
 ARG CATALYST_USER_EMAIL=${CATALYST_USER_EMAIL}
 ARG CATALYST_USER_PASSWORD=${CATALYST_USER_PASSWORD}
 ARG CATALYST_USER_FIRST_N=${CATALYST_USER_FIRST_N}
@@ -45,15 +45,11 @@ ARG CATALYST_USER_LAST_N=${CATALYST_USER_LAST_N}
 ARG DB_USERNAME=${DB_USERNAME}
 ARG DB_PASSWORD=${DB_PASSWORD}
 
-RUN ./createServiceUsers.sh
+RUN ./script/createServiceUsers.sh
 
+
+# RUN ./script/db-restore-dev.sh
 COPY . .
-
-# RUN aws configure
-
-# RUN restoreFromBackup or set a new backup bucket
-
-
 
 EXPOSE 8000
 CMD ./script/docker-start.sh
