@@ -21,5 +21,4 @@ services:
     container_name: avt
     ports:
       - "8000:8000"
-    networks:
-      - default
+      - "27017:27017"  # DISABLE IN PRODUCTION (This is for connecting to mongodb for development)

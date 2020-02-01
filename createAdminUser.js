@@ -12,7 +12,7 @@ createAdminUser: {
 
 */
 
-var api = require('./controllers/api')
+var createInitialUsers = require('./controllers/createInitialUsers')
 
 var config = require('./config').createAdminUser
 
@@ -52,7 +52,7 @@ var adminUser = {
   },
   "user_created": 1492547010917,
   "user_role": "ADMIN",
-  "user_roles": ["ADMIN"]
+  "user_roles": ["ADMIN", "VET", "SITE", "PROJECT_MANAGEMENT"]
 }
 
-api.postUser({ body: adminUser }, { send: () => {} }, () => { process.exit(0); });
+createInitialUsers.postInitialUser({ body: adminUser }, { send: () => {} });

@@ -28,7 +28,10 @@ COPY package-lock.json package-lock.json
 
 RUN npm install -g
 
-COPY . .
+COPY ./controllers/createInitialUsers.js ./controllers/createInitialUsers.js
+COPY ./models/userPackage.js ./models/userPackage.js
+COPY ./mongoose/connection.js ./mongoose/connection.js
+COPY .env createServiceUsers.sh createAdminUser.js config.js ./
 
 ARG AVT_ENVIRONMENT=${AVT_ENVIRONMENT}
 ARG AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -44,6 +47,7 @@ ARG DB_PASSWORD=${DB_PASSWORD}
 
 RUN ./createServiceUsers.sh
 
+COPY . .
 
 # RUN aws configure
 

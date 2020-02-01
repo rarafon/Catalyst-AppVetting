@@ -11,6 +11,6 @@ EOF
 
 node createAdminUser &
 
-sleep 4
+sleep 1
 
 pkill -2 mongod
