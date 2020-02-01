@@ -1,1 +1,25 @@
-#docker run -it -p 8000:8000 a
+version: "3.7"
+services:
+  avt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:                                                                      
+        AVT_ENVIRONMENT: ${AVT_ENVIRONMENT}
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+        AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+        AWS_REGION: ${AWS_REGION}
+        CATALYST_USER_EMAIL: ${CATALYST_USER_EMAIL}
+        CATALYST_USER_PASSWORD: ${CATALYST_USER_PASSWORD}
+        CATALYST_USER_FIRST_N: ${CATALYST_USER_FIRST_N}
+        CATALYST_USER_LAST_N: ${CATALYST_USER_LAST_N}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
+    container_name: avt
+    ports:
+      - "8000:8000"
+    networks:
+      - default

@@ -11,7 +11,6 @@ PATH='/home/ubuntu/.nvm/versions/node/v11.10.1/bin:/usr/local/sbin:/usr/local/bi
 #sudo forever stop bin/www
 #sudo forever start bin/www
 
-
 sudo forever stopall
 
 sudo service mongod stop
