@@ -9,8 +9,8 @@ db.createUser({ user: '$DB_USERNAME', pwd: '$DB_PASSWORD', roles: [{role:'userAd
 exit
 EOF
 
-node createAdminUser
+node createAdminUser &
 
-sleep 1
+sleep 4
 
 pkill -2 mongod
