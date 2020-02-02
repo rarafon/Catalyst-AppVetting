@@ -1,6 +1,10 @@
 #! /bin/bash
-BIN_PATH=./node_modules/.bin
+#BIN_PATH=./node_modules/.bin
 
-pkill -2 mongod
+if [ -x "$(command -v systemctl)" ]; then
+  systemctl stop mongod
+else
+  pkill -2 mongod
+fi
 
 sleep 1

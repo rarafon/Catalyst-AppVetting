@@ -51,10 +51,10 @@ case "$CONTINUE" in
           read -r -p "Are you sure? [y/N] " response
           case "$response" in
               [yY][eE][sS]|[yY]) 
-                  echo -e "\nAVT | Setting up Catalyst Appvetting Tool..."
+                  echo -e "$SETUP: Setting up Catalyst Appvetting Tool..."
                   ;;
               *)
-                  echo -e "AVT | Cancelled by user, exiting."
+                  echo -e "$SETUP: Cancelled by user, exiting."
                   exit 1
                   ;;
           esac
@@ -62,32 +62,43 @@ case "$CONTINUE" in
 esac
 
 
-exit 1
-
 # checkout to that branch
-git checkout update-setup  # Change to variable
-
-
+echo -e "$SETUP: Checking out $AVT_GIT_BRANCH"
+git checkout $AVT_GIT_BRANCH  # Change to variable
 
 # Install Node Modules from package.json
+echo -e "$SETUP: Running NPM Install..."
 npm install
-    # Install Global NPM modules Such as [Forever]
-
 
 # Enable systemctl: mongod service - set mongodb to start automatically on system startup
-echo -e "$SETUP: Starting MongoDB... (automated startup)"
+echo -e "$SETUP: Starting MongoDB..."
+if [ -x "$(command -v systemctl)" ]; then
+  systemctl enable mongod
+fi
+
 ./script/start-mongod.sh
-systemctl enable mongod
-
-
+echo -e "$SETUP: Finalizing: Creating DB and AVT Service Users"
 ./script/createServiceUsers.sh
-./script/db-restore-dev.sh
 
+./script/db-restore.sh
 
-# START Server
-sudo ./restart.sh
- ./script/docker-start.sh
+echo -e "$SETUP: Finalizing: Setting up Automated Backups [using crontab] to S3"
+./script/init-crontab.sh
 
-sudo forever list
-
+echo -e "AVT | DONE: Cron Job Set Successfully"
 echo -e "$SETUP: DONE: Configuration Complete!"
+echo -e "AVT | Do you want to start the web-application tool?\n"
+
+read -r -p "Are you sure? [y/N] " startup
+case "$startup" in
+    [yY][eE][sS]|[yY]) 
+        echo -e "AVT | Starting Node.js..."
+        ;;
+    *)
+        echo -e "$SETUP: Cancelled by user, exiting. Run NPM START manually when ready."
+        exit 1
+        ;;
+esac
+
+# START Node.js
+./script/start-node.sh
