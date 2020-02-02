@@ -18,13 +18,13 @@ case "$CONTINUE" in
         ;;
     *)
           echo -e "$SETUP: Let's set up the environment configuration..."
-          echo -e "$SETUP: When done, save the file to continue"
+          echo -e "$SETUP: When done, save the file to continue by typing   [ESC] :wq!"
           echo -e "$SETUP: Opening..."
           sleep 3
 
           # Open editor to modify environment variables
           chmod 777 .env
-          nano .env
+          vi .env
 
           echo -e "$SETUP: Confirm your installation configuration..."
 

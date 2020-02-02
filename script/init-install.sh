@@ -17,7 +17,7 @@ echo -e "$SETUP: Creating 'logs' folder"
  
 echo -e "$SETUP: Updating Ubuntu OS 18.04 Packages..."
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y git curl nano gnupg
+DEBIAN_FRONTEND=noninteractive apt-get install -y git curl vim gnupg
 
 # Install AWS Command Line Interface
 echo -e "$SETUP: Installing AWS CLI..."

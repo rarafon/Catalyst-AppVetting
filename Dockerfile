@@ -50,7 +50,7 @@ ARG DB_PASSWORD=${DB_PASSWORD}
 
 RUN ./script/start-mongod.sh && ./script/createServiceUsers.sh && ./script/stop-mongod.sh
 
-RUN ./script/start-mongod.sh && ./script/db-restore.sh -yes ./script/stop-mongod.sh
+# RUN ./script/start-mongod.sh && ./script/db-restore.sh -yes ./script/stop-mongod.sh
 
 COPY . .
 
