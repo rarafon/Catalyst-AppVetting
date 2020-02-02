@@ -5,12 +5,13 @@
 set -e 
 
 TITLE="\e[96mCatalyst AppVetting Tool v0.1.0\e[0m"
-echo -e "\n$TITLE"
 
 apt-get update && apt-get install git -y
+
+echo -e "\n$TITLE"
 cd /usr/src
 
-if [ ! -d /usr/src/Catalyst-AppVetting ]; then
+if [ -d Catalyst-AppVetting ]; then
   echo -e "\nERROR: Not a fresh install: '/usr/src/Catalyst-AppVetting' already exists! Quitting.\n" 
   exit 1
 fi
