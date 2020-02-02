@@ -5,6 +5,7 @@
 set -e 
 
 TITLE="\e[96mCatalyst AppVetting Tool v0.1.0\e[0m"
+echo -e "\n$TITLE"
 
 apt-get update && apt-get install git -y
 cd /usr/src
