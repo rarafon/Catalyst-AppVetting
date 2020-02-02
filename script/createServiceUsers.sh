@@ -1,7 +1,5 @@
 #!/bin/bash
 
-./script/start-mongod.sh
-
 mongo admin <<EOF
 use admin;
 db.createUser({ user: '$DB_USERNAME', pwd: '$DB_PASSWORD', roles: [{role:'userAdmin',db:'admin'}]});
@@ -11,5 +9,3 @@ EOF
 node ./script/createAdminUser &
 
 sleep 1
-
-pkill -2 mongod

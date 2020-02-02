@@ -35,6 +35,7 @@ COPY ./script/ ./script/
 COPY .env config.js ./
 
 ARG AVT_ENVIRONMENT=${AVT_ENVIRONMENT}
+ARG AVT_RESTORE_FROM_BACKUP=${AVT_RESTORE_FROM_BACKUP}
 ARG AVT_GIT_BRANCH=${AVT_GIT_BRANCH}
 ARG AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 ARG AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
@@ -47,11 +48,12 @@ ARG CATALYST_USER_LAST_N=${CATALYST_USER_LAST_N}
 ARG DB_USERNAME=${DB_USERNAME}
 ARG DB_PASSWORD=${DB_PASSWORD}
 
-RUN ./script/createServiceUsers.sh
+RUN ./script/start-mongod.sh && ./script/createServiceUsers.sh && ./script/stop-mongod.sh
 
+RUN ./script/start-mongod.sh && ./script/db-restore-dev.sh -yes ./script/stop-mongod.sh
 
-# RUN ./script/db-restore-dev.sh
 COPY . .
 
 EXPOSE 8000
+
 CMD ./script/docker-start.sh

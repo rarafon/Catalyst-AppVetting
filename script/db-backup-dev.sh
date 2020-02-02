@@ -1,23 +1,40 @@
 #!/bin/bash
 
-DB_BACKUPS_DIR=/usr/src/db_backups
+CONTINUE=$1
 DATE=$(date +\%Y-\%m-\%d:\%H:\%M:\%S)
+DB_BACKUP_FOLDER=db_backups
+DB_BACKUPS_DIR=/usr/src/$DB_BACKUP_FOLDER
 DEST=$DB_BACKUPS_DIR/$DATE
 
 mkdir $DEST
 cd $DEST
 
-#Dump database into directory
-   #mongodump -h IP:PORT -u username -p "password" --authenticationDatabase admin -d catalyst -o $DEST
-sudo mongodump --authenticationDatabase admin -d catalyst -o $DEST
+echo -e "AVT | BACKUP SCRIPT: Your S3 BUCKET NAME is $AWS_S3_BUCKET"
+echo -e "AVT | Backing up to: $DB_BACKUPS_DIR/$DATE"
+echo -e "AVT | Uploading Backup to s3 at s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/$DATE\n"
 
+case "$CONTINUE" in
+    [-][yY][eE][sS]|[yY]) 
+        echo -e "\nAVT | Automated Run: Starting Backup..."
+        ;;
+    *)
+          read -r -p "Are you sure? [y/N] " response
+          case "$response" in
+              [yY][eE][sS]|[yY]) 
+                  echo -e "\nAVT | Starting Backup..."
+                  ;;
+              *)
+                  echo -e "AVT | Cancelled by user, exiting."
+                  exit 1;
+                  ;;
+          esac
+        ;;
+esac
 
-#Upload directory to S3 bucket
-    #aws s3 cp $DEST s3://catalystnwbackup/db_backups/${DEST:47:19} --recursive
-aws s3 cp $DEST s3://catalyst-application-db/db_backups/$DATE . --recursive
+echo -e "AVT | BACKUP SCRIPT: Running Mongodump..."
+mongodump --authenticationDatabase admin -d catalyst -o $DEST
 
-aws s3 cp s3://catalyst-application-db/db_backups/devInstance . --recursive
+echo -e "AVT | BACKUP SCRIPT: Uploading a copy to S3..."
+aws s3 cp $DEST s3://$AWS_S3_BUCKET/db_backups/$DATE --recursive
 
-folder=$1
-
-mongorestore $DB_BACKUPS_DIR/$folder/catalyst --authenticationDatabase admin -d catalyst
+echo -e "AVT | Backup Complete!\n"

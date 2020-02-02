@@ -6,7 +6,8 @@ services:
       dockerfile: Dockerfile
       args:                                                                      
         AVT_ENVIRONMENT: ${AVT_ENVIRONMENT}
-        ARG AVT_GIT_BRANCH: ${AVT_GIT_BRANCH}
+        AVT_GIT_BRANCH: ${AVT_GIT_BRANCH}
+        AVT_RESTORE_FROM_BACKUP: ${AVT_RESTORE_FROM_BACKUP}
         AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
         AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
         AWS_S3_BUCKET: ${AWS_S3_BUCKET}
