@@ -31,10 +31,11 @@ echo -e "\tCATALYST_USER_LAST_N: $CATALYST_USER_LAST_N"
 echo -e "\tDB_USERNAME: $DB_USERNAME"
 echo -e "\tDB_PASSWORD: $DB_PASSWORD\n"
 
-echo -e "Note: If you do not see a confirmation prompt next, please run ./script/init-setup.sh manually!\n"
+echo -e "Note: If you do not see a confirmation prompt next, run:    cd /usr/src/Catalyst-AppVetting && ./script/init-setup.sh    manually!\n"
 
-read -e -r -p "Are you sure? [y/N] " response
-case "$response" in
+read -e -r -p "Press Enter to continue..." response
+read -e -r -p "Are you sure? [y/N] " someAns
+case "$someAns" in
     [yY][eE][sS]|[yY]) 
         echo -e "$SETUP: Setting up Catalyst Appvetting Tool..."
         ;;
