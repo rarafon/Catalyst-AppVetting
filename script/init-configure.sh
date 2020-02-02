@@ -18,7 +18,7 @@ case "$CONTINUE" in
         ;;
     *)
           echo -e "$SETUP: Let's set up the environment configuration..."
-          echo -e "$SETUP: When done, save the file to continue by typing   [ESC] :wq!"
+          echo -e "$SETUP: Soon: Press [a] to edit. When done, save the file to continue by typing [ESC] :wq!"
           echo -e "$SETUP: Opening..."
           sleep 3
 
@@ -26,6 +26,7 @@ case "$CONTINUE" in
           chmod 777 .env
           vi .env
 
+          sleep 2
           echo -e "$SETUP: Confirm your installation configuration..."
 
           # Source the .env file
