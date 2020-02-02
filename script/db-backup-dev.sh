@@ -25,7 +25,7 @@ case "$CONTINUE" in
                   ;;
               *)
                   echo -e "AVT | Cancelled by user, exiting."
-                  exit 1;
+                  exit 1
                   ;;
           esac
         ;;

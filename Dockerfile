@@ -26,7 +26,7 @@ WORKDIR /usr/src/Catalyst-AppVetting
 COPY package.json package.json
 COPY package-lock.json package-lock.json
 
-RUN npm install -g
+RUN npm install
 
 COPY ./controllers/createInitialUsers.js ./controllers/createInitialUsers.js
 COPY ./models/userPackage.js ./models/userPackage.js
