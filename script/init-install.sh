@@ -11,9 +11,9 @@ echo -e "$SETUP: Running in $(pwd)"
 # Create folders under /usr/src
 echo -e "$SETUP: Making initial app directories under $(pwd)"
 echo -e "$SETUP: Creating 'db_backups' folder"
-[ ! -d db_backups ] && mkdir db_backups
+[ -d db_backups ] || mkdir db_backups
 echo -e "$SETUP: Creating 'logs' folder"
-[ ! -d logs ] && mkdir logs
+[ -d logs ] || mkdir logs
  
 exit 1
 
@@ -35,7 +35,7 @@ echo -e "$SETUP: Installing MongoDB v4..."
     # import mongoDB 4.0 public gpg key
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
     # create the /etc/apt/sources.list.d/mongodb-org-4.0.list file for mongodb
-[ ! -f /etc/apt/sources.list.d/mongodb-org-4.0.list ] && echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+[ -f /etc/apt/sources.list.d/mongodb-org-4.0.list ] || echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     # install mongoDB
 apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y mongodb-org
 
