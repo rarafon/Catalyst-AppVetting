@@ -4,17 +4,63 @@
 
 set -e 
 
-TITLE="\e[96mConfiguration Script for Catalyst AppVetting Tool v0.1.0 by Rohin Adalja\e[0m"
+CONTINUE=$1
+TITLE="\e[96mConfiguration Script for Catalyst AppVetting Tool\e[0m"
 SETUP="\n\e[93mCONFIGURE\e[0m"
 
 echo -e "\n$TITLE"
 echo -e "$SETUP: Running in $(pwd)"
 
 # Ask env vars - including branch and set it in env and source it
+case "$CONTINUE" in
+    [-][yY][eE][sS]|[yY]) 
+        echo -e "\nAVT | Automated Run: Reading configuration from .env!"
+        ;;
+    *)
+          echo -e "$SETUP: Let's set up the environment configuration..."
+          echo -e "$SETUP: Loading... When done, save the file to continue"
+          sleep 3
+
+          # Open editor to modify environment variables
+          nano .env
+
+          echo -e "$SETUP: Confirm your installation configuration..."
+
+          # Source the .env file
+          set -a
+          source .env
+          set +a
+
+          echo -e "
+            AVT_ENVIRONMENT: $AVT_ENVIRONMENT
+            AVT_GIT_BRANCH: $AVT_GIT_BRANCH
+            AVT_RESTORE_FROM_BACKUP: $AVT_RESTORE_FROM_BACKUP
+            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+            AWS_S3_BUCKET: $AWS_S3_BUCKET
+            AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+            CATALYST_USER_EMAIL: $CATALYST_USER_EMAIL
+            CATALYST_USER_PASSWORD: $CATALYST_USER_PASSWORD
+            CATALYST_USER_FIRST_N: $CATALYST_USER_FIRST_N
+            CATALYST_USER_LAST_N: $CATALYST_USER_LAST_N
+            DB_USERNAME: $DB_USERNAME
+            DB_PASSWORD: $DB_PASSWORD
+          "
+
+          read -r -p "Are you sure? [y/N] " response
+          case "$response" in
+              [yY][eE][sS]|[yY]) 
+                  echo -e "\nAVT | Setting up Catalyst Appvetting Tool..."
+                  ;;
+              *)
+                  echo -e "AVT | Cancelled by user, exiting."
+                  exit 1
+                  ;;
+          esac
+        ;;
+esac
 
 
-
-pwd
 exit 1
 
 # checkout to that branch
