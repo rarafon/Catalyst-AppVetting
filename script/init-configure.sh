@@ -23,6 +23,7 @@ case "$CONTINUE" in
           sleep 3
 
           # Open editor to modify environment variables
+          chmod 777 .env
           nano .env
 
           echo -e "$SETUP: Confirm your installation configuration..."
