@@ -12,6 +12,7 @@ echo -e "$SETUP: Running in $(pwd)"
 
 ./script/init-install.sh
 ./script/init-configure.sh
+reset
 sudo bash ./script/init-setup.sh
 
 echo -e "$SETUP: DONE: Init Complete!"
