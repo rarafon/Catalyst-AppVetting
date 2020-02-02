@@ -31,7 +31,7 @@ echo -e "\tCATALYST_USER_LAST_N: $CATALYST_USER_LAST_N"
 echo -e "\tDB_USERNAME: $DB_USERNAME"
 echo -e "\tDB_PASSWORD: $DB_PASSWORD\n"
 
-echo -e "Note: If you do not see a confirmation prompt next, run:    cd /usr/src/Catalyst-AppVetting && ./script/init-setup.sh    manually!\n"
+echo -e "Note: If you do not see a confirmation prompt next, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
 
 read -e -r -p "Press Enter to continue..." response
 read -e -r -p "Are you sure? [y/N] " someAns
