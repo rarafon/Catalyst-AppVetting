@@ -9,7 +9,7 @@ echo -e "\n$TITLE"
 
 apt-get update && apt-get install git -y
 cd /usr/src
-[ ! -d /usr/src/Catalyst-AppVetting ] || echo -e "\nERROR: Not a fresh install: '/usr/src/Catalyst-AppVetting' already exists! Quitting.\n" && exit 1
+[ ! -d /usr/src/Catalyst-AppVetting ] || ( echo -e "\nERROR: Not a fresh install: '/usr/src/Catalyst-AppVetting' already exists! Quitting.\n" && exit 1 )
 git clone https://github.com/dandahle/Catalyst-AppVetting.git
 cd Catalyst-AppVetting/
 git checkout update-setup
