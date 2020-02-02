@@ -18,7 +18,8 @@ case "$CONTINUE" in
         ;;
     *)
           echo -e "$SETUP: Let's set up the environment configuration..."
-          echo -e "$SETUP: Loading... When done, save the file to continue"
+          echo -e "$SETUP: When done, save the file to continue"
+          echo -e "$SETUP: Opening..."
           sleep 3
 
           # Open editor to modify environment variables
