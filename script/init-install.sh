@@ -1,7 +1,7 @@
 #! /bin/bash
 set -e 
 
-TITLE="\e[96mInstall Script for Catalyst AppVetting Tool v0.1.0 by Rohin Adalja\e[0m"
+TITLE="\e[96mInstall Script for Catalyst AppVetting Tool by Rohin Adalja\e[0m"
 SETUP="\n\e[93mINSTALL\e[0m"
 
 cd ..
