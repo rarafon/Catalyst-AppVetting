@@ -2,7 +2,6 @@
 # This script can be run as following: 
 #   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/update-setup/script/init-curl.sh | sudo bash -
 
-set -e 
 
 CONTINUE=$1
 TITLE="\e[96mSetup Script for Catalyst AppVetting Tool\e[0m"
@@ -33,7 +32,7 @@ echo -e "\tDB_USERNAME: $DB_USERNAME"
 echo -e "\tDB_PASSWORD: $DB_PASSWORD\n"
 
 
-read -r -p "Are you sure? [y/N] " response
+read -e -r -p "Are you sure? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY]) 
         echo -e "$SETUP: Setting up Catalyst Appvetting Tool..."
