@@ -31,6 +31,7 @@ echo -e "\tCATALYST_USER_LAST_N: $CATALYST_USER_LAST_N"
 echo -e "\tDB_USERNAME: $DB_USERNAME"
 echo -e "\tDB_PASSWORD: $DB_PASSWORD\n"
 
+echo -e "Note: If you do not see a confirmation prompt next, please run ./script/init-setup.sh manually!\n"
 
 read -e -r -p "Are you sure? [y/N] " response
 case "$response" in
