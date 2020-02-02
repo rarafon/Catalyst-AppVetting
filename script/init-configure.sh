@@ -24,7 +24,7 @@ case "$CONTINUE" in
 
           # Open editor to modify environment variables
           chmod 777 .env
-          vi .env
+          vim -p .env
 
           sleep 2
           echo -e "$SETUP: Confirm your installation configuration..."
