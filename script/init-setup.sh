@@ -3,19 +3,12 @@ set -e
 
 TITLE="\e[96mSetup Script for Catalyst AppVetting Tool v0.1.0 by Rohin Adalja\e[0m"
 SETUP="\n\e[93mSETUP\e[0m"
-EXEC="" #sudo
-
-# Pre-requisites: 
-#   sudo apt-get update && sudo apt-get install git -y && \
-#   cd /usr/src && \
-#   sudo git clone https://github.com/dandahle/Catalyst-AppVetting.git && \
-#   cd Catalyst-AppVetting/ && \
-#   sudo git checkout update-setup && \
-#   sudo bash setup.sh
 
 cd ..
 echo -e "\n$TITLE"
 echo -e "$SETUP: Running in $(pwd)"
+
+exit 1
 
 # Create folders under /usr/src
 echo -e "$SETUP: Making initial app directories..."
