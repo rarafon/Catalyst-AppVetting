@@ -8,7 +8,7 @@ module.exports = {
 	//setting up your localhost as your "ec2" instance
 	ec2: {
 		public_ip: '127.0.0.1',
-		port: 8000,
+		port: 80,
 	},
 
 	/**

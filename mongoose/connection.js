@@ -1,38 +1,39 @@
-var config = require('../config');      // Load config file to get URL, username, password, etc
+const dotenv = require('dotenv');
+dotenv.config();
 
 var mongoose = require('mongoose');     // Import the mongoose module
 
-/* PULL IN SENSITIVE INFORMATION FROM config.js */
-var local_url = 'mongodb://127.0.0.1:27017/test';   // Local URL, connects EC2 instance to local mongod
-var remote_url = config.ec2.public_ip;              // Connects to the public IP of the server hosting the database
+// var local_url = 'mongodb://127.0.0.1:27017/test';   // Local URL, connects EC2 instance to local mongod
+// var remote_url = config.ec2.public_ip;  // public_ip: '127.0.0.1',             Connects to the public IP of the server hosting the database
 
 // var options = {
-//     username:   config.mongo.username,      // Username and password of a user that has read and write permissions
-//     password:   config.mongo.password
+//     username:   process.env.DB_USERNAME,      // Username and password of a user that has read and write permissions
+//     password:   process.env.DB_PASSWORD
 // };
 
 // Example: mongodb://username:password@127.0.0.1:27017/database-to-use?authSource=admin
 var uri = 'mongodb://'
-    + config.mongo.username
+    + process.env.DB_USERNAME
     + ':'
-    + encodeURIComponent(config.mongo.password)
+    + encodeURIComponent(process.env.DB_PASSWORD)
     + '@'
-    + config.mongo.host
+    + process.env.DB_HOST || 'localhost'
     + ':'
-    + config.mongo.port
+    + process.env.DB_PORT || '27017'
     + '/'
-    + config.mongo.db
+    + process.env.DB_NAME || 'catalyst'
     + '?authSource='
-    + config.mongo.authSource;
+    + process.env.DB_AUTHSOURCE || 'admin';
 
 
 
 // Connect to the URL
+console.log(`Connecting to MongoDB uri: ${uri}`);
 // mongoose.connect(uri, options);
 mongoose.connect(uri, { useNewUrlParser: true,  useUnifiedTopology: true } );
 mongoose.connection.on('error', console.error.bind(console, '[ DATABASE ] Connection :: Connection response: '));
 mongoose.connection.once('open', function () {
-    console.log('[ DATABASE ] Connection :: Successfully connected to the database: ' + config.mongo.db);
+    console.log('[ DATABASE ] Connection :: Successfully connected to the database: ' + process.env.DB_NAME);
 });
 
 // Nothing needs to be exported, simply use:   require('<path>/mongoose')

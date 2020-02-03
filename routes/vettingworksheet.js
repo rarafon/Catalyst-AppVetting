@@ -5,7 +5,6 @@ var db = require('../mongoose/connection');
 var DocumentPackage = require('../models/documentPackage');
 var highlightPackage = require('../models/highlightPackage');
 var VettingNotePackage = require('../models/vettingNotePackage');
-var config = require('../config')
 var WorkItemPackage = require('../models/workItemPackage');
 var fs = require('fs');
 

@@ -7,7 +7,6 @@ var HighlightPackage = require('../models/highlightPackage');
 var VettingNotePackage = require('../models/vettingNotePackage');
 var api = require('../controllers/api');
 var User = require('../models/userPackage');
-var config = require('../config');
 var fs = require('fs');
 
 var Promise = require('bluebird'); // Import promise engine

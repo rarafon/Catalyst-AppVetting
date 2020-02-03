@@ -18,6 +18,11 @@ services:
         CATALYST_USER_LAST_N: ${CATALYST_USER_LAST_N}
         DB_USERNAME: ${DB_USERNAME}
         DB_PASSWORD: ${DB_PASSWORD}
+        DB_AUTHSOURCE: ${DB_AUTHSOURCE}
+        DB_HOST: ${DB_HOST}
+        DB_PORT: ${DB_PORT}
+        DB_NAME: ${DB_NAME}
+        AVT_SERVER_PORT: ${AVT_SERVER_PORT}
     env_file:
       - .env
     container_name: avt
