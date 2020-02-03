@@ -7,7 +7,7 @@ RUN apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y gnupg curl
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      git \
+      git vim nano\
       awscli 
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \

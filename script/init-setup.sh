@@ -17,21 +17,32 @@ set -a
 source .env
 set +a
 
-echo -e "\tAVT_ENVIRONMENT: $AVT_ENVIRONMENT"
-echo -e "\tAVT_GIT_BRANCH: $AVT_GIT_BRANCH"
-echo -e "\tAVT_RESTORE_FROM_BACKUP: $AVT_RESTORE_FROM_BACKUP"
 echo -e "\tAWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
 echo -e "\tAWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
 echo -e "\tAWS_S3_BUCKET: $AWS_S3_BUCKET"
 echo -e "\tAWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
+echo -e "\tAVT_GIT_BRANCH: $AVT_GIT_BRANCH"
+echo -e "\tAVT_RESTORE_FROM_BACKUP: $AVT_RESTORE_FROM_BACKUP"
+echo -e "\tAVT_SERVER_PORT: $AVT_SERVER_PORT"
 echo -e "\tCATALYST_USER_EMAIL: $CATALYST_USER_EMAIL"
 echo -e "\tCATALYST_USER_PASSWORD: $CATALYST_USER_PASSWORD"
+echo -e "\tDB_USERNAME: $DB_USERNAME"
+echo -e "\tDB_PASSWORD: $DB_PASSWORD"
+echo -e "\tAVT_ENVIRONMENT: $AVT_ENVIRONMENT"
 echo -e "\tCATALYST_USER_FIRST_N: $CATALYST_USER_FIRST_N"
 echo -e "\tCATALYST_USER_LAST_N: $CATALYST_USER_LAST_N"
-echo -e "\tDB_USERNAME: $DB_USERNAME"
-echo -e "\tDB_PASSWORD: $DB_PASSWORD\n"
+echo -e "\tDB_AUTHSOURCE: $DB_AUTHSOURCE"
+echo -e "\tDB_HOST: $DB_HOST"
+echo -e "\tDB_PORT: $DB_PORT"
+echo -e "\tDB_NAME: $DB_NAME"
+echo -e ""
+
 
 echo -e "Note: If you do not see a confirmation prompt next, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
+
+while read -r -t 0; do
+    read -n 256 -r -s
+done
 
 read -e -r -p "Press Enter to continue..." response
 read -e -r -p "Are you sure? [y/N] " someAns
@@ -74,6 +85,10 @@ echo -e "$SETUP: Finalizing: Setting up Automated Backups [using crontab] to S3"
 echo -e "AVT | DONE: Cron Job Set Successfully"
 echo -e "$SETUP: DONE: Configuration Complete!"
 echo -e "AVT | Do you want to start the web-application tool?\n"
+
+while read -r -t 0; do
+    read -n 256 -r -s
+done
 
 read -r -p "Are you sure? [y/N] " startup
 case "$startup" in
