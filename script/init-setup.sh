@@ -13,23 +13,11 @@ echo -e "$SETUP: Running in $(pwd)"
 echo -e "$SETUP: Confirm your installation configuration..."
 
 # Source the .env file
-set -x
+set -a
 source .env
-set +x
+set +a
 
-echo -e "\tAVT_ENVIRONMENT: $AVT_ENVIRONMENT"
-echo -e "\tAVT_GIT_BRANCH: $AVT_GIT_BRANCH"
-echo -e "\tAVT_RESTORE_FROM_BACKUP: $AVT_RESTORE_FROM_BACKUP"
-echo -e "\tAWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-echo -e "\tAWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
-echo -e "\tAWS_S3_BUCKET: $AWS_S3_BUCKET"
-echo -e "\tAWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
-echo -e "\tCATALYST_USER_EMAIL: $CATALYST_USER_EMAIL"
-echo -e "\tCATALYST_USER_PASSWORD: $CATALYST_USER_PASSWORD"
-echo -e "\tCATALYST_USER_FIRST_N: $CATALYST_USER_FIRST_N"
-echo -e "\tCATALYST_USER_LAST_N: $CATALYST_USER_LAST_N"
-echo -e "\tDB_USERNAME: $DB_USERNAME"
-echo -e "\tDB_PASSWORD: $DB_PASSWORD\n"
+cat 
 
 echo -e "Note: If you do not see a confirmation prompt next, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
 
@@ -56,13 +44,13 @@ npm install
 
 # Enable systemctl: mongod service - set mongodb to start automatically on system startup
 echo -e "$SETUP: Starting MongoDB..."
-if [ -x "$(command -v systemctl)" ]; then
-  systemctl enable mongod
-fi
+# if [ -x "$(command -v systemctl)" ]; then
+#   systemctl enable mongod
+# fi
 
 ./script/start-mongod.sh
 
-sleep 3
+sleep 4
 echo -e "$SETUP: Finalizing: Creating DB and AVT Service Users"
 ./script/createServiceUsers.sh
 

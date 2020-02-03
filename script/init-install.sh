@@ -10,6 +10,8 @@ echo -e "$SETUP: Running in $(pwd)"
 
 # Create folders under /usr/src
 echo -e "$SETUP: Making initial app directories under $(pwd)"
+echo -e "$SETUP: Creating 'db' folder"
+[ -d db ] || mkdir db
 echo -e "$SETUP: Creating 'db_backups' folder"
 [ -d db_backups ] || mkdir db_backups
 echo -e "$SETUP: Creating 'logs' folder"

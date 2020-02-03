@@ -1,10 +1,10 @@
 #! /bin/bash
 #BIN_PATH=./node_modules/.bin
 
-if [ -x "$(command -v systemctl)" ]; then
-  systemctl start mongod
-else
+# if [ -x "$(command -v systemctl)" ]; then
+#   systemctl start mongod
+# else
   mongod --dbpath /usr/src/db/ --logpath /usr/src/logs/mongod.log &
-fi
+# fi
 
 sleep 1
