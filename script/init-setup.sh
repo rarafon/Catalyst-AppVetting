@@ -13,9 +13,9 @@ echo -e "$SETUP: Running in $(pwd)"
 echo -e "$SETUP: Confirm your installation configuration..."
 
 # Source the .env file
-set -a
+set -x
 source .env
-set +a
+set +x
 
 echo -e "\tAVT_ENVIRONMENT: $AVT_ENVIRONMENT"
 echo -e "\tAVT_GIT_BRANCH: $AVT_GIT_BRANCH"
@@ -61,6 +61,8 @@ if [ -x "$(command -v systemctl)" ]; then
 fi
 
 ./script/start-mongod.sh
+
+sleep 3
 echo -e "$SETUP: Finalizing: Creating DB and AVT Service Users"
 ./script/createServiceUsers.sh
 

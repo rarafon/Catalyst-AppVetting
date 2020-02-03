@@ -53,6 +53,7 @@ ARG DB_PORT=${DB_PORT}
 ARG DB_NAME=${DB_NAME}
 ARG AVT_SERVER_PORT=${AVT_SERVER_PORT}
 
+RUN ls
 RUN ./script/start-mongod.sh && ./script/createServiceUsers.sh && ./script/stop-mongod.sh
 
 # RUN ./script/start-mongod.sh && ./script/db-restore.sh -yes ./script/stop-mongod.sh
