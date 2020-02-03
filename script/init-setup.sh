@@ -40,10 +40,6 @@ echo -e ""
 
 echo -e "Note: If you do not see a confirmation prompt next, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
 
-while read -r -t 0; do
-    read -n 256 -r -s
-done
-
 read -e -r -p "Press Enter to continue..." response
 read -e -r -p "Are you sure? [y/N] " someAns
 case "$someAns" in
@@ -86,9 +82,6 @@ echo -e "AVT | DONE: Cron Job Set Successfully"
 echo -e "$SETUP: DONE: Configuration Complete!"
 echo -e "AVT | Do you want to start the web-application tool?\n"
 
-while read -r -t 0; do
-    read -n 256 -r -s
-done
 
 read -r -p "Are you sure? [y/N] " startup
 case "$startup" in
