@@ -19,7 +19,7 @@ esac
 if [ "$AVT_RESTORE_FROM_BACKUP_BUCKET" == "latest" ]; then
     FOLDER=$(aws s3 ls s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/ | awk '{print $2}' | sort | grep $YEAR | tail -1)
 else
-    FOLDER=$AVT_RESTORE_FROM_BACKUP_BUCKET
+    FOLDER=${AVT_RESTORE_FROM_BACKUP_BUCKET}/
 fi
 
 if [ -z "$FOLDER" ]; then
