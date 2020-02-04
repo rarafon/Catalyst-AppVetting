@@ -1,5 +1,4 @@
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config({ path: require('find-config')('.env') });
 
 var mongoose = require('mongoose');     // Import the mongoose module
 

@@ -10,8 +10,7 @@ createAdminUser: {
 
 */
 
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config({ path: require('find-config')('.env') });
 
 var createInitialUsers = require('../controllers/createInitialUsers');
 
