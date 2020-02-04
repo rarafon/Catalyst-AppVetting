@@ -1293,7 +1293,7 @@ getDocumentPlanning: function (req, res, next) {
     },
 
 
-	postUser: function(req, res) {
+	postUser: function(req, res, next) {
         // Data will be submitted using req.body
         console.log('[ API ] postUser :: Call invoked');
 		console.log(req.body);
@@ -1322,6 +1322,7 @@ getDocumentPlanning: function (req, res, next) {
 				res.send( { status : 200 } );
             }
         });
+        
     },
 
 	updateUser: function(req, res, next) {

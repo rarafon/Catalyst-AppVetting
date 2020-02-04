@@ -15,10 +15,15 @@ case "$AVT_RESTORE_FROM_BACKUP" in
         ;;
 esac
 
-FOLDER=$(aws s3 ls s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/ | awk '{print $2}' | sort | grep $YEAR | tail -1)
+# Automatically find the latest backup to restore from if not provided
+if [ "$AVT_RESTORE_FROM_BACKUP_BUCKET" == "latest" ]; then
+    FOLDER=$(aws s3 ls s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/ | awk '{print $2}' | sort | grep $YEAR | tail -1)
+else
+    FOLDER=$AVT_RESTORE_FROM_BACKUP_BUCKET
+fi
 
 if [ -z "$FOLDER" ]; then
-  echo -e "\nAVT | RESTORE BACKUP SCRIPT: [ ERROR ]  Make sure at least 1 backup folder exists for the current year to restore from.\n"
+  echo -e "\nAVT | RESTORE BACKUP SCRIPT: [ ERROR ]  Make sure a backup folder exists for the current year to restore from.\n"
   exit 1
 fi
 
