@@ -16,13 +16,13 @@ var uri = 'mongodb://'
     + ':'
     + encodeURIComponent(process.env.DB_PASSWORD)
     + '@'
-    + process.env.DB_HOST || 'localhost'
+    + (process.env.DB_HOST || 'localhost')
     + ':'
-    + process.env.DB_PORT || '27017'
+    + (process.env.DB_PORT || '27017')
     + '/'
-    + process.env.DB_NAME || 'catalyst'
+    + (process.env.DB_NAME || 'catalyst')
     + '?authSource='
-    + process.env.DB_AUTHSOURCE || 'admin';
+    + (process.env.DB_AUTHSOURCE || 'admin');
 
 
 
