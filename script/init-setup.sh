@@ -38,10 +38,8 @@ echo -e "\tDB_PORT: $DB_PORT"
 echo -e "\tDB_NAME: $DB_NAME"
 echo -e ""
 
-
 echo -e "Note: If you do not see a confirmation prompt next, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
 
-read -e -r -p "Press Enter to continue..." response
 read -e -r -p "Are you sure? [y/N] " someAns
 case "$someAns" in
     [yY][eE][sS]|[yY]) 

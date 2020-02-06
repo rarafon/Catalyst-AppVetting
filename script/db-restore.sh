@@ -1,5 +1,10 @@
 #!/bin/bash
 
+cd /usr/src/Catalyst-Appvetting/
+set -a
+source .env
+set +a
+
 CONTINUE=$1
 DB_BACKUP_FOLDER=db_backups
 DB_BACKUPS_DIR=/usr/src/$DB_BACKUP_FOLDER

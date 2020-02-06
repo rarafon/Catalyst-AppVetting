@@ -1,5 +1,10 @@
 #!/bin/bash
 
+cd /usr/src/Catalyst-Appvetting/
+set -a
+source .env
+set +a
+
 CONTINUE=$1
 DATE=$(date +\%Y-\%m-\%d:\%H:\%M:\%S)
 DB_BACKUP_FOLDER=db_backups
