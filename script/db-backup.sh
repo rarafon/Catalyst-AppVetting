@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /usr/src/Catalyst-Appvetting/
+cd /usr/src/Catalyst-AppVetting/
 set -a
 source .env
 set +a
