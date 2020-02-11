@@ -30,7 +30,7 @@ function addNote(e) {
     if($('#note').val() != "") {
 
         //otherwise, prepare payload with the application ID and the note contents
-        var payload = {};
+        var payload = {}; 
 		payload.user = $('#userId').val();
 		console.log(payload.user);
         payload.description = $('#note').val();
@@ -45,6 +45,7 @@ function addNote(e) {
             data: JSON.stringify(payload)
         });
         posting.done(function (xhr) {
+            console.log(xhr);
             if(xhr.status == 200) {
                 //check if the 'empty notes' row exists and delete if so
                 var emptyNotes = $('#empty-notes');
@@ -73,6 +74,7 @@ function addNote(e) {
             }
             else{
                 console.log("API submission for new note failed");
+                alert("Note did not save, please try again...");
             }
             // If code is not 200 forward below to .fail()
         });
@@ -80,6 +82,7 @@ function addNote(e) {
         posting.fail(function (data)
         {
             console.log("ajax failed to POST data");
+            alert("Note did not save, please try again...");
         });
 
     }
@@ -115,11 +118,13 @@ function deleteNote(e) {
         }
         else{
             console.log("API did not return 200 status for deleting note");
+            alert("Note might not be deleted, please try again...");
         }
     });
     posting.fail(function (data)
     {
         console.log("Ajax POST failed");
+        alert("Note might not be deleted, please try again...");
     });
 
 }
@@ -182,6 +187,7 @@ function updateNote(e) {
         }
         else{
             console.log("API did not return 200 status for updating note");
+            alert("Note might not be updated, please try again...");
         }
         // If code is not 200 forward below to .fail()
     });
@@ -189,6 +195,7 @@ function updateNote(e) {
     posting.fail(function (data)
     {
         console.log("Ajax POST failed");
+        alert("Note might not be updated, please try again...");
     });
 }
 

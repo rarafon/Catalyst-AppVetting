@@ -32,7 +32,7 @@ COPY ./controllers/createInitialUsers.js ./controllers/createInitialUsers.js
 COPY ./models/userPackage.js ./models/userPackage.js
 COPY ./mongoose/connection.js ./mongoose/connection.js
 COPY ./script/ ./script/
-COPY .env config.js ./
+COPY ./.env ./.env
 
 ARG AVT_ENVIRONMENT=${AVT_ENVIRONMENT}
 ARG AVT_RESTORE_FROM_BACKUP=${AVT_RESTORE_FROM_BACKUP}

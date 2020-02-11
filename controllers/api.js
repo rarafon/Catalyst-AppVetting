@@ -2241,19 +2241,16 @@ getDocumentPlanning: function (req, res, next) {
 					note.vetAgent = results.user.contact_info.user_name.user_first + " " + results.user.contact_info.user_name.user_last;
 					console.log(note.vetAgent);
 
-					note.saveAsync(function (err, note, numAffected) {
-						if (err) {
-							console.error(err);
-						}
-						else if (numAffected == 1) {
+					note.saveAsync(function (err, note) {
+						if (note && note._id) {
 							console.log('[ API ] postVettingNote :: Note created with _id: ' + note._id);
 							//send note ID so it can be referenced without page refresh
 							res.send( { status : 200, noteId: note._id, vetAgent: note.vetAgent } );
+						} else {
+                            console.error(err);
+                            res.send( { status : 500, message: 'Error: Cannot create note. Please retry...' } );
 						}
 					})
-
-
-
 				}
 			})
             .catch(function(err) {
@@ -2286,18 +2283,18 @@ getDocumentPlanning: function (req, res, next) {
 					console.log(note.projectPlanner);
 
 					note.saveAsync(function (err, note, numAffected) {
-						if (err) {
-							console.error(err);
-						}
-						else if (numAffected == 1) {
+                        console.log({ err });
+                        console.log({ note });
+                        console.log({ numAffected });
+						if (note && note._id) {
 							console.log('[ API ] postVettingNote :: Note created with _id: ' + note._id);
 							//send note ID so it can be referenced without page refresh
 							res.send( { status : 200, noteId: note._id, projectPlanner: note.projectPlanner } );
+						} else {
+                            console.error(err);
+                            res.send( { status : 500, message: 'Could not save note. Please try again...'} );
 						}
 					})
-
-
-
 				}
 			})
             .catch(function(err) {
