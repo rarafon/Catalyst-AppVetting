@@ -30,7 +30,7 @@ function addNote(e) {
     if($('#note').val() != "") {
 
         //otherwise, prepare payload with the application ID and the note contents
-        var payload = {};
+        var payload = {}; 
 		payload.user = $('#userId').val();
 		console.log(payload.user);
         payload.description = $('#note').val();
