@@ -956,7 +956,6 @@ getDocumentPlanning: function (req, res, next) {
         // Log the _id, name, and value that are passed to the function
         console.log('[ API ] putUpdateDocument :: Call invoked with _id: ' + req.params.id
             + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
-        console.log(req.body.name + ' + ' + req.body.value);
 		var updates = {};
 		var id;
 		if(res.locals.role == "SITE") {
@@ -965,8 +964,7 @@ getDocumentPlanning: function (req, res, next) {
 			}
 			else if(req.body.name == "status") {
                 if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
-                    var inStatus = { status: req.body.value };
-                    updates.project = inStatus;
+                    updates['project.status']= req.body.value;
                 }
 				updates['status'] = req.body.value;
 			}
@@ -974,8 +972,7 @@ getDocumentPlanning: function (req, res, next) {
 		}
         else if (req.body.name == "status") {
                 if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
-                    var inStatus = { status: req.body.value };
-                    updates.project = inStatus;
+                    updates['project.status']= req.body.value;
                 }
                 updates['status'] = req.body.value;
 

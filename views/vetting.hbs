@@ -17,14 +17,14 @@
                 </div>
                 <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable0">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Last Edit</th>
-                                <th class="col-md-2">Status</th>
-								<th class="col-md-2">Application Date</th>
-								<th class="col-md-2">Application Number</th>
+                                <th onclick="orderTable('orderTable0', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable0', 1)" class="col-md-2">Last Edit</th>
+                                <th onclick="orderTable('orderTable0', 2)" class="col-md-2">Status</th>
+								<th onclick="orderTable('orderTable0', 3)" class="col-md-2">Application Date</th>
+								<th onclick="orderTable('orderTable0', 4)" class="col-md-2">Application Number</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -57,14 +57,14 @@
                 </div>
                 <div id="collapseTwo" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable1">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Last Edit</th>
-                                <th class="col-md-2">Status</th>
-								<th class="col-md-2">Application Date</th>
-								<th class="col-md-2">Application Number</th>
+                                <th onclick="orderTable('orderTable1', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable1', 1)" class="col-md-2">Last Edit</th>
+                                <th onclick="orderTable('orderTable1', 2)" class="col-md-2">Status</th>
+								<th onclick="orderTable('orderTable1', 3)" class="col-md-2">Application Date</th>
+								<th onclick="orderTable('orderTable1', 4)" class="col-md-2">Application Number</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -105,14 +105,14 @@
                 </div>
                 <div id="collapseThree" class="collapse in" role="tabpanel" aria-labelledby="headingThree">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover" id="unapproved_table">
+                        <table class="table table-sm table-bordered table-hover orderTable2" id="unapproved_table">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Last Edit</th>
-                                <th class="col-md-2">Status</th>
-								<th class="col-md-2">Application Date</th>
-								<th class="col-md-2">Application Number</th>
+                                <th onclick="orderTable('orderTable2', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable2', 1)" class="col-md-2">Last Edit</th>
+                                <th onclick="orderTable('orderTable2', 2)" class="col-md-2">Status</th>
+								<th onclick="orderTable('orderTable2', 3)" class="col-md-2">Application Date</th>
+								<th onclick="orderTable('orderTable2', 4)" class="col-md-2">Application Number</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -154,14 +154,14 @@
                 </div>
                 <div id="collapseFour" class="collapse in" role="tabpanel" aria-labelledby="headingFour">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover" id="project_table">
+                        <table class="table table-sm table-bordered table-hover orderTable3" id="project_table">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Last Edit</th>
-                                <th class="col-md-2">Status</th>
-								<th class="col-md-2">Application Date</th>
-								<th class="col-md-2">Application Number</th>
+                                <th onclick="orderTable('orderTable3', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable3', 1)" class="col-md-2">Last Edit</th>
+                                <th onclick="orderTable('orderTable3', 2)" class="col-md-2">Status</th>
+								<th onclick="orderTable('orderTable3', 3)" class="col-md-2">Application Date</th>
+								<th onclick="orderTable('orderTable3', 4)" class="col-md-2">Application Number</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -195,14 +195,14 @@
                 </div>
                 <div id="collapseFive" class="collapse in" role="tabpanel" aria-labelledby="headingFive">
                     <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table class="table table-sm table-bordered table-hover orderTable4">
                             <thead>
                             <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Last Edit</th>
-                                <th class="col-md-2">Status</th>
-								<th class="col-md-2">Application Date</th>
-								<th class="col-md-2">Application Number</th>
+                                <th onclick="orderTable('orderTable4', 0)" class="col-md-2">Name</th>
+                                <th onclick="orderTable('orderTable4', 1)" class="col-md-2">Last Edit</th>
+                                <th onclick="orderTable('orderTable4', 2)" class="col-md-2">Status</th>
+								<th onclick="orderTable('orderTable4', 3)" class="col-md-2">Application Date</th>
+								<th onclick="orderTable('orderTable4', 4)" class="col-md-2">Application Number</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -227,6 +227,7 @@
     </div>
 </div>
 <script src="/javascript/searchYear.js" type="text/javascript"></script>
+<script src="/javascript/orderTable.js" type="text/javascript"></script>
 <!-- Make entire table rows clickable! -->
 <script>
     jQuery(document).ready(function($) {
