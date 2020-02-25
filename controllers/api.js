@@ -883,7 +883,7 @@ getDocumentPlanning: function (req, res, next) {
 						if (err) {
 							console.error(err);
 						}
-						else if (numAffected == 1) {
+						else {
 							console.log('[ API ] postDocument :: Document created with _id: ' + doc._id);
 						}
 					});
@@ -893,7 +893,7 @@ getDocumentPlanning: function (req, res, next) {
 						if (err) {
 							console.error(err);
 						}
-						else if (numAffected == 1) {
+						else {
 							console.log('[ API ] postDocument :: highlightPackage created with _id: ' + highlight._id);
 							console.log('[ API ] postDocument :: highlightPackage references document package _id: ' + highlight.reference);
 							//res.send( { status : 200 } );
@@ -905,7 +905,7 @@ getDocumentPlanning: function (req, res, next) {
 						if (err) {
 							console.error(err);
 						}
-						else if (numAffected == 1) {
+						else {
 							console.log('[ API ] postDocument :: finPackage created with _id: ' + finance._id);
 							console.log('[ API ] postDocument :: highlightPackage references document package _id: ' + finance.appID);
 							//res.send( { status : 200 } );
@@ -921,7 +921,7 @@ getDocumentPlanning: function (req, res, next) {
 							if (err) {
 								console.error(err);
 							}
-							else if (numAffected == 1) {
+							else {
 								console.log('[ API ] postDocument :: finPackage created with _id: ' + finance._id);
 								console.log('[ API ] postDocument :: finPackage references document package _id: ' + finance.appID);
 								//res.send( { status : 200 } );
@@ -1313,8 +1313,7 @@ getDocumentPlanning: function (req, res, next) {
         doc.saveAsync(function (err, doc, numAffected) {
             if (err) {
                 console.error(err);
-            }
-            else if (numAffected == 1) {
+            } else {
                 console.log('[ API ] postUser :: User Created with ID: ' + doc._id);
 				res.send( { status : 200 } );
             }
@@ -1692,7 +1691,7 @@ getDocumentPlanning: function (req, res, next) {
             if (err) {
                 console.error(err);
             }
-            else if (numAffected == 1) {
+            else {
 
                 console.log('[ API ] role vet created');
 				//res.send( { status : 200 } );
@@ -1704,7 +1703,7 @@ getDocumentPlanning: function (req, res, next) {
             if (err) {
                 console.error(err);
             }
-            else if (numAffected == 1) {
+            else {
                 console.log('[ API ] role site created');
 				//res.send( { status : 200 } );
             }
@@ -1801,17 +1800,15 @@ getDocumentPlanning: function (req, res, next) {
 
         item.saveAsync(function (err, note, numAffected) {
             if (err) {
+                console.log ('[ API ] :: createPartner error.');
                 console.error(err);
-            }
-            else if (numAffected == 1) {
+            } else {
                 console.log("saved!");
                 console.log('[ API ] createPartner :: New Partner created with _id: ' + item._id);
                 console.log(item);
                 //send note ID so it can be referenced without page refresh
                 //res.send( { status : 200, _id: item._id } );
                 res.locals.status = '200';
-            } else {
-                console.log ('[ API ] :: createPartner error.');
             }
             next();
         });
@@ -2311,8 +2308,7 @@ getDocumentPlanning: function (req, res, next) {
         item.saveAsync(function (err, note, numAffected) {
             if (err) {
                 console.error(err);
-            }
-            else if (numAffected == 1) {
+            } else {
 				console.log("saved!");
                 console.log('[ API ] add Work Item :: Note created with _id: ' + item._id);
                 //send note ID so it can be referenced without page refresh
@@ -3143,11 +3139,10 @@ getDocumentPlanning: function (req, res, next) {
 								if (err) {
 									console.error(err);
 								}
-								else if (numAffected == 1) {
+								else {
 									console.log('[ API ] postDocument :: finPackage created with _id: ' + finance._id);
 									console.log('[ API ] postDocument :: finPackage references document package _id: ' + finance.appID);
 									//res.send( { status : 200 } );
-
 								}
 							});
 
