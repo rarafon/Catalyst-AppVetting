@@ -590,7 +590,7 @@ function formatDate(element)
 	var appDay = ("00" + appDate.getDate()).slice(-2);
 	var appMon = ("00" + (appDate.getMonth()+1)).slice(-2);
 	element.project.project_start = appMon + "/" + appDay + "/" + appYear;
-
+    element.project.project_start_full_date = appYear + "/" + appMon + "/" + appDay;
 	}
     return element;
 }

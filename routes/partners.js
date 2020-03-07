@@ -136,13 +136,15 @@ function formatDate(element)
     //get month and day with padding since they are 0 indexed
     var Day = ( "00" + element.updated.getDate()).slice(-2);
     var Mon = ("00" + (element.updated.getMonth()+1)).slice(-2);
-    element.updated = Mon + "/" + Day + "/" + Year;
+		element.updated = Mon + "/" + Day + "/" + Year;
+		element.updated_full_date = Year + "/" + Mon + "/" + Day;
 
 	if(element.signature && element.signature.client_date != "") {
 	var appYear = element.signature.client_date.getFullYear();
 	var appDay = ("00" + element.signature.client_date.getDate()).slice(-2);
 	var appMon = ("00" + (element.signature.client_date.getMonth()+1)).slice(-2);
 	element.signature.client_date = appMon + "/" + appDay + "/" + Year;
+	element.signature.client_full_date = Year + "/" + appMon + "/" + appDay;
 	}
     return element;
 }

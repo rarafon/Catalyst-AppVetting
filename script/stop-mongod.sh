@@ -5,6 +5,7 @@
 #   systemctl stop mongod
 # else
   pkill -2 mongod
+  pkill mongod
 # fi
 
 sleep 1

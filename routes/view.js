@@ -565,6 +565,7 @@ function formatDate(element)
     var Day = ( "00" + element.updated.getDate()).slice(-2);
     var Mon = ("00" + (element.updated.getMonth()+1)).slice(-2);
     element.updated = Mon + "/" + Day + "/" + Year;
+    element.updated_full_date = Year + "/" + Mon + "/" + Day;
 
 	//signature date (application date)
 	if(element.signature && element.signature.client_date != "") {
@@ -572,7 +573,8 @@ function formatDate(element)
 	var appYear = appDate.getFullYear();
 	var appDay = ("00" + appDate.getDate()).slice(-2);
 	var appMon = ("00" + (appDate.getMonth()+1)).slice(-2);
-	element.signature.client_date = appMon + "/" + appDay + "/" + appYear;
+    element.signature.client_date = appMon + "/" + appDay + "/" + appYear;
+    element.signature.client_full_date = appYear + "/" + appMon + "/" + appDay;
 
 	}
     return element;
