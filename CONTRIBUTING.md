@@ -11,6 +11,9 @@ for your willingness to use your skills and talents developing software for **Ca
 As you work through this process, suggestions are always welcome.  [Email Mike](mailto:mikehainespdx@gmail.com) with any ideas, tools, or suggestions that could make things better, and especially if you'd like to contribute needed changes to this codebase.
 
 #### Install Necessary Tools:
+**New: Fully automated setup if you are running Ubuntu 18.04:** You can run the following command from your terminal that will guide you through the installation and setup of the tool. This requires running the following command:
+`curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -`
+
 **IDE/Text Editor:** This web application is written entirely in javascript and runs in an internet browser. **[Notepad++](https://notepad-plus-plus.org/)** works nicely, but if you own IntelliJ, ATOM, etc...go for it.
 
 **Command Line Interface/Console:** There are many tools one may use - git Bash, Windows PowerShell, Mac Terminal, cygwin, etc...use whatever you are comfortable using.  For the purposes of this readMe, we will use the word **console** for this type of application.
@@ -81,11 +84,10 @@ So far, the database is set up and running properly with all the folder configur
 
 **Configure the Appvetting Software**
 * Head back to the catalyst repo folder.
-* Rename the `RENAME_THIS_TO_config.js` file you received from Mike to `config.js`. 
-* Open `config.js` in text editor or IDE of choice, and follow the instructions given.
-* Once you have saved your personal config.js, open a console in the AppVetting root, and 
+* Open `.env` in text editor or IDE of choice, and update the file with the information you received from Dan/Mike. 
+* Once you have saved your personal .env, open a console in the AppVetting root, and 
 * Type `node createAdminUser`  
-* At this point, you have used the config.js file to connect the MongoDB to the mongo username and password, and you have created a user you will need once we open the app in a browser window.  So, we're all set!
+* At this point, you have used the .env file to connect the MongoDB to the mongo username and password, and you have created a user you will need once we open the app in a browser window.  So, we're all set!
 
 
 #### Starting the Software 
