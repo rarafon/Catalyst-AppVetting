@@ -1,7 +1,9 @@
+# Added in 2020
+.env
+
 # Added by kohn-catalyst
 rest-data/*
 rest-logs/*
-config.js
 db_backup_LOCAL.sh
 /data/*
 

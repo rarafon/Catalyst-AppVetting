@@ -221,10 +221,6 @@ ProjectPlanPackageSchema.methods.getCompletedDate = function (name) {
 // This filters tasks either unassigned or assigned to a particular userId.
 ProjectPlanPackageSchema.statics.filterOwnedTasks = function (userId) {
   console.log("user is " + userId);
-  var owner = { $ne: null };
-  if (userId) {
-    owner = ObjectId(userId)
-  }
   return {
     $or: [
       {        

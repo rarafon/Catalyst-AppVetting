@@ -1,5 +1,3 @@
-#!/usr/bin/node
-
 /*
 
 createAdminUser -- creates an admin user in the mongo db
@@ -12,17 +10,17 @@ createAdminUser: {
 
 */
 
-var api = require('./controllers/api')
+require('dotenv').config({ path: require('find-config')('.env') });
 
-var config = require('./config').createAdminUser
+var createInitialUsers = require('../controllers/createInitialUsers');
 
 var adminUser = {
   "contact_info": {
-    "user_email": config.email,
+    "user_email": process.env.CATALYST_USER_EMAIL,
     "user_name": {
-      "user_first": config.first,
+      "user_first": process.env.CATALYST_USER_FIRST_N || 'Catalyst',
       "user_middle": "",
-      "user_last": config.last,
+      "user_last": process.env.CATALYST_USER_LAST_N || 'Admin',
       "user_preferred": ""
     },
     "user_dob": {
@@ -41,8 +39,8 @@ var adminUser = {
       "uec_phone": "adsf"
     }
   },
-  "password": config.password,
-  "password-confirm": config.password,
+  "password": process.env.CATALYST_USER_PASSWORD,
+  "password-confirm": process.env.CATALYST_USER_PASSWORD,
   "user_status": "ACTIVE",
   "user_documents": {
     "ID_Date": true,
@@ -52,7 +50,7 @@ var adminUser = {
   },
   "user_created": 1492547010917,
   "user_role": "ADMIN",
-  "user_roles": ["ADMIN"]
+  "user_roles": ["ADMIN", "VET", "SITE", "PROJECT_MANAGEMENT"]
 }
 
-api.postUser({ body: adminUser }, { send: () => {} }, () => {})
+createInitialUsers.postInitialUser({ body: adminUser }, { send: () => {} });
