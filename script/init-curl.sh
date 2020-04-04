@@ -1,6 +1,6 @@
 #! /bin/bash
 # This script can be run as following:
-#   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/update-setup/script/init-curl.sh | sudo bash -
+#   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -
 
 set -e 
 
@@ -18,5 +18,5 @@ fi
 
 git clone https://github.com/dandahle/Catalyst-AppVetting.git
 cd Catalyst-AppVetting/
-git checkout update-setup
+git checkout develop
 ./script/init.sh
