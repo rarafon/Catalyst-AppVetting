@@ -48,8 +48,7 @@ case "$CONTINUE" in
                   echo -e "\nAVT | Starting Restore..."
                   ;;
               *)
-                  echo -e "AVT | Cancelled by user, exiting."
-                  exit 1
+                  echo -e "AVT | Skipping Restore... (In the future, you can run ./script/db-restore.sh to restore later on)"
                   ;;
           esac
         ;;
