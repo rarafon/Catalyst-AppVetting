@@ -12,5 +12,5 @@ echo -e "$SETUP: Running in $(pwd)"
 
 ./script/init-install.sh
 ./script/init-configure.sh
-
-echo -e "$SETUP: CONFIGURATION SAVED.\nTO CONTINUE INSTALLATION, RUN:   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh"
+reset
+sudo bash ./script/init-setup.sh
