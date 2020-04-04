@@ -45,7 +45,7 @@ case "$someAns" in
         echo -e "$SETUP: Setting up Catalyst Appvetting Tool..."
         ;;
     *)
-        echo -e "$SETUP: TO CONTINUE, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
+        echo -e "$SETUP: Edit the .env file to your liking.\nTO CONTINUE, run:\n   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh\n"
         exit 1
         ;;
 esac
