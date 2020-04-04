@@ -21,10 +21,10 @@ case "$AVT_RESTORE_FROM_BACKUP" in
 esac
 
 # Automatically find the latest backup to restore from if not provided
-if [ "$AVT_RESTORE_FROM_BACKUP_BUCKET" == "latest" ]; then
-    FOLDER=$(aws s3 ls s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/ | awk '{print $2}' | sort | grep $YEAR | tail -1)
+if [ "$AVT_RESTORE_FROM_BACKUP_FOLDER" == "latest" ]; then
+    FOLDER=$(aws s3 ls s3://$AWS_S3_RESTORE_BUCKET/$DB_BACKUP_FOLDER/ | awk '{print $2}' | sort | grep $YEAR | tail -1)
 else
-    FOLDER=${AVT_RESTORE_FROM_BACKUP_BUCKET}
+    FOLDER=${AVT_RESTORE_FROM_BACKUP_FOLDER}
 fi
 
 if [ -z "$FOLDER" ]; then
@@ -32,8 +32,8 @@ if [ -z "$FOLDER" ]; then
   exit 1
 fi
 
-echo -e "AVT | RESTORE BACKUP SCRIPT: Your S3 BUCKET NAME is $AWS_S3_BUCKET"
-echo -e "AVT | Restoring from: s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/$FOLDER"
+echo -e "AVT | RESTORE BACKUP SCRIPT: Your S3 BUCKET NAME is $AWS_S3_RESTORE_BUCKET"
+echo -e "AVT | Restoring from: s3://$AWS_S3_RESTORE_BUCKET/$DB_BACKUP_FOLDER/$FOLDER"
 echo -e "AVT | Restoring to: $DB_BACKUPS_DIR/restore-$FOLDER\n"
 
 
@@ -58,7 +58,7 @@ esac
 mkdir $DB_BACKUPS_DIR/restore-$FOLDER
 cd $DB_BACKUPS_DIR/restore-$FOLDER
 
-aws s3 cp s3://$AWS_S3_BUCKET/$DB_BACKUP_FOLDER/$FOLDER . --recursive
+aws s3 cp s3://$AWS_S3_RESTORE_BUCKET/$DB_BACKUP_FOLDER/$FOLDER . --recursive
 
 mongorestore $DB_BACKUPS_DIR/restore-$FOLDER/catalyst --authenticationDatabase admin -d catalyst
 

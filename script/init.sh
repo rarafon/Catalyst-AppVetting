@@ -1,6 +1,6 @@
 #! /bin/bash
 # This script can be run as following:
-#   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/update-setup/script/init-curl.sh | sudo bash -
+#   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -
 
 set -e 
 
@@ -12,7 +12,5 @@ echo -e "$SETUP: Running in $(pwd)"
 
 ./script/init-install.sh
 ./script/init-configure.sh
-reset
-sudo bash ./script/init-setup.sh
 
-echo -e "$SETUP: DONE: Init Complete!"
+echo -e "$SETUP: CONFIGURATION SAVED.\nTO CONTINUE INSTALLATION, RUN:   cd /usr/src/Catalyst-AppVetting && sudo bash ./script/init-setup.sh"
