@@ -883,7 +883,7 @@ getDocumentPlanning: function (req, res, next) {
 						if (err) {
 							console.error(err);
 						}
-						else if (numAffected == 1) {
+						else {
 							console.log('[ API ] postDocument :: Document created with _id: ' + doc._id);
 						}
 					});
@@ -893,7 +893,7 @@ getDocumentPlanning: function (req, res, next) {
 						if (err) {
 							console.error(err);
 						}
-						else if (numAffected == 1) {
+						else {
 							console.log('[ API ] postDocument :: highlightPackage created with _id: ' + highlight._id);
 							console.log('[ API ] postDocument :: highlightPackage references document package _id: ' + highlight.reference);
 							//res.send( { status : 200 } );
@@ -905,7 +905,7 @@ getDocumentPlanning: function (req, res, next) {
 						if (err) {
 							console.error(err);
 						}
-						else if (numAffected == 1) {
+						else {
 							console.log('[ API ] postDocument :: finPackage created with _id: ' + finance._id);
 							console.log('[ API ] postDocument :: highlightPackage references document package _id: ' + finance.appID);
 							//res.send( { status : 200 } );
@@ -921,7 +921,7 @@ getDocumentPlanning: function (req, res, next) {
 							if (err) {
 								console.error(err);
 							}
-							else if (numAffected == 1) {
+							else {
 								console.log('[ API ] postDocument :: finPackage created with _id: ' + finance._id);
 								console.log('[ API ] postDocument :: finPackage references document package _id: ' + finance.appID);
 								//res.send( { status : 200 } );
@@ -956,7 +956,6 @@ getDocumentPlanning: function (req, res, next) {
         // Log the _id, name, and value that are passed to the function
         console.log('[ API ] putUpdateDocument :: Call invoked with _id: ' + req.params.id
             + ' | key: ' + req.body.name + ' | value: ' + req.body.value);
-        console.log(req.body.name + ' + ' + req.body.value);
 		var updates = {};
 		var id;
 		if(res.locals.role == "SITE") {
@@ -965,8 +964,7 @@ getDocumentPlanning: function (req, res, next) {
 			}
 			else if(req.body.name == "status") {
                 if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
-                    var inStatus = { status: req.body.value };
-                    updates.project = inStatus;
+                    updates['project.status']= req.body.value;
                 }
 				updates['status'] = req.body.value;
 			}
@@ -974,8 +972,7 @@ getDocumentPlanning: function (req, res, next) {
 		}
         else if (req.body.name == "status") {
                 if (req.body.value && ((req.body.value == "project") || (req.body.value == "handle"))) {
-                    var inStatus = { status: req.body.value };
-                    updates.project = inStatus;
+                    updates['project.status']= req.body.value;
                 }
                 updates['status'] = req.body.value;
 
@@ -1316,13 +1313,12 @@ getDocumentPlanning: function (req, res, next) {
         doc.saveAsync(function (err, doc, numAffected) {
             if (err) {
                 console.error(err);
-            }
-            else if (numAffected == 1) {
+            } else {
                 console.log('[ API ] postUser :: User Created with ID: ' + doc._id);
 				res.send( { status : 200 } );
             }
         });
-
+        
     },
 
 	updateUser: function(req, res, next) {
@@ -1695,7 +1691,7 @@ getDocumentPlanning: function (req, res, next) {
             if (err) {
                 console.error(err);
             }
-            else if (numAffected == 1) {
+            else {
 
                 console.log('[ API ] role vet created');
 				//res.send( { status : 200 } );
@@ -1707,7 +1703,7 @@ getDocumentPlanning: function (req, res, next) {
             if (err) {
                 console.error(err);
             }
-            else if (numAffected == 1) {
+            else {
                 console.log('[ API ] role site created');
 				//res.send( { status : 200 } );
             }
@@ -1804,17 +1800,15 @@ getDocumentPlanning: function (req, res, next) {
 
         item.saveAsync(function (err, note, numAffected) {
             if (err) {
+                console.log ('[ API ] :: createPartner error.');
                 console.error(err);
-            }
-            else if (numAffected == 1) {
+            } else {
                 console.log("saved!");
                 console.log('[ API ] createPartner :: New Partner created with _id: ' + item._id);
                 console.log(item);
                 //send note ID so it can be referenced without page refresh
                 //res.send( { status : 200, _id: item._id } );
                 res.locals.status = '200';
-            } else {
-                console.log ('[ API ] :: createPartner error.');
             }
             next();
         });
@@ -2241,19 +2235,16 @@ getDocumentPlanning: function (req, res, next) {
 					note.vetAgent = results.user.contact_info.user_name.user_first + " " + results.user.contact_info.user_name.user_last;
 					console.log(note.vetAgent);
 
-					note.saveAsync(function (err, note, numAffected) {
-						if (err) {
-							console.error(err);
-						}
-						else if (numAffected == 1) {
+					note.saveAsync(function (err, note) {
+						if (note && note._id) {
 							console.log('[ API ] postVettingNote :: Note created with _id: ' + note._id);
 							//send note ID so it can be referenced without page refresh
 							res.send( { status : 200, noteId: note._id, vetAgent: note.vetAgent } );
+						} else {
+                            console.error(err);
+                            res.send( { status : 500, message: 'Error: Cannot create note. Please retry...' } );
 						}
 					})
-
-
-
 				}
 			})
             .catch(function(err) {
@@ -2286,18 +2277,18 @@ getDocumentPlanning: function (req, res, next) {
 					console.log(note.projectPlanner);
 
 					note.saveAsync(function (err, note, numAffected) {
-						if (err) {
-							console.error(err);
-						}
-						else if (numAffected == 1) {
+                        console.log({ err });
+                        console.log({ note });
+                        console.log({ numAffected });
+						if (note && note._id) {
 							console.log('[ API ] postVettingNote :: Note created with _id: ' + note._id);
 							//send note ID so it can be referenced without page refresh
 							res.send( { status : 200, noteId: note._id, projectPlanner: note.projectPlanner } );
+						} else {
+                            console.error(err);
+                            res.send( { status : 500, message: 'Could not save note. Please try again...'} );
 						}
 					})
-
-
-
 				}
 			})
             .catch(function(err) {
@@ -2317,8 +2308,7 @@ getDocumentPlanning: function (req, res, next) {
         item.saveAsync(function (err, note, numAffected) {
             if (err) {
                 console.error(err);
-            }
-            else if (numAffected == 1) {
+            } else {
 				console.log("saved!");
                 console.log('[ API ] add Work Item :: Note created with _id: ' + item._id);
                 //send note ID so it can be referenced without page refresh
@@ -3149,11 +3139,10 @@ getDocumentPlanning: function (req, res, next) {
 								if (err) {
 									console.error(err);
 								}
-								else if (numAffected == 1) {
+								else {
 									console.log('[ API ] postDocument :: finPackage created with _id: ' + finance._id);
 									console.log('[ API ] postDocument :: finPackage references document package _id: ' + finance.appID);
 									//res.send( { status : 200 } );
-
 								}
 							});
 

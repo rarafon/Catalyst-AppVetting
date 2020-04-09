@@ -24,15 +24,15 @@
                             Handle-its: To Be Assigned <div style="float: right;">{{handle.length}}</div>
                         </a>
                     </h5>
-                                <!--           <div id="year_select">
-                                          <form class="display_year">
-                                            <select name="year" id="displayYear">
-                                              {{#each year}}
-                                              <option value={{yearValue}}>{{yearValue}}</option>
-                                              {{/each}}
-                                            </select>
-                                          </form>
-                                          </div> -->
+                    <!--           <div id="year_select">
+                                <form class="display_year">
+                                <select name="year" id="displayYear">
+                                    {{#each year}}
+                                    <option value={{yearValue}}>{{yearValue}}</option>
+                                    {{/each}}
+                                </select>
+                                </form>
+                                </div> -->
             
                 </div>
                 <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -62,7 +62,7 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                 <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                 <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                 <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                 <!--    <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
                                 </tr>
@@ -111,7 +111,7 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                   <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                   <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
@@ -122,51 +122,6 @@
                 </div>
             </div>
         </div>
-
-
-<!--        <div role="tablist" aria-multiselectable="true">
-            <div class="card">
-                <div class="card-header bg-pink" role="tab" id="headingTwo">
-
-                    <h5 class="mb-0">
-                        <a data-toggle="collapse" href="#collapseThree" aria-expanded="true" aria-controls="collapseTwo" class="text-white">
-                            MORE TABS: <div style="float: right;">{{completed.length}}</div>
-                        </a>
-                    </h5>
-
-                </div>
-                <div id="collapseThree" class="collapse in" role="tabpanel" aria-labelledby="headingTwo">
-                    <div class="card-block">
-                        <table class="table table-sm table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-2">Address</th>
-                                <th class="col-md-2">Crew-Chief</th>
-                                <th class="col-md-2">Proj. Advocate</th>
-                                <th class="col-md-2">SH</th>
-                                <th class="col-md-2">Partners</th>
-                                <th class="col-md-2">Appl. Status</th>
-                <th class="col-md-2">Start Date</th>
-                <th class="col-md-2">Application Number</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {{#each completed}}
-                                <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
-                                    <td class="col-md-2"><a href="http://maps.google.com/?q={{application.address.line_1}}, {{application.address.line_2}}{{#if_not_eq application.address.line_2 ''}}, {{/if_not_eq}}{{application.address.city}}, {{application.address.state}}, {{application.address.zip}}" target="_blank">{{application.address.city}}, {{application.address.state}}</a></td>
-                                    <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                  <td class="col-md-2">{{project.project_start}}</td>
-                  <td class="col-md-2">{{app_name}}</td>
-                                </tr>
-                            {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 
 
         <div role="tablist" aria-multiselectable="true">
@@ -184,18 +139,17 @@
                     <div class="card-block">
                         <table class="table table-sm table-bordered table-hover orderTable2">
                             <thead>
-                                      <tr>
+                            <tr>
                                 <th onclick="orderTable('orderTable2', 0)" class="col-md-2 cell-overflow">Name</th>
                                 <th onclick="orderTable('orderTable2', 1)" class="col-md-2 cell-overflow">Address</th>
                                 <!-- <th class="col-md-2">Last Edit</th> -->
                                 <th onclick="orderTable('orderTable2', 2)" class="col-md-2 cell-overflow">Appl. Status</th>
-                <th onclick="orderTable('orderTable2', 3)" class="col-md-1">CC</th>
-                <th onclick="orderTable('orderTable2', 4)" class="col-md-1">PA</th>
-                <th onclick="orderTable('orderTable2', 5)" class="col-md-1">SH</th>
-                <th onclick="orderTable('orderTable2', 6)" class="col-md-1 cell-overflow">Start Date</th>
-                <th onclick="orderTable('orderTable2', 7)" class="col-md-2 cell-overflow">Partners</th>
-                <!-- <th class="col-md-1">#</th>   -->           
-                 
+                                <th onclick="orderTable('orderTable2', 3)" class="col-md-1">CC</th>
+                                <th onclick="orderTable('orderTable2', 4)" class="col-md-1">PA</th>
+                                <th onclick="orderTable('orderTable2', 5)" class="col-md-1">SH</th>
+                                <th onclick="orderTable('orderTable2', 6)" class="col-md-1 cell-overflow">Start Date</th>
+                                <th onclick="orderTable('orderTable2', 7)" class="col-md-2 cell-overflow">Partners</th>
+                                <!-- <th class="col-md-1">#</th>   -->
                             </tr>
                             </thead>
                             <tbody>
@@ -208,7 +162,7 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                   <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                   <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
@@ -260,7 +214,7 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                   <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                   <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
@@ -312,7 +266,7 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                   <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                    <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
                                 </tr>
@@ -374,56 +328,12 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                   <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                 <!-- <td class="col-md-1 cell-overflow">{{app_name}}</td> -->
                                 </tr>
                             {{/each}}
                 </div>
-<!--                 <div class="compH" style="display: none;">
-                        {{#each handleCompleted}}
-                                <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
-                                    <td class="col-md-2">{{updated}}</td>
-                                    <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                    <td class="col-md-2">{{project.project_start}}</td>
-                                    <td class="col-md-2">{{app_name}}</td>
-                                </tr>
-                        {{/each}}
-                </div>
-
-                <div class="compP" style="display: none;">
-                        {{#each projectCompleted}}
-                                <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
-                                    <td class="col-md-2">{{updated}}</td>
-                                    <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                    <td class="col-md-2">{{project.project_start}}</td>
-                                    <td class="col-md-2">{{app_name}}</td>
-                                </tr>
-                        {{/each}}
-                </div>
-
-                <div class="compStacked" style="display: none !important;">
-                        {{#each projectCompleted}}
-                                <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
-                                    <td class="col-md-2">{{updated}}</td>
-                                    <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                    <td class="col-md-2">{{project.project_start}}</td>
-                                    <td class="col-md-2">{{app_name}}</td>
-                                </tr>
-                        {{/each}}
-                        {{#each handleCompleted}}
-                                <tr class="clickable-row" data-href="/projectview/{{_id}}">
-                                    <td class="col-md-2"><a href="/projectview/{{_id}}">{{#if application.name.preferred}}{{application.name.preferred}} {{application.name.last}}{{else}}{{application.name.first}} {{application.name.last}}{{/if}}</a></td>
-                                    <td class="col-md-2">{{updated}}</td>
-                                    <td class="col-md-2"><span class="text-danger">{{status}}</span></td>
-                                    <td class="col-md-2">{{project.project_start}}</td>
-                                    <td class="col-md-2">{{app_name}}</td>
-                                </tr>
-                        {{/each}}
-                </div> -->
                             </tbody>
                         </table>
                     </div>
@@ -481,7 +391,7 @@
                                      <td title="{{project.crew_chief}}" class="col-md-1 cell-overflow">{{project.crew_chief}}&nbsp;</td>
                   <td title="{{project.project_advocate}}" class="col-md-1 cell-overflow">{{project.project_advocate}}&nbsp;</td>
                    <td title="{{project.site_host}}" class="col-md-1 cell-overflow">{{project.site_host}}&nbsp;</td>
-                  <td class="col-md-1 cell-overflow">{{project.project_start}}&nbsp;</td>
+                  <td class="col-md-1 cell-overflow" fullDate="{{project.project_start_full_date}}">{{project.project_start}}&nbsp;</td>
                   <td class="col-md-2 cell-overflow">{{parts}}&nbsp;</td>
                <!--    <td class="col-md-1 cell-overflow">{{app_name}}</td>  -->
                                 </tr>
@@ -499,6 +409,7 @@
     </div>
 </div>
 <script src="/javascript/searchYear.js" type="text/javascript"></script>
+<script src="/javascript/orderTable.js" type="text/javascript"></script>
 <!-- Make entire table rows clickable! -->
 <script>
     jQuery(document).ready(function($) {
@@ -539,53 +450,7 @@
         }
     }
 
-
-// SORT TABLE CODE --------------------------------------------------
-function orderTable(inTableClass, colmn) {
-    var switchCnt = 0, rows, reverse;
-
-    var curr = "ascending";
-    var thisTable = document.getElementsByClassName(inTableClass)[0];
-    var switching = true;
-    
-    var i, x, y;
-    while (switching) {
-        switching = false;
-        rows = thisTable.getElementsByTagName("tr");
-        
-        for (i = 1; i < (rows.length - 1); i++) {
-            reverse = false;
-            x = rows[i].getElementsByTagName("td")[colmn];
-            y = rows[i + 1].getElementsByTagName("td")[colmn];
-            if (curr == "ascending") {
-                if (x.innerText.toLowerCase() > y.innerText.toLowerCase()) {
-                    reverse = true;
-                    break;
-                }
-            } else if (curr == "descending") {
-                if (x.innerText.toLowerCase() < y.innerText.toLowerCase()) {
-                    reverse = true;
-                    break;
-                }
-            }
-        }
-
-        if (reverse) {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-            switchCnt++;      
-        } else {
-            if (switchCnt == 0 && curr == "ascending") {
-            curr = "descending";
-            switching = true;
-            }
-        }
-    }
-}
-// -------------------------------------------------- END SORT TABLE CODE 
-
 </script>
-
 <style type="text/css">
 .cell-overflow {
     white-space: nowrap;

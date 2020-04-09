@@ -7,7 +7,6 @@ var HighlightPackage = require('../models/highlightPackage');
 var VettingNotePackage = require('../models/vettingNotePackage');
 var api = require('../controllers/api');
 var User = require('../models/userPackage');
-var config = require('../config');
 var fs = require('fs');
 
 var Promise = require('bluebird'); // Import promise engine
@@ -591,7 +590,7 @@ function formatDate(element)
 	var appDay = ("00" + appDate.getDate()).slice(-2);
 	var appMon = ("00" + (appDate.getMonth()+1)).slice(-2);
 	element.project.project_start = appMon + "/" + appDay + "/" + appYear;
-
+    element.project.project_start_full_date = appYear + "/" + appMon + "/" + appDay;
 	}
     return element;
 }
