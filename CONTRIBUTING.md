@@ -1,3 +1,117 @@
+
+# Installing Catalyst AppVetting Software 
+## for Local Testing on a Windows Machine
+(Updated 04/11/2020)
+
+**This guide will help you:**
+- **Install Ubuntu Linux on your Windows Machine**
+- **Do some pre-install checks of previously installed components**
+- **Install the Catalyst software**
+- **Set up the VS Code IDE to access the Catalyst software in the Linux environment**
+- **Other dev notes**
+
+## Installing Linux
+### Install the Windows Subsystem for Linux (WSL)
+Before you can install Ubuntu (linux) on your Windows machine, you must let Windows know you want to install a linux instance.  To do this:
+- Open PowerShell as Administrator and run:
+```
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+```
+- Restart your computer when prompted.
+
+
+### Install Ubuntu: 
+
+- Open the windows store
+- Download and install Ubuntu ^18
+
+
+## Pre-installation Checklist
+
+
+### Make sure any prior local installations are gone
+Open Ubuntu
+```
+cd /usr/src/ 
+ls
+```
+- Make sure the src folder does not contain the following folders:
+  - Catalyst-AppVetting
+  - db 
+  - db_backups
+  - logs
+- IF they exist, delete them.
+
+### Shut off any MongoDB instances
+(This step is necessary if you have ever installed any instances of MongoDB on your computer, and will not hurt if you haven't.)
+- Open windows powershell or equivalent and type 
+```
+net stop mongodb
+```
+This should shut off any windows instances of mongoDB. We should be good to go!
+
+## Installing the Catalyst Software
+### Get the installation started:
+From the linux command line, run:
+```
+curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -
+```
+The above line finds the installation script (init-curl.sh) from the develop branch of our gitHub repo, and executes it locally.  Enjoy the log files as they wander down your linux console.  **This process will take a few minutes.**  During this process, you may encounter firewall issues.  If they come from Ubuntu, you should be safe.
+
+### Configure the .env File
+Installation will pause in .vim to allow you to configure a file called .env.
+This .env file contains all the variable configuration data necessary to not only install locally (which we are doing), but also in AWS.
+
+The following .env setup will allow you to download some starter data for your local instance.  Any data changes you make will only be local changes, and will not affect any other remote data sets.
+
+*****************INSERT .env file text here *********************************
+```
+AWS_ACCESS_KEY_ID:  
+AWS_SECRET_ACCESS_KEY:  
+AWS_S3_RESTORE_BUCKET: cat-osu-apr2020 
+AWS_S3_BACKUP_BUCKET: cat-osu-apr2020 
+AWS_DEFAULT_REGION: us-west-2 
+AVT_GIT_BRANCH: develop-osu 
+AVT_RESTORE_FROM_BACKUP: yes 
+AVT_RESTORE_FROM_BACKUP_FOLDER: latest
+AVT_SERVER_PORT: 80 
+CATALYST_USER_EMAIL: osu@user.com
+```
+2:12 PM
+
+Once you finish, write quit `:wq)` and verify your settings are correct.  Type 'Y' at the following prompt to continue the installation.
+
+### 
+To access and test the software once it is running, go to a browser and run
+```
+localhost:8000
+```
+*Note: If you changed the port number in the .env file, you'll need that port number rather than :8000.*
+
+## Using VS Code as your IDE:
+
+### Install Remote - WSL Extension
+
+If you wish to use VS Code as your IDE on your Windows machine, it is helpful to install the Windows Subsystem for Linux **Remote - WSL extension** in VS Code to access the files.  Now, if your VS Code is updated to the latest version, it SHOULD detect that you have activated WSL. (from the first step in this document), and give you a helper box in the lower right corner to install "Remote - WSL."  Follow the instructions to install the extension.
+
+If you don't get the helper box, you can go to the Welcome Screen, click on Tools and Languages, and search for WSL in the Extensions Marketplace (on the left), and the "Remote - WSL" extension should be at or near the top.  Install it.
+
+### Using the WSL Extension to Access Catalyst Files
+
+Once your Remote WSL Extension is installed and active, the bottom left corner goes green.  Click it, and open a new window (if multiple distros, then choose the one you installed Catalyst to).  Then in the new window, open a new folder, and type /usr/src/ and click okay - you're all set - manipulate code in the Catalyst-Appvetting folder, and you'll see changes in localhost:8000.  
+
+## Other Dev Notes
+### Using GitHub
+
+The catalyst production code is located at [github.com/dandahle/Catalyst-AppVetting](github.com/dandahle/Catalyst-AppVetting). Please follow best practices when forking and branching.  Pull requests to the main develop branch will need to be approved.
+
+Please also be sure to merge the upstream branch into your own (and fixing any merge conflicts) before submitting any pull requests.
+
+
+
+
+
+# ----------------- OLD  INSTRUCTIONS   AS   OF  04/11/2020 --------------------------
 # Volunteer Developer Onboarding Information
 
 ### Thank You
