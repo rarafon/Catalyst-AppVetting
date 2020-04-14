@@ -1,6 +1,6 @@
 #! /bin/bash
 # This script can be run as following:
-#   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -
+#   export AVT_GIT_BRANCH=develop && curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/${AVT_GIT_BRANCH}/script/init-curl.sh | sudo bash -
 
 
 CONTINUE=$1
@@ -22,6 +22,7 @@ case "$CONTINUE" in
           sleep 3
 
           # Open editor to modify environment variables
+          [ -f ".env" ] || mv .env.template .env
           chmod 777 .env
           vim .env
 

@@ -1,6 +1,6 @@
 #! /bin/bash
 # This script can be run as following:
-#   curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -
+#   export AVT_GIT_BRANCH=develop && curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/${AVT_GIT_BRANCH}/script/init-curl.sh | sudo bash -
 
 set -e 
 
@@ -18,5 +18,5 @@ fi
 
 git clone https://github.com/dandahle/Catalyst-AppVetting.git
 cd Catalyst-AppVetting/
-git checkout develop
+git checkout ${AVT_GIT_BRANCH}
 ./script/init.sh

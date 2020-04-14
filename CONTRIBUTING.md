@@ -12,7 +12,7 @@ As you work through this process, suggestions are always welcome.  [Email Mike](
 
 #### Install Necessary Tools:
 **New: Fully automated setup if you are running Ubuntu 18.04:** You can run the following command from your terminal that will guide you through the installation and setup of the tool. This requires running the following command:
-`curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/develop/script/init-curl.sh | sudo bash -`
+`export AVT_GIT_BRANCH=develop && curl https://raw.githubusercontent.com/dandahle/Catalyst-AppVetting/${AVT_GIT_BRANCH}/script/init-curl.sh | sudo bash -`
 
 **IDE/Text Editor:** This web application is written entirely in javascript and runs in an internet browser. **[Notepad++](https://notepad-plus-plus.org/)** works nicely, but if you own IntelliJ, ATOM, etc...go for it.
 
