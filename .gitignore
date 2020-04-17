@@ -1,6 +1,9 @@
 # Added in 2020
 .env
 
+# Ignore Visual Studio Files in .vs directory
+.vs/*
+
 # Added by kohn-catalyst
 rest-data/*
 rest-logs/*
