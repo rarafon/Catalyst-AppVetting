@@ -20,6 +20,7 @@ function create_user_context(req) {
     return {
       // user_role: result.user.user_role,
       user_email: result.contact_info.user_email,
+      user_roles: result.user_roles,
       user: true,
       carenetwork: true
     }
