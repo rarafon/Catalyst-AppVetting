@@ -26,6 +26,21 @@ router.get('/application', function(req, res){
   );
 });
 
+router.get('/applications', function(req, res){
+  helper.create_user_context(req).then(
+    (context) => {
+      CareApplicant.find({}, function(err, applicants) {
+        var a = [];
+        applicants.forEach(function(applicant) {
+          a.push(applicant._id);
+        });
+        context.applicants = a;
+        res.render("care/applications", context);
+      });
+    }
+  );
+});
+
 
 router.post('/application', async function(req, res) {
   if (application_service.check_care_application(req.body)) {
