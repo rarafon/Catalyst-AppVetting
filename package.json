@@ -7,13 +7,15 @@
     "start": "node ./bin/www",
     "stop": "pkill --signal SIGINT node",
     "disown": "nohup npm start &",
-    "pull": "git pull --no-edit"
+    "pull": "git pull --no-edit",
+    "test": "mocha"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.4.1",
+    "chai": "^4.2.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.5",
     "debug": "^2.2.0",
@@ -25,6 +27,7 @@
     "hbs": "^4.1.1",
     "iconv-lite": "^0.4.13",
     "jquery": "^3.4.0",
+    "mocha": "^7.1.1",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
     "morgan": "^1.10.0",
