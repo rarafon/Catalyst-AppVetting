@@ -2,28 +2,29 @@
  * Helper Functions for Care Network
  */
 
-var express = require('express');
 // var db = require('../mongoose/connection');
 var User = require('../../models/userPackage');
 
 
 // Uses Promises to retrieve user info. Returns context object
 function create_user_context(req) {
-  var userID = req.user._id.toString();
-
   var myPromise = new Promise((resolve, reject) => {
+    var result = undefined;
+    if(req.isAuthenticated()) {
+      var userID = req.user._id.toString();
       var result = User.findOne({"_id": userID}).lean();
-      resolve(result);
-    });
+    }
+    resolve(result);
+  });
 
   return myPromise.then( (result) => {
-    return {
-      // user_role: result.user.user_role,
-      user_email: result.contact_info.user_email,
-      user_roles: result.user_roles,
-      user: true,
-      carenetwork: true
+    var context = {carenetwork: true};
+    if (result) {
+      context.user_email = result.contact_info.user_email;
+      context.user_roles = result.user_roles;
+      context.user = true;
     }
+    return context;
   });
 }
 
@@ -33,7 +34,6 @@ function isLoggedIn(req, res, next) {
     return next();
   }
   else {
-    console.log("no user id");
     res.redirect('/user/login');
   }
 }
