@@ -26,21 +26,25 @@ router.get('/application', function(req, res){
   );
 });
 
-router.get('/applications', function(req, res){
+router.get('/view_applications', function(req, res){
   helper.create_user_context(req).then(
     (context) => {
+      context.applicants = [];
+      var app_obj;
       CareApplicant.find({}, function(err, applicants) {
         var a = [];
         applicants.forEach(function(applicant) {
-          a.push(applicant._id);
+          app_obj = {};
+          app_obj.id = applicant._id
+          app_obj.link = "./view_application/" + applicant._id;
+          context.applicants.push(app_obj);
         });
-        context.applicants = a;
+        
         res.render("care/applications", context);
       });
     }
   );
 });
-
 
 router.post('/application', async function(req, res) {
   if (application_service.check_care_application(req.body)) {
