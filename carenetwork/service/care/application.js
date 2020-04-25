@@ -7,7 +7,6 @@ var CareContact = require('../../models/care/careContact');
 // Check that all required data was provided using fields obj
 // into body of request
 function check_care_application(req_body) {
-  console.log(req_body);
   for (field in fields_map) {
     if (fields_map[field]["required"]) {
       if (req_body[field] == undefined || req_body[field].length <= 0){
@@ -15,10 +14,21 @@ function check_care_application(req_body) {
         console.log(field)
         return false;
       }
-        
     }
   }
   return true;
+}
+
+async function get_applicant(application_id) {
+  var applicant = await CareApplicant.findById(application_id)
+    .lean().exec();
+  var contact_ids = applicant.application.contacts;
+
+  var contacts = await CareContact.find().where('_id').in(contact_ids)
+    .lean().exec();
+  
+  applicant.application.contacts = contacts;
+  return applicant;
 }
 
 async function create_care_applicant(req_body) {
@@ -180,3 +190,4 @@ var fields_map = {
 
 module.exports.check_care_application = check_care_application;
 module.exports.create_care_applicant = create_care_applicant;
+module.exports.get_applicant = get_applicant;
