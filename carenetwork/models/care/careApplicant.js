@@ -26,7 +26,7 @@ const careApplicantSchema = new mongoose.Schema({
     }],
 
     health_issues: String,
-    help_requested: String,
+    help_request: String,
     home_occupants: String,
     refer_text: String,
 
