@@ -1,0 +1,187 @@
+<div id="applicant_id_div" hidden>{{application_id}}</div>
+
+<form action="UPDATE">
+  <div class="form-group row">
+    <label for="input-first-name" class="col-sm-2 col-form-label ">
+      First Name</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-first-name" name="first_name"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-middle-name" class="col-sm-2 col-form-label ">
+      Last Name</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control "
+        id="input-middle-name" name="middle_name"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-last-name" class="col-sm-2 col-form-label ">
+      Last Name</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-last-name" name="last_name"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-phone" class="col-sm-2 col-form-label ">
+      Phone Number</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-phone" name="phone"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-email" class="col-sm-2 col-form-label ">
+      Email</label>
+    <div class="col-sm-3">
+      <input type="email" class="form-control " 
+        id="input-email" name="email"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-dob" class="col-sm-2 col-form-label ">
+      Date of Birth</label>
+    <div class="col-sm-3">
+      <input type="date" class="form-control " 
+        id="input-dob" name="dob"> 
+    </div>
+  </div>
+  <fieldset class="form-row row">
+      <label class="col-sm-2 col-form-label ">
+        Marital Status</label>
+      <div class="custom-control custom-radio custom-control-line">
+        <input type="radio" id="marital-radio-1" name="marital_status" 
+          class="form-check-input" value="married" required>
+        <label class="custom-control-label" for="marital-radio-1">
+          Married</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-line">
+        <input type="radio" id="marital-radio-2" name="marital_status" 
+          class="form-check-input" value="single">
+        <label class="custom-control-label" for="marital-radio-2">
+          Single</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-line">
+        <input type="radio" id="marital-radio-3" name="marital_status" 
+          class="form-check-input" value="widow">
+        <label class="custom-control-label" for="marital-radio-3">
+          Widow</label>
+      </div>
+  </fieldset>
+
+  <div class="form-group row">
+    <label for="input-line-1" class="col-sm-2 col-form-label ">
+      Address 1</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-line-1" name="line_1"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-line-2" class="col-sm-2 col-form-label ">
+      Address 2</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-line-2" name="line_2"> 
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="input-city" class="col-sm-2 col-form-label ">
+      City</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-city" name="city"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-state" class="col-sm-2 col-form-label ">
+      State</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-state" name="state"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-zip" class="col-sm-2 col-form-label ">
+      Zip</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-zip" name="zip"> 
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="input-contact-name" class="col-sm-2 col-form-label ">
+      Contact Name</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-contact-name" name="contact_name"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-contact-relationship" class="col-sm-2 col-form-label ">
+      Contact Rel.</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-contact-relationship" name="contact_relationship"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-contact-phone" class="col-sm-2 col-form-label ">
+      Contact Phone</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        input="input-contact-phone" name="contact_phone"> 
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="input-contact-email" class="col-sm-2 col-form-label ">
+      Contact Email</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control " 
+        id="input-contact-email" name="contact_email"> 
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="form-group col-md-6">
+      <label for="input-symptoms" class="col-form-label ">
+        Health Issues</label>
+      <textarea class="form-control" id="input-symptoms" rows="3"
+        name="health_issues"></textarea >
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="form-group col-md-6">
+      <label for="input-others-text">Others in Home</label>
+      <textarea class="form-control" id="input-others-text" rows="5" 
+        name="home_occupants"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="form-group col-md-6">
+      <label for="input-help-text">Help Requested</label>
+      <textarea class="form-control" id="input-help-text" rows="5" 
+        name="help_request"></textarea>
+    </div>
+  </div>
+
+  <div class="form-row row">
+    <div class="form-group col-md-6">
+      <label for="input-hear">How Did You Hear About Catalyst Care Network?</label>
+      <input type="text" class="form-control" id="input-hear" 
+        name="refer_text">
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Submit</button>
+  <button class="btn btn-secondary" type="button">Reset</button>
+</form>
+
+<script type="text/javascript" src="/javascript/care/application_page.js"></script>
