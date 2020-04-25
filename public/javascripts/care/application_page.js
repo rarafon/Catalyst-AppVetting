@@ -1,65 +1,46 @@
 window.onload = function() {
-  $("#applicant-form").on("submit", function(e) {
-    e.preventDefault();
+  var app_id = $("#applicant_id_div").text();
+  console.log("HI");
 
-    if (!application.check_inputs()) {
-      window.alert("Some of the required fields are missing. Please look at the red box");
-      return;
-    }
-    if (!application.check_marital()) {
-      window.alert("Please select an option for the marital status");
-      return;
-    }
-    if (!application.check_waiver()) {
-      window.alert("TO continue, please agree with the release");
-      return;
-    }
-    
-
-    var $form = $(this);
-
-    $.ajax({
-      type: "POST",
-      url: $form.attr('action'),
-      data: $form.serialize(),
+  $.ajax({
+    type: "GET",
+      url: "/carenetwork/application/" + app_id,
       success: function(data, textStatus, xhr) {
         if (xhr.status == 200) {
-          $form.trigger('reset'); // Reset form
-          window.alert("Your form was submitted successfully");
+          console.log(data);
+
+          fill_app_data(data)
         }
       },
       error: function(xhr, ajaxOptions, err) {
-        if (xhr.status == 500) {
-          window.alert("A server error was encountered. Please contact someone in Catalyst");
-        } else if (xhr.status == 404) {
-          window.alert("One of the fields was missing. Please check again.");
-        }
       }
-    });
   });
 };
 
-// Check the form, in case html required doesn't work
-var application = {
-  check_waiver() {
-    return ($('input[name=waiver-radio]:checked').val() == "1");
-  },
-  check_inputs() {
-    var filled_out = true;
-
-    function check_element(index, element) {
-      if ($(this).val().length <= 0) {
-        $(this).css("border-color", "red");
-        filled_out = false;
+// Fill out the inputs with data
+function fill_app_data(data) {
+  var field,
+      app_data = data.application;
+  for (field in app_data) {
+    if (field == "address") { // Set address
+      for (field in app_data.address) {
+        $(`input[name=${field}]`).val(app_data.address[field]);
       }
+    } else if (field == "contacts") {
+      for (field in app_data.contacts[0]) {
+        $(`input[name=contact_${field}]`).val(app_data.contacts[0][field]);
+      }
+    } else if (field == "dob") {
+      var regex = /(\d{4}-\d{2}-\d{2})/g
+      var result = app_data[field].match(regex);
+      if (result)
+        $(`input[name=${field}]`).val(result[0]);
+    } else if (field == "marital_status") {
+      $(`:radio[value=${app_data[field]}]`,).prop('checked', true);
+    } else {
+      $(`input[name=${field}]`, ).val(app_data[field]);
+      // Set text area for some fields
+      $(`textarea[name=${field}]`, ).val(app_data[field]);
     }
-    
-    $('input[notrequired]').each(check_element);
-    $('textarea[notrequired]').each(check_element);
-    $('radio[notrequired]').each(check_element);
-    return filled_out;
-  },
-  check_marital() {
-    return ($('input[name=marital_status]:checked').val() !== undefined);
-  },
-};
+  }
+}
