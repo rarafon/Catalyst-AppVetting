@@ -5,7 +5,7 @@ var router = express.Router();
 var helper = require("../../service/helper");
 
 var CareApplicant = require('../../models/care/careApplicant');
-// var CareContact = require('../../models/care/careContact');
+var CareContact = require('../../models/care/careContact');
 
 var application_service = require('../../service/care/application.js');
 
@@ -18,10 +18,34 @@ var application_service = require('../../service/care/application.js');
   );  
 });
 
+router.get('/view_application/:application_id',  function(req, res){
+  helper.create_user_context(req).then(
+    async (context) => {
+      var application_id = req.params.application_id
+      context.application_id = application_id;
+      var application = await application_service.get_applicant(application_id);
+      console.log(application);
+      res.render("care/application_page", context);
+    }
+  );
+});
+
+router.get('/application/:application_id',  function(req, res){
+  helper.create_user_context(req).then(
+    async (context) => {
+      var application_id = req.params.application_id
+      context.application_id = application_id;
+      var application = await application_service.get_applicant(application_id);
+      res.status(200).json(application);
+    }
+  );
+});
+
+
 router.get('/application', function(req, res){
   helper.create_user_context(req).then(
     (context) => {
-      res.render("care/application", context);
+      res.render("care/application_form", context);
     }
   );
 });
@@ -32,7 +56,6 @@ router.get('/view_applications', function(req, res){
       context.applicants = [];
       var app_obj;
       CareApplicant.find({}, function(err, applicants) {
-        var a = [];
         applicants.forEach(function(applicant) {
           app_obj = {};
           app_obj.id = applicant._id
