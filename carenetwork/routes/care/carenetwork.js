@@ -5,7 +5,8 @@ var router = express.Router();
 var helper = require("../../service/helper");
 
 var CareApplicant = require('../../models/care/careApplicant');
-var CareContact = require('../../models/care/careContact');
+var CareService = require('../../models/care/careService');
+// var CareContact = require('../../models/care/careContact');
 
 var application_service = require('../../service/care/application.js');
 
@@ -66,7 +67,8 @@ router.get('/view_applications', function(req, res){
         applicants.forEach(function(applicant) {
           app_obj = {};
           app_obj.id = applicant._id
-          app_obj.link = "./view_application/" + applicant._id;
+          app_obj.application_link = "./view_application/" + applicant._id;
+          app_obj.services_link = "./view_services/" + applicant._id;
           context.applicants.push(app_obj);
         });
         
@@ -84,10 +86,26 @@ router.post('/application', async function(req, res) {
     res.status(404).end(); // Missing fields
 });
 
-router.get('/view_apps', function(req, res){
+// Services Page
+router.get('/view_services/:applicant_id', function(req, res) {
   helper.create_user_context(req).then(
     (context) => {
-      res.render("care/application", context);
+      var applicant_id = req.params.applicant_id
+      context.applicant_id = applicant_id;
+      
+      context.add_service_url ="/carenetwork/add_service/" + applicant_id;
+      res.render("care/services_page.hbs", context);
+    }
+  );
+});
+
+// Add Service Page
+router.get('/add_service/:applicant_id', function(req, res) {
+  helper.create_user_context(req).then(
+    (context) => {
+      var applicant_id = req.params.applicant_id
+      context.applicant_id = applicant_id;
+      res.render("care/add_service.hbs", context);
     }
   );
 });

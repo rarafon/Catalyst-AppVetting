@@ -1,0 +1,26 @@
+<form>
+  <input id="applicant_id_div" type="hidden" name="applicant" value={{applicant_id}}>
+
+  <div class="form-row row">
+    <div class="form-group col-md-3">
+      <label for="worker-select">Date of Birth</label>
+      <select class="form-control" id="worker-select" name="care_worker"></select>
+    </div>
+  </div>
+
+  <div class="form-row row">
+    <div class="form-group col-md-3">
+      <label for="service-date">Service Date</label>
+      <input type="date" class="form-control" id="service-date" 
+        name="service_date" required>
+    </div>
+  </div>
+  
+  <div class="form-row row">
+    <div class="form-group col-md-6">
+      <label for="note-input">Note</label>
+      <textarea class="form-control" id="note-input" rows="8" 
+        name="note"></textarea>
+    </div>
+  </div>
+</form>
