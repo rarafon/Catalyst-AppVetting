@@ -38,6 +38,12 @@ const careApplicantSchema = new mongoose.Schema({
     signature: String,
     signature_date: Date,
   },
+  service: [{
+    type: mongoose.ObjectId,
+    ref: "CareService",
+  }],
+}, {
+  timestamps: true, // Creates createdAt & updatedAt
 });
 
 module.exports = mongoose.model('CareApplicant', careApplicantSchema);
