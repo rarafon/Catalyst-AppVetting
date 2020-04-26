@@ -11,7 +11,7 @@ function check_care_application(req_body) {
     if (fields_map[field]["required"]) {
       if (req_body[field] == undefined || req_body[field].length <= 0){
         console.log("missing");
-        console.log(field)
+        console.log(field);
         return false;
       }
     }
@@ -31,11 +31,47 @@ async function get_applicant(application_id) {
   return applicant;
 }
 
+async function update_application(application_id, req_body) {
+  var field, value, old_value, field_obj, o, 
+    update_status = false;
+
+  var careApplicant = await CareApplicant.findById(application_id).exec();
+    
+  var new_data = {};
+
+  for (field in fields_map) {
+    value = req_body[field];
+    field_obj = fields_map[field];
+
+    if (value == undefined)
+      continue;
+
+    o = careApplicant;
+    
+    // Split path string into array. Used for navigation
+    path_arr = field_obj.path.split("/");
+    for (i=0; i< path_arr.length; i++) {
+      if (i == path_arr.length - 1) {
+        // Update if the values differ
+        if (value != o[path_arr[i]]) {
+          o[path_arr[i]] = value;
+          update_status = true
+        }
+      }
+      else
+        o = o[path_arr[i]];
+    }
+  }
+  if (update_status)
+    await careApplicant.save();
+  return true;
+}
+
 async function create_care_applicant(req_body) {
   var field;
 
-  var careApplicant = new CareApplicant(),
-      careContact = new CareContact();
+  var careApplicant = new CareApplicant();
+      // careContact = new CareContact();
 
   var path_arr, i, value, field_obj;
 
@@ -51,24 +87,24 @@ async function create_care_applicant(req_body) {
     path_arr = field_obj.path.split("/");
 
     var o;
-    if (field_obj.schema == "careApplicant")
+    // if (field_obj.schema == "careApplicant")
       o = careApplicant;
-    else
-      o = careContact
+    // else
+    //   o = careContact
     
     // Navigate through model objects thru path array
     for (i=0; i< path_arr.length; i++) {
       if (i == path_arr.length - 1)
         o[path_arr[i]] = value;
       else
-        o = o[path_arr[i]]
+        o = o[path_arr[i]];
     }
   }
   // Add IDs of each other
-  careApplicant.application.contacts.push(careContact._id);
-  careContact.applicant_id = CareApplicant._id;
+  // careApplicant.application.contacts.push(careContact._id);
+  // careContact.applicant_id = CareApplicant._id;
 
-  await careContact.save()
+  // await careContact.save()
   await careApplicant.save();
   return true
 }
@@ -168,26 +204,27 @@ var fields_map = {
   // Contact Schema
   contact_name: {
     required: true,
-    schema: "careContact",
-    path: "name"
+    schema: "careApplicant",
+    path: "application/contact_name"
   },
   contact_relationship: {
     required: true,
-    schema: "careContact",
-    path: "relationship"
+    schema: "careApplicant",
+    path: "application/contact_relationship"
   },
   contact_phone: {
     required: true,
-    schema: "careContact",
-    path: "phone"
+    schema: "careApplicant",
+    path: "application/contact_phone"
   },
   contact_email: {
     required: false,
-    schema: "careContact",
-    path: "email"
+    schema: "careApplicant",
+    path: "application/contact_email"
   },
 };
 
 module.exports.check_care_application = check_care_application;
 module.exports.create_care_applicant = create_care_applicant;
 module.exports.get_applicant = get_applicant;
+module.exports.update_application = update_application;
