@@ -20,10 +20,15 @@ const careApplicantSchema = new mongoose.Schema({
       zip: String,
     },
 
-    contacts: [{
-      type: mongoose.ObjectId,
-      ref: "careContact",
-    }],
+    contact_name: String,
+    contact_relationship: String,
+    contact_phone: String,
+    contact_email: String,
+
+    // contacts: [{
+    //   type: mongoose.ObjectId,
+    //   ref: "careContact",
+    // }],
 
     health_issues: String,
     help_request: String,
