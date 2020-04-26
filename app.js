@@ -32,6 +32,7 @@ initPassport(passport);
 // Define routes that will be used
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 var routes = require('./routes/index')(passport);
+var report = require('./routes/report')(passport);
 var test = require('./routes/test');
 var view = require('./routes/view')(passport);
 var edit = require('./routes/edit')(passport);
@@ -351,6 +352,7 @@ app.use('/partners', partners);
 app.use('/projectview', projectview);
 app.use('/tasks/', tasks);
 app.use('/leadtime', leadtime);
+app.use('/projectreport', report);
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Server Side Libraries
 // Links to jQuery and Boots strap files
