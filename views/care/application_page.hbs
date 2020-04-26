@@ -1,10 +1,11 @@
 <div id="applicant_id_div" hidden>{{application_id}}</div>
 
-<form action="UPDATE">
+<form id="application-form">
   {{> care_partialform}}
-  
+
   <button class="btn btn-primary" type="submit">Submit</button>
-  <button class="btn btn-secondary" type="button">Reset</button>
+  <button class="btn btn-secondary" type="button" id="form-reset-button">Reset</button>
 </form>
 
+<script type="text/javascript" src="/javascript/care/application_helper.js"></script>
 <script type="text/javascript" src="/javascript/care/application_page.js"></script>

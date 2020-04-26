@@ -1,7 +1,34 @@
 window.onload = function() {
   var app_id = $("#applicant_id_div").text();
-  console.log("HI");
+  console.log(app_id);
 
+  var $form = $("#application-form")
+  
+  $("#form-reset-button").click(event, function() {
+    event.preventDefault();
+    $form[0].reset();
+    form_load_data(app_id);
+  });
+
+  form_load_data(app_id);
+
+  $form.on("submit", function(e) {
+    e.preventDefault();
+    console.log(window.location.href);
+
+    $.ajax({
+      type: "POST",
+      url: window.location.href,
+      data: $form.serialize(),
+      success: function(data, textStatus, xhr) {
+        if (xhr.status == 200) {
+        }
+      }
+    });
+  });
+};
+
+function form_load_data(app_id) {
   $.ajax({
     type: "GET",
       url: "/carenetwork/application/" + app_id,
@@ -15,7 +42,7 @@ window.onload = function() {
       error: function(xhr, ajaxOptions, err) {
       }
   });
-};
+}
 
 // Fill out the inputs with data
 function fill_app_data(data) {
@@ -26,10 +53,10 @@ function fill_app_data(data) {
       for (field in app_data.address) {
         $(`input[name=${field}]`).val(app_data.address[field]);
       }
-    } else if (field == "contacts") {
-      for (field in app_data.contacts[0]) {
-        $(`input[name=contact_${field}]`).val(app_data.contacts[0][field]);
-      }
+    // } else if (field == "contacts") {
+    //   for (field in app_data.contacts[0]) {
+    //     $(`input[name=contact_${field}]`).val(app_data.contacts[0][field]);
+    //   }
     } else if (field == "dob") {
       var regex = /(\d{4}-\d{2}-\d{2})/g
       var result = app_data[field].match(regex);

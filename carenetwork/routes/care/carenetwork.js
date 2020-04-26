@@ -15,19 +15,27 @@ var application_service = require('../../service/care/application.js');
     (context) => {
       res.render("care/index", context);
     }
-  );  
+  );
 });
 
+// View Page for Applicant Data
 router.get('/view_application/:application_id',  function(req, res){
   helper.create_user_context(req).then(
     async (context) => {
       var application_id = req.params.application_id
       context.application_id = application_id;
-      var application = await application_service.get_applicant(application_id);
-      console.log(application);
+      // var application = await application_service.get_applicant(application_id);
       res.render("care/application_page", context);
     }
   );
+});
+
+
+// Edit Applicant Data
+router.post('/view_application/:application_id', async function(req, res) {
+  var application_id = req.params.application_id;
+  await application_service.update_application(application_id, req.body);
+  res.status(200).end();
 });
 
 router.get('/application/:application_id',  function(req, res){
@@ -40,7 +48,6 @@ router.get('/application/:application_id',  function(req, res){
     }
   );
 });
-
 
 router.get('/application', function(req, res){
   helper.create_user_context(req).then(
@@ -72,7 +79,7 @@ router.get('/view_applications', function(req, res){
 router.post('/application', async function(req, res) {
   if (application_service.check_care_application(req.body)) {
       await application_service.create_care_applicant(req.body)
-      res.status(200).end(); // OK creation
+      res.status(201).end(); // OK creation
   } else
     res.status(404).end(); // Missing fields
 });
