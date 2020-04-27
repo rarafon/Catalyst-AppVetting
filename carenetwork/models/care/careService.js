@@ -9,10 +9,6 @@ const careServiceSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     ref: "UserPackage",
   },
-  creation_date: {
-    type: Date,
-    default: Date.now,
-  },
   note: String,
   service_date: Date,
 }, {
