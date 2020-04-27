@@ -38,7 +38,7 @@ const careApplicantSchema = new mongoose.Schema({
     signature: String,
     signature_date: Date,
   },
-  service: [{
+  services: [{
     type: mongoose.ObjectId,
     ref: "CareService",
   }],
