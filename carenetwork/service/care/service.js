@@ -6,6 +6,12 @@ async function get_services(applicant_id) {
   return result;
 }
 
+async function get_services_by_user(user_id) {
+  // var result = await CareService.find({applicant: user_id}).lean().exec();
+  var result = await CareService.find({}).lean().exec();
+  return result;
+}
+
 async function get_service(service_id) {
   var result = await CareService.find({_id: service_id}).lean().exec();
   return result[0];
@@ -45,3 +51,4 @@ module.exports.get_services = get_services;
 module.exports.create_service = create_service;
 module.exports.get_workers = get_workers;
 module.exports.get_service = get_service;
+module.exports.get_services_by_user = get_services_by_user

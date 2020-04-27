@@ -97,6 +97,7 @@ router.get('/view_services/:applicant_id', function(req, res) {
       context.services = await service_service.get_services(applicant_id);
       for (var i=0;i < context.services.length; i++) {
         context.services[i].update_service_url = "/carenetwork/update_service/" + context.services[i]._id;
+        context.services[i].view_service_url = "/carenetwork/view_service/" + context.services[i]._id;
       }
       
       context.add_service_url ="/carenetwork/add_service/" + applicant_id;
@@ -155,6 +156,8 @@ router.get('/service/:service_id', async function(req, res) {
    res.status(200).json(service);
 });
 
+
+// Update Service. Redirects back to view_servicse
 router.post('/update_service/:service_id', async function(req, res) {
   // Get Services
   var service_id = req.params.service_id;
@@ -163,15 +166,40 @@ router.post('/update_service/:service_id', async function(req, res) {
   
   var service = await CareService.findById(service_id).exec();
 
-  console.log(req_body);
-
-
   service.note = req_body.note;
   service.case_worker = req_body.case_worker;
   service.service_date = req_body.service_date;
   service.save();
 
   res.redirect('/carenetwork/view_services/' + service.applicant);
+});
+
+router.get('/view_service/:service_id', async function(req, res) {
+  helper.create_user_context(req).then(
+    async (context) => {
+      var service_id = req.params.service_id;
+
+      context.service_id = service_id;
+
+      res.render("care/service_page.hbs", context);
+    }
+  );
+});
+
+// Services Page
+router.get('/view_services', function(req, res) {
+  helper.create_user_context(req).then(
+    async (context) => {
+      // if (req.user) {
+        // var user_id = req.user._id;
+        var services = await service_service.get_services_by_user();
+
+        context.services = services;
+      // }
+      
+      res.render("care/view_services.hbs", context);
+    }
+  );
 });
 
 module.exports = router;

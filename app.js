@@ -46,6 +46,8 @@ var projectsummary = require('./routes/projectsummary')(passport);
 var partners = require('./routes/partners')(passport);
 var projectview = require('./routes/projectview')(passport);
 
+var care_network = require('./carenetwork/routes/care/carenetwork');
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Init the Express App Engine
@@ -352,7 +354,7 @@ app.use('/projectview', projectview);
 app.use('/tasks/', tasks);
 app.use('/leadtime', leadtime);
 
-app.use('/carenetwork', require('./carenetwork/routes/care/carenetwork'));
+app.use('/carenetwork', care_network);
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Server Side Libraries
 // Links to jQuery and Boots strap files
