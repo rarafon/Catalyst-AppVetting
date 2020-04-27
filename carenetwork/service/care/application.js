@@ -22,12 +22,12 @@ function check_care_application(req_body) {
 async function get_applicant(application_id) {
   var applicant = await CareApplicant.findById(application_id)
     .lean().exec();
-  var contact_ids = applicant.application.contacts;
+  // var contact_ids = applicant.application.contacts;
 
-  var contacts = await CareContact.find().where('_id').in(contact_ids)
-    .lean().exec();
+  // var contacts = await CareContact.find().where('_id').in(contact_ids)
+  //   .lean().exec();
   
-  applicant.application.contacts = contacts;
+  // applicant.application.contacts = contacts;
   return applicant;
 }
 
@@ -201,7 +201,6 @@ var fields_map = {
     schema: "careApplicant",
     path: "application/signature_date"
   },
-  // Contact Schema
   contact_name: {
     required: true,
     schema: "careApplicant",

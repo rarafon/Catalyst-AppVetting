@@ -1,1 +1,51 @@
-{{service_id}}
+<div class="row">
+  <div class="col-sm-6" id="applicant-div">
+    <h1>Applicant</h1>
+    <h2>Contact</h2>
+    <div>Name: {{{application.first_name}}} {{{application.middle_name}}} {{{application.last_name}}}</div>
+    <div>Phone: {{{application.phone}}}</div>
+    <div>Email: {{{application.email}}}</div>
+    <div>Date of Birth: {{{application.dob}}}</div>
+    <div>Marital Status: {{{application.marital_status}}}</div>
+
+    <h2>Address</h2>
+    <div>{{{application.address.line_1}}}</div>
+    {{# if application.address.line_2}}
+    <div>{{{application.address.line_2}}}</div>
+    {{/if}}
+    <div>{{{application.address.city}}}, {{{application.address.state}}} {{{application.address.zip}}}</div>
+
+    <div><a href={{{google_map_url}}} target="_blank">Google Maps Link</a></div>
+
+    <h2>Info</h2>
+    <h3>Other Contacts</h3>
+    <div>Name: {{{application.contact_name}}}</div>
+    <div>Relationship: {{{application.contact_relationship}}}</div>
+    <div>Phone: {{{application.health_issues}}}</div>
+    <div>Email: {{{application.health_issues}}}</div>
+
+    <h3>Health Issues</h3>
+    <div>{{{application.health_issues}}}</div>
+
+    <h3>Help Request</h3>
+    <div>{{{application.help_request}}}</div>
+  </div>
+  <div class="col-sm-6" id="service-div">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="">Current Service</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="">Past Services</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="">Future Services</a>
+      </li>
+    </ul>
+    <div id="current-service-container">
+      <div>Service Date: {{{service.service_date}}}</div>
+      <h3>Note</h3>
+      <div>{{{service.note}}}</div>
+    </div>
+  </div>
+</div>

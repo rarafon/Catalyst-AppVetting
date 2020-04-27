@@ -1,5 +1,6 @@
 var CareService = require('../../models/care/careService');
-var UserPackage = require('../../../models/userPackage')
+var CareApplicant = require('../../models/care/careApplicant');
+var UserPackage = require('../../../models/userPackage');
 
 async function get_services(applicant_id) {
   var result = await CareService.find({applicant: applicant_id}).lean().exec();
@@ -12,9 +13,10 @@ async function get_services_by_user(user_id) {
   return result;
 }
 
+// Get Service Data only
 async function get_service(service_id) {
-  var result = await CareService.find({_id: service_id}).lean().exec();
-  return result[0];
+  var result = await CareService.findById(service_id).exec();
+  return result;
 }
 
 async function create_service(applicant_id, data) {
@@ -24,6 +26,10 @@ async function create_service(applicant_id, data) {
   service.service_date = data.service_date;
   service.note = data.note;
   await service.save();
+
+  var applicant = await CareApplicant.findById(applicant_id).exec();
+  applicant.services.push(service._id);
+
   return true;
 }
 
