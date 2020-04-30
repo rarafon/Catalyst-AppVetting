@@ -1,6 +1,5 @@
 window.onload = function() {
   var app_id = $("#applicant_id_div").text();
-  console.log(app_id);
 
   var $form = $("#application-form")
   
@@ -48,11 +47,17 @@ function form_load_data(app_id) {
 function fill_app_data(data) {
   var field,
       app_data = data.application;
+  // Fill out application_status select value
+  if (data.application_status)
+    $('[name=application_status]').val(data.application_status);
+  else // Just in case status isn't given
+    $('[name=application_status]').val("never_contacted");
+
   for (field in app_data) {
     if (field == "address") { // Set address
       for (field in app_data.address) {
         $(`input[name=${field}]`).val(app_data.address[field]);
-      }
+      }     
     // } else if (field == "contacts") {
     //   for (field in app_data.contacts[0]) {
     //     $(`input[name=contact_${field}]`).val(app_data.contacts[0][field]);

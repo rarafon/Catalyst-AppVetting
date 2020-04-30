@@ -109,8 +109,15 @@ async function create_care_applicant(req_body) {
   return true
 }
 
-// Map for names of the HTML inputs, required for db, schema name, & path for schema variable
+// Map for names of the HTML inputs, required for db, 
+// schema name, & path for schema variable
+// Used to check that the forms has these fields
 var fields_map = {
+  application_status: { // This has a default value
+    required: false,
+    schema: "careApplicant",
+    path: "application_status"
+  },
   first_name: {
     required: true,
     schema: "careApplicant",

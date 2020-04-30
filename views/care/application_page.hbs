@@ -1,6 +1,22 @@
 <div id="applicant_id_div" hidden>{{application_id}}</div>
 
 <form id="application-form">
+
+  <div class="form-row row">
+    <div class="form-group col-md-3">
+      <label for="app-status-select">Status</label>
+      <select class="custom-select" name="application_status" id="app-status-select">
+        <option value="to_be_contacted">To Be Contacted</option>
+        <option value="assigned_caller">Assigned Caller</option>
+        <option value="help_requested">Helper Requested</option>
+        <option value="contact_complete">Contact Completed</option>
+        <option value="never_contacted">Never Contacted</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+  </div>
+  
+
   {{> care_partialform}}
 
   <button class="btn btn-primary" type="submit">Submit</button>

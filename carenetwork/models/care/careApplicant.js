@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 
 const careApplicantSchema = new mongoose.Schema({
+  application_status: {
+    type: String,
+    default: "never_contacted",
+    enum: [
+      "to_be_contacted", "assigned_caller", "help_requested", 
+      "contact_complete", "never_contacted", "completed"],
+  },
   application: {
     first_name: String,
     middle_name: String,
