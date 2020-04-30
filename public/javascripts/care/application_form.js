@@ -22,7 +22,7 @@ window.onload = function() {
       url: $form.attr('action'),
       data: $form.serialize(),
       success: function(data, textStatus, xhr) {
-        if (xhr.status == 200) {
+        if (xhr.status == 201) {
           $form.trigger('reset'); // Reset form
           window.alert("Your form was submitted successfully");
         }
