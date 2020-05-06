@@ -48,6 +48,9 @@
    width: 22em;
    height: 10em;
  }
+ .button-go-now {
+   cursor: pointer;
+ }
 </style>
 
 
@@ -198,6 +201,29 @@
             </div>
 
             <div class="col-xs-12 col-sm-6" style="float:left;">
+
+              <!-- Google Drive Link and Go Button -->
+
+              <span style="display:inline-flex">
+                <h4>Google Drive URL:</h4>&nbsp;&nbsp;
+                <a href="#" id="drive_url" data-type="text" data-pk="{{_id}}"
+                  data-url="/edit/project/{{_id}}" data-name="drive_url" 
+                  data-title="Drive Link" data-onblur="submit">
+                  {{drive.drive_url}}
+                </a>
+              </span>
+              {{#if drive.drive_url}}
+                <br>
+                <span>
+                  <h6>
+                    <button class="button-go-now" onclick="goToGoogleDriveLink()">Visit Google Drive</a>
+                  </h6>
+                </span>
+              {{/if}}
+              <br />
+              <br />
+
+
               <h4>Vetting Summary</h4>
               <p>
                 {{#if_not_eq notes.vet_summary ''}}
@@ -531,6 +557,12 @@
          ]
        });
 
+       //Added for Google Drive Editability
+       $('#drive_url').editable();
+       $('#drive_url').on('save', function (e, params) {
+         location.reload();
+       });
+
        // Assessment Checklist autosaving
        $('.assessment-checklist input[type="radio"], .assessment-checklist input[type="checkbox"], ' +
          '.assessment-checklist input[type="date"], .assessment-checklist input[type="number"]')
@@ -766,6 +798,19 @@
                               .attr('href', '#')
                               .on('click', showWorkItemEditForm)
                               .appendTo(cardBlock)
+ }
+
+//For Google Drive Link
+ function goToGoogleDriveLink() {
+    var link = "{{{escape doc.drive.drive_url}}}";
+    //format the URL properly for clickability
+    if (link && !link.startsWith('http')) {
+      link = 'http://' + link;
+      window.open(link, "_blank");
+    }
+    else {
+      //Do nothing, just being thorough - MsH
+    }
  }
 
  function saveWorkItem(node) {
