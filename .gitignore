@@ -1,5 +1,6 @@
 # Added in 2020
 .env
+.env.template
 
 # Added by kohn-catalyst
 rest-data/*
