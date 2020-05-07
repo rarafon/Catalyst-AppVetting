@@ -57,7 +57,12 @@ git checkout $AVT_GIT_BRANCH  # Change to variable
 
 # Install Node Modules from package.json
 echo -e "$SETUP: Running NPM Install..."
+npm install
+
+# Re-install with minimist permissions
+echo -e "$SETUP: Running NPM Install...again with --unsafe-perm to fix minimist issues"
 npm install --unsafe-perm
+
 
 # Enable systemctl: mongod service - set mongodb to start automatically on system startup
 echo -e "$SETUP: Starting MongoDB..."
