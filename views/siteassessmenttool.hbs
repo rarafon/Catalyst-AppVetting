@@ -48,9 +48,12 @@
    width: 22em;
    height: 10em;
  }
- .button-go-now {
-   cursor: pointer;
- }
+ .btnEditDrive {
+  font-size: 14px;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  margin-top: -3px;
+}
 </style>
 
 
@@ -204,22 +207,23 @@
 
               <!-- Google Drive Link and Go Button -->
 
-              <span style="display:inline-flex">
-                <h4>Google Drive URL:</h4>&nbsp;&nbsp;
+              <!-- HBS - IF NO DRIVE LINK  - then show this. -->
+              <span id="noDrive" style="display: inline-flex;">
+                <h4>Drive URL:&nbsp;&nbsp;</h4>
                 <a href="#" id="drive_url" data-type="text" data-pk="{{_id}}"
-                  data-url="/edit/project/{{_id}}" data-name="drive_url" 
-                  data-title="Drive Link" data-onblur="submit">
-                  {{drive.drive_url}}
-                </a>
+                  data-url="/edit/project/{{_id}}" data-name="drive_url" data-title="Drive Link" 
+                  data-onblur="submit">{{drive.drive_url}}</a>&nbsp;&nbsp;
               </span>
-              {{#if drive.drive_url}}
-                <br>
-                <span>
-                  <h6>
-                    <button class="button-go-now" onclick="goToGoogleDriveLink()">Visit Google Drive</a>
-                  </h6>
-                </span>
-              {{/if}}
+              
+              <!-- HBS - IF LINK EXISTS - then show this. -->
+              
+              <span id="yesDrive" style="display: inline-flex;">
+                <a id="driveHref" target="_blank" href="{{drive.drive_url}}">
+                  <h4>Google Drive</h4>
+                </a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btnEditDrive" onclick="editDriveURL()">Edit</button>
+              </span>
               <br />
               <br />
 
@@ -562,6 +566,7 @@
        $('#drive_url').on('save', function (e, params) {
          location.reload();
        });
+       yesDriveLoaded();
 
        // Assessment Checklist autosaving
        $('.assessment-checklist input[type="radio"], .assessment-checklist input[type="checkbox"], ' +
@@ -800,18 +805,31 @@
                               .appendTo(cardBlock)
  }
 
-//For Google Drive Link
- function goToGoogleDriveLink() {
-    var link = "{{{escape doc.drive.drive_url}}}";
-    //format the URL properly for clickability
-    if (link && !link.startsWith('http')) {
-      link = 'http://' + link;
-      window.open(link, "_blank");
+  function editDriveURL() {
+    //Toggle = show edit span, and hide current span
+    document.getElementById("yesDrive").style.display = "none";
+    document.getElementById("noDrive").style.display = "inline-flex";
+
+  }
+
+  function yesDriveLoaded() {
+    var webUrl = "{{{escape doc.drive.drive_url}}}";
+
+    if (document.getElementById("driveHref").href == "" || document.getElementById("driveHref").href == window.location || document.getElementById("driveHref").href + "#" == window.location) {
+      document.getElementById("yesDrive").style.display = "none";
+      document.getElementById("noDrive").style.display = "inline-flex";
+    } else {
+      if (document.getElementById("driveHref") && document.getElementById("driveHref").href) {
+        var webUrl = "{{{escape doc.drive.drive_url}}}";
+        if (!webUrl.startsWith('http')) {
+          document.getElementById("driveHref").href = 'http://' + webUrl;
+        }
+      }
+
+      document.getElementById("yesDrive").style.display = "inline-flex";
+      document.getElementById("noDrive").style.display = "none";
     }
-    else {
-      //Do nothing, just being thorough - MsH
-    }
- }
+  }
 
  function saveWorkItem(node) {
    var data = {}, id = false
