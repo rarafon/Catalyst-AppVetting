@@ -1,5 +1,12 @@
 <!-- This view handles the Vetting Worksheet. -->
 
+<style>
+	.no-left-padding {
+		padding-left: 0px;
+	}
+</style>
+
+
 <!-- This part is the fixed Vetting Notes INPUT area so Vetting Agents
   -- can make notes whenever they need to without having to scroll around
   -->
@@ -21,10 +28,15 @@
 
 
 <div class="container col-xs-12">
-		<h1>{{doc.application.name.first}} {{doc.application.name.last}} - Vetting Worksheet</h1>
-		<h3>Status: <a href="#" id="status" data-type="select" data-pk="1" data-url="/edit/{{doc._id}}" data-name="status" data-title="Select status"></a></h3>
-		</div>
+	<h1>{{doc.application.name.first}} {{doc.application.name.last}} - Vetting Worksheet</h1>
 
+<div class="col-sm-6 no-left-padding">
+	<h3>Status: <a href="#" id="status" data-type="select" data-pk="1" data-url="/edit/{{doc._id}}" data-name="status" data-title="Select status"></a></h3>
+</div>
+<div class="col-sm-6 no-left-padding">
+	<h3>Google stuff coming soon</h3>
+</div>
+</div>
 
 		<!-- ADDRESS AREA AND MAP IT LINK -->
 <div class="container col-xs-12">
