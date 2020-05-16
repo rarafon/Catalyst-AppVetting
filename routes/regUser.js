@@ -42,11 +42,6 @@ module.exports = function (passport) {
 			payload.user_email = res.locals.email;
 			payload.user_role = res.locals.role;
 			
-			
-			
-			console.log("payload");
-			console.log(payload);
-			console.log(payload.user_roles_display)
 			res.render('userlist', payload)
 
 		});
@@ -75,14 +70,11 @@ module.exports = function (passport) {
 		.get(isAdmin, api.findUser, function (req, res) {
 			var payload = {};
 			payload = res.locals.results;
-			console.log(payload);
 			//payload.user = req.user._id;
 			payload.user_email = res.locals.email;
 			payload.user_role = res.locals.role;
 			payload.user_roles= res.locals.user_roles
       payload.user.assign_tasks = payload.user.assign_tasks || false;
-			console.log("payload");
-			console.log(payload);
 			res.render('adminuseredit', payload);
 
 		})

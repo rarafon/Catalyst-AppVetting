@@ -290,11 +290,9 @@ getDocumentPlanning: function (req, res, next) {
                     console.log('No users found');
                 }
                 else {
-                    console.log('users found');
 					for(var x=0; x<results.users.length; x++) {
 						results.users[x].salt = "";
                         results.users[x].hash = "";
-                        console.log('here');
                         console.log(results.users[x]);
                         results.users[x].user_roles_display="";
                         if (results.users[x].user_roles === undefined || results.users[x].user_roles.length===0 ) {
