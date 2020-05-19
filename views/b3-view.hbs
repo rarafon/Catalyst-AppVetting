@@ -20,10 +20,18 @@
 	}
 	.drive-button-padding {
 		padding-top: 15px;
+        padding-left: 10px;
 	}
 	.drive-link {
-		padding-top: 10px;
+		padding-top: 0px;
+        margin-top: 0px;
+        font-size: 1.8em;
+        font-weight: bold;
 	}
+    .drive-input-link {
+        padding-top: 7px;
+        font-size: 1.2em;
+    }
 </style>
 
 <a href="/view" class="btn btn-primary">Back to Vetting Home</a>
@@ -44,7 +52,7 @@
             <h4 class="drive-header">Drive URL:&nbsp;&nbsp;</h4>
             <a href="#" onclick="showDriveDone()" id="drive_url" data-type="text" data-pk="{{_id}}"
                 data-url="/edit/project/{{doc._id}}" data-name="drive_url" data-title="Drive Link" data-onblur="submit"
-                class="drive-link">{{doc.drive.drive_url}}</a>&nbsp;&nbsp;
+                class="drive-input-link">{{doc.drive.drive_url}}</a>&nbsp;&nbsp;
             <button class="btn btn-success shallow" id="driveDoneBtn" style="display: none;"
                 onclick="window.location.reload(true)">Collapse</button>
         </span>
@@ -53,7 +61,7 @@
 
         <span id="yesDrive" style="display: inline-flex;">
             <a id="driveHref" target="_blank" href="{{doc.drive.drive_url}}">
-                <h4 class="no-bottom-margin">Google Drive</h4>
+                <h4 class="no-bottom-margin drive-link">Google Drive</h4>
             </a>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button class="btn btnEditDrive" onclick="editDriveURL()">Edit</button>
