@@ -55,6 +55,7 @@ function isLoggedIn(req, res, next) {
 						   next();
 					   }
 					   else {
+							 console.log(results);
 							 
 							 //format user data to send to front end
 							 res.locals.email = results.user.contact_info.user_email;

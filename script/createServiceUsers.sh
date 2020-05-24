@@ -7,7 +7,7 @@ set +a
 
 mongo admin <<EOF
 use admin;
-db.createUser({ user: '$DB_USERNAME', pwd: '$DB_PASSWORD', roles: [{role:'userAdmin',db:'admin'}]});
+db.createUser({ user: '$DB_USERNAME' + a, pwd: '$DB_PASSWORD', roles: [{role:'userAdmin',db:'admin'}]});
 exit
 EOF
 
