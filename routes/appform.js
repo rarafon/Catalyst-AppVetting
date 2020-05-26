@@ -48,7 +48,6 @@ module.exports = function(passport) {
     // Load in the application model
     var query = Application.find({}, function(err, docs) {
       if (err) throw err;
-      console.log(docs);
       return docs;
     });
 
@@ -70,7 +69,6 @@ module.exports = function(passport) {
   router.get('/helper-last-name', function(req, res) {
     Application.findLastName("West", function(err, docs) {
       if (err) console.error(err);
-      console.log(docs);
       res.json(docs);
     })
   });
@@ -90,10 +88,6 @@ module.exports = function(passport) {
     var cuisine = req.body.cuisine;
     var name = req.body.name;
     var restid = req.body.restaurant_id;
-
-    console.log('POST VALUES: ' + '\n' + building + '\n' + coord1 + '\n' + coord2
-              + '\n' + street + '\n' + zip + '\n' + borough + '\n' + cuisine + '\n' +
-                name  + '\n' + restid + '\n');
 
     res.send("Insert a new rest (C)");
   });

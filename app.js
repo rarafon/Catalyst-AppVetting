@@ -178,10 +178,7 @@ hbs.registerHelper('otherResidents', function(residentsObject) {
 })
 
 hbs.registerHelper('select', function(values) {
-  console.log('here');
-  console.log(values);
   var $el = $('select');
-  console.log($el);
   var i = 0;
   for(i; i<values.length; i++)
   {
@@ -215,8 +212,6 @@ hbs.registerHelper('getApplicationStartTime', function (apps, appid) {
 });
 
 hbs.registerHelper('getApplicationDueDate', function (apps, appid, ldTime) {
-  console.log("Handlebars Helper: getApplicationDueDate called");
-  console.log(ldTime);
   if (apps[appid] && apps[appid].project && apps[appid].project.project_start) {
       var myNewDate = new Date(apps[appid].project.project_start);
       
@@ -228,9 +223,7 @@ hbs.registerHelper('getApplicationDueDate', function (apps, appid, ldTime) {
   }
 });
 
-hbs.registerHelper('dateToLocaleDate', function (date) {
-  console.log('dateToLocaleDate', arguments);
-  
+hbs.registerHelper('dateToLocaleDate', function (date) {  
   if (date === "Not set") {
     return 'Not set'
   } else {
@@ -252,8 +245,6 @@ hbs.registerHelper('getPlanTaskAssignments', function(plan, userId, apps, appid)
   var labels = [];
   for (var i = 0; i < assigned.length; i++) {
     if (!assigned[i].complete) {
-      console.log("apple");
-      console.log(assigned[i]);
       labels.push(assigned[i].label);
     }
   }
@@ -321,7 +312,7 @@ app.use(function(req, res, next) {
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
-    console.log('[ ' + req.method + ' ] request made from ' + 'IP: ' + ip);
+    // console.log('[ ' + req.method + ' ] request made from ' + 'IP: ' + ip);
     if(req.get('X-Forwarded-Proto') == 'http'){
       res.redirect('https://' + req.get('Host') + req.url);
     }

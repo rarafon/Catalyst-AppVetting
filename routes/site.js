@@ -22,9 +22,8 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 	//separate applications in res.locals.results based on status of
 	//assessemnt pending or assessment complete
 	var payload = {};
-    console.log(res.locals.results);
 	if(res.locals.results.site[0] == null) {
-		console.log('[ ROUTER ] /site :: Unable to find Document Packages with status: \'assess\'');
+		;
 	}
 	else {
 		res.locals.results.site.forEach(function (element) {
@@ -35,7 +34,7 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 	payload.site = res.locals.results.site;
 
 	if(res.locals.results.complete[0] == null) {
-		console.log('[ ROUTER ] /site :: Unable to find Document Packages with status: \'assess\'');
+		;
 	}
 	else {
 		res.locals.results.complete.forEach(function (element) {
@@ -48,10 +47,6 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 	payload.user_email = res.locals.email;
 	payload.user_role = res.locals.role;
 	payload.user_roles = res.locals.user_roles;
-
-	console.log("payload");
-	console.log(payload);
-	
 	
 	res.render('siteassessment', payload);
 });
@@ -60,7 +55,6 @@ router.get('/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders, 
     //Checking what's in params
     //console.log("Rendering application " + ObjectId(req.params.id));
 	//TEST
-	console.log("rendering test application");
     var payload = {}
 	payload.doc = res.locals.results.doc[0];
 	payload.work = res.locals.results.work;
@@ -69,18 +63,12 @@ router.get('/:id', isLoggedIn, api.getDocumentSite, api.getProjPartnersLeaders, 
 	payload.user_role = res.locals.role;
 	payload.user_roles = res.locals.user_roles;
   if (res.locals.results.assessment && res.locals.results.assessment.length > 0) {
-    console.log("Found assessment: ", res.locals.results.assessment);
     payload.assessment = res.locals.results.assessment;
   } else {
     payload.assessment = [AssessmentPackage.empty];
-    console.log("No assessment found. Using empty: ", payload.assessment);
   }
 
 	payload.part = res.locals.results.part||req.partnerTime;			//Data for Partners Tab Partial
-
-
-	console.log("results");
-  console.log(payload);
  
 	res.render('siteassessmenttool', payload);
 
@@ -125,8 +113,6 @@ router.route('/updatesummary')
   // Handle saving the assessment checklist.
 router.route('/assessment')
 	    .post(isLoggedInPost, api.saveAssessmentDocument, function (req, res) {
-        console.log('from /site/assessment')
-        console.log(res.locals)
         if (res.locals.status !== '200') {
           res.status(500).send("Could not update assessment document");
         } else {
@@ -138,7 +124,6 @@ router.route('/assessment')
 //route catches invalid post requests.
 router.use('*', function route2(req, res, next) {
 	if(res.locals.status == '406'){
-		console.log("in error function");
         res.status(406).send("Could not update note");
 		res.render('/user/login');
     }
@@ -209,18 +194,13 @@ return router;
 function isLoggedIn(req, res, next) {
 
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
-			console.log("userID");
-			console.log(userID);
 			var ObjectId = require('mongodb').ObjectID;
 			Promise.props({
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
-
 					if (!results) {
 						res.redirect('/user/logout');
 					}
@@ -244,13 +224,11 @@ function isLoggedIn(req, res, next) {
 						}
 
 							else {
-								console.log("user is not required role");
 								res.redirect('/user/logout');
 							}
 						}
 						else {
 							//user not active
-							console.log("user not active");
 							res.redirect('/user/logout');
 						}
 					}
@@ -265,7 +243,6 @@ function isLoggedIn(req, res, next) {
          .catch(next);
 		}
 		else {
-			console.log("no user id");
 			res.redirect('/user/login');
 		}
 }
@@ -273,7 +250,6 @@ function isLoggedIn(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting or site agent
 function isLoggedInPost(req, res, next) {
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
 			var ObjectId = require('mongodb').ObjectID;
@@ -282,8 +258,6 @@ function isLoggedInPost(req, res, next) {
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log('123');
-				console.log(results);
 
 					if (!results) {
 						//user not found in db.  Route to error handler
@@ -310,7 +284,6 @@ function isLoggedInPost(req, res, next) {
 
 						}
 						else {
-							console.log('234');
 							//user is not active
 							res.locals.status = 406;
 							return next('route');
@@ -328,7 +301,6 @@ function isLoggedInPost(req, res, next) {
 		}
 		else {
 			//user is not logged in
-			console.log("no user id");
 			res.locals.status = 406;
 			return next('route');
 		}

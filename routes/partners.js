@@ -21,17 +21,12 @@ module.exports = function(passport) {
 router.get('/', isLoggedInMultiRoles, api.getProjPartnersLeaders, function(req, res, next) {
 	var results = {};
 
-	console.log("Getting Partners");
-    console.log(res.locals.results);
-
 	if(! res.locals.results) {
-		console.log('[ ROUTER ] /partners :: Unable to find any Partners in database');
 	}
 	//results.partner = res.locals.results.pAll;
 	//results.pAssoc = res.locals.results.pAssoc;
 	//results.pCount = res.locals.results.pCount;
 
-	console.log(results);
 	// res.render('partners', results);
 	res.send(results);
 });
@@ -42,12 +37,10 @@ router.get('/', isLoggedInMultiRoles, api.getProjPartnersLeaders, function(req, 
 router.route('/getPartnerAssoc', isLoggedInMultiRoles)									// FOR getProjPartnersLeaders
 	.post(api.getProjPartnersLeaders, function(req, res) {
 
-	console.log("\n/partners/getPartnerAssoc POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
         res.status(500).send("Could not get partner Associations");
     }
     else{
-    	console.log("res: " + res);
         res.json(res.locals);
     }
 });
@@ -56,12 +49,10 @@ router.route('/getPartnerAssoc', isLoggedInMultiRoles)									// FOR getProjPar
 router.route('/createPartnerAssoc', isLoggedInMultiRoles)
 	.post(api.setProjPartnersLeaders, function(req, res) {
 	
-	console.log("\n/partners/createPartnerAssoc POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
         res.status(500).send("Could not create partner Associations");
     }
     else {
-    	console.log("res: " + res);
         res.json(res.locals);
     }
 });
@@ -71,12 +62,10 @@ router.route('/createPartnerAssoc', isLoggedInMultiRoles)
 router.route('/createPartner')
 	.post(api.createPartner, function(req, res) {
 	
-	console.log("\n/partners/createPartner POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
         res.status(500).send("Could not create partner");
     }
     else {
-    	console.log("res: " + res);
         //res.json(res.locals);
         res.status(200).end();
     }
@@ -86,7 +75,6 @@ router.route('/createPartner')
 router.route('/deletePartner')
 	.post(api.deletePartner, function(req, res) {
 
-	console.log("\n/partners/deletePartner AFTER POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
         res.status(500).send("Could not remove Partner");
     }
@@ -98,12 +86,10 @@ router.route('/deletePartner')
 router.route('/getPartner')
 	.post(api.getPartner, function(req, res) {
 
-	console.log("\n/partners/getPartner AFTER POST TRIGGERED...\nreq:\n" + req);
 	if(res.locals.status != '200'){
         res.status(500).send("Could not get partners");
     }
     else{
-    	console.log(res);
         res.json(res.locals);
     }
 });
@@ -232,17 +218,13 @@ return router;
 function isLoggedIn(req, res, next) {
 
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
-			console.log("userID");
-			console.log(userID);
 			var ObjectId = require('mongodb').ObjectID;
 			Promise.props({
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
 
 					if (!results) {
 						res.redirect('/user/logout');
@@ -295,17 +277,13 @@ function isLoggedIn(req, res, next) {
 function isLoggedInMultiRoles(req, res, next) {
 
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
-			console.log("userID");
-			console.log(userID);
 			var ObjectId = require('mongodb').ObjectID;
 			Promise.props({
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
 
 					if (!results) {
 						res.redirect('/user/logout');
@@ -358,7 +336,6 @@ function isLoggedInMultiRoles(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting or site agent
 function isLoggedInPost(req, res, next) {
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
 			var ObjectId = require('mongodb').ObjectID;
@@ -367,7 +344,6 @@ function isLoggedInPost(req, res, next) {
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
 
 					if (!results) {
 						//user not found in db.  Route to error handler
@@ -416,7 +392,6 @@ function isLoggedInPost(req, res, next) {
 //post request authenticator.  (*NEW* - Supports Multiple roles)
 function isLoggedInPostMultiRoles(req, res, next) {
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
 			var ObjectId = require('mongodb').ObjectID;
@@ -425,7 +400,6 @@ function isLoggedInPostMultiRoles(req, res, next) {
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
 
 					if (!results) {
 						//user not found in db.  Route to error handler

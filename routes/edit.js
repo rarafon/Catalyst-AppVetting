@@ -81,7 +81,6 @@ module.exports = function(passport) {
 
 
 router.post('/customnote/:id', isLoggedInProjectRole, api.saveCustomChecklist, function(req, res) {
-        console.log("customnote triggered --> Calling api.saveProjectPlan");
         if(res.locals.status != '200'){
           res.status(500).send("Could not update customnote plan");
         }
@@ -96,7 +95,6 @@ router.post('/customnote/:id', isLoggedInProjectRole, api.saveCustomChecklist, f
    * Only handles single line updates (e.g., phone number, Date of birth)
    **/
   router.post('/putUpdatePartner/:id', isLoggedInProjectRole, api.putUpdatePartner, function(req, res) {
-    console.log("Triggered Partner Edit");
 
     if(res.locals.status != '200'){
       res.status(500).send("Could not update field");
@@ -196,17 +194,13 @@ router.post('/customnote/:id', isLoggedInProjectRole, api.saveCustomChecklist, f
 //check to see if user is logged in and a vetting agent or an admin
 function isLoggedIn(req, res, next) {
 	if(req.isAuthenticated()) {
-		console.log(req.user._id);
 		var userID = req.user._id.toString();
 		
-		console.log("userID");
-		console.log(userID);
 		var ObjectId = require('mongodb').ObjectID;
 		Promise.props({
 			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 		})
 			     .then(function (results) {
-				     console.log(results);
 					   
 					   if (!results) {
 						   res.redirect('/user/logout');
@@ -256,7 +250,6 @@ function isLoggedIn(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting agent
 function isLoggedInPost(req, res, next) {
 	if(req.isAuthenticated()) {
-		console.log(req.user._id);
 		var userID = req.user._id.toString();
 		
 		var ObjectId = require('mongodb').ObjectID;
@@ -265,7 +258,6 @@ function isLoggedInPost(req, res, next) {
 			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 		})
 			     .then(function (results) {
-				     console.log(results);
 				     
 					   if (!results) {
 						   //user not found in db.  Route to error handler
@@ -316,7 +308,6 @@ function isLoggedInPost(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting agent
 function isLoggedInWork(req, res, next) {
   if(req.isAuthenticated()) {
-    console.log(req.user._id);
     var userID = req.user._id.toString();
     
     var ObjectId = require('mongodb').ObjectID;
@@ -325,7 +316,6 @@ function isLoggedInWork(req, res, next) {
       user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
     })
            .then(function (results) {
-             console.log(results);
              
              if (!results) {
                //user not found in db.  Route to error handler
@@ -371,7 +361,6 @@ function isLoggedInWork(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting agent
 function isLoggedInProjectRole(req, res, next) {
   if(req.isAuthenticated()) {
-    console.log(req.user._id);
     var userID = req.user._id.toString();
     
     var ObjectId = require('mongodb').ObjectID;
@@ -380,7 +369,6 @@ function isLoggedInProjectRole(req, res, next) {
       user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
     })
            .then(function (results) {
-             console.log(results);
              
              if (!results) {
                //user not found in db.  Route to error handler

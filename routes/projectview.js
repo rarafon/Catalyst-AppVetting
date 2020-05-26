@@ -53,10 +53,6 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 	// payload.complete = res.locals.results.complete;
 	// payload.user = req.user._id;
 	// payload.user_email = res.locals.email;
-
-	// console.log("payload");
-	// console.log(payload);
-	
 	
 	// res.render('projectview', payload);
 	res.redirect('/projectsummary');
@@ -70,7 +66,6 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
            //Checking what's in params
            //console.log("Rendering application " + ObjectId(req.params.id));
 
-	         console.log("rendering test application");
            var payload = {};
 
 	         payload.doc = res.locals.results.doc[0];
@@ -86,8 +81,6 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
            payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
            payload.leadtime = res.locals.leadtime;
 	         payload.partDocId = res.locals.results.doc[0]._id;
-	         console.log("results");
-           console.log(payload);
            
 	         // res.render('siteassessmenttool', payload);
 	         res.render('projectview', payload);
@@ -102,8 +95,6 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 					 function(req, res, next) {
 					 //Checking what's in params
 					 //console.log("Rendering application " + ObjectId(req.params.id));
-				 
-						 console.log("Export to PDF Called");
 					 var payload = {};
 				 
 						 payload.doc = res.locals.results.doc[0];
@@ -119,8 +110,6 @@ router.get('/', isLoggedIn, api.getDocumentStatusSite, function(req, res, next) 
 					 payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
 					 payload.leadtime = res.locals.leadtime;
 						 payload.partDocId = res.locals.results.doc[0]._id;
-						 console.log("results - export as PDF");
-					 console.log(payload);
 					 
 						 // res.render('siteassessmenttool', payload);
 						 res.render('exportPDF', payload);
@@ -184,7 +173,6 @@ router.route('/plan')
   //route catches invalid post requests.
   router.use('*', function route2(req, res, next) {
 	if(res.locals.status == '406'){
-		console.log("in error function");
         res.status(406).send("Could not update note");
 		res.render('/user/login');
     }
@@ -255,17 +243,13 @@ return router;
 function isLoggedIn(req, res, next) {
 
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
-			console.log("userID");
-			console.log(userID);
 			var ObjectId = require('mongodb').ObjectID;
 			Promise.props({
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
 
 					if (!results) {
 						res.redirect('/user/logout');
@@ -297,13 +281,11 @@ function isLoggedIn(req, res, next) {
 							}
 
 							else {
-								console.log("user is not required role");
 								res.redirect('/user/logout');
 							}
 						}
 						else {
 							//user not active
-							console.log("user not active");
 							res.redirect('/user/logout');
 						}
 					}
@@ -318,7 +300,6 @@ function isLoggedIn(req, res, next) {
          .catch(next);
 		}
 		else {
-			console.log("no user id");
 			res.redirect('/user/login');
 		}
 }
@@ -326,7 +307,6 @@ function isLoggedIn(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting or site agent
 function isLoggedInPost(req, res, next) {
 		if(req.isAuthenticated()) {
-			console.log(req.user._id);
 			var userID = req.user._id.toString();
 
 			var ObjectId = require('mongodb').ObjectID;
@@ -335,7 +315,6 @@ function isLoggedInPost(req, res, next) {
 				user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 			})
 			.then(function (results) {
-				console.log(results);
 
 					if (!results) {
 						//user not found in db.  Route to error handler
@@ -384,7 +363,6 @@ function isLoggedInPost(req, res, next) {
 		}
 		else {
 			//user is not logged in
-			console.log("no user id");
 			res.locals.status = 406;
 			return next('route');
 		}

@@ -2304,10 +2304,8 @@ getDocumentPlanning: function (req, res, next) {
       ).execAsync()
     }).then(function (results) {
       if (results.assessment !== null) {
-        console.log('[ API ] saveAssessmentDocument :: Assessment found: TRUE');
         res.locals.status = '200';
       } else {
-        console.log('[ API ] saveAssessmentDocument :: Assessment found: FALSE');
         res.locals.status = '500';
       }
       res.locals.results = results
@@ -2478,12 +2476,6 @@ getDocumentPlanning: function (req, res, next) {
             highlight: HighlightPackage.findById(req.params.id).lean().execAsync()
         })
             .then(function(results) {
-                if (!results) {
-                    console.log('[ API ] getHighlightsById :: Highlight package found: FALSE');
-                }
-                else {
-                    console.log('[ API ] getHighlightsById :: Highlight package found: TRUE');
-                }
 
                 res.locals.results = results;
 
@@ -2522,7 +2514,6 @@ getDocumentPlanning: function (req, res, next) {
                     var length = str_split.length;
 
                     if (length == 1) {
-                        console.log(results.highlight[ str_split[0] ]);
                         if (results.highlight[str_split[0]] === true) {
                             updates[req.body.name] = false;
                         }

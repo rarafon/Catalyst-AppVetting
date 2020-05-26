@@ -25,7 +25,6 @@ module.exports = function(passport) {
 /* Route to specific application by Object ID */
 router.get('/:id', isLoggedIn, function(req, res) {
     //Checking what's in params
-    console.log("Vetting Worksheet for " + ObjectId(req.params.id));
     /* search by _id. */
     Promise.props({
         doc: DocumentPackage.findOne({_id: ObjectId(req.params.id)}).lean().execAsync(),
@@ -53,11 +52,9 @@ router.get('/:id', isLoggedIn, function(req, res) {
             }
 
 			if(result.doc.service_area == null) {
-				console.log("no service area value");
 				result.service = false;
 			}
 			else {
-				console.log("there is a service area value");
 				result.service = true;
 			}
 
@@ -76,16 +73,12 @@ router.get('/:id', isLoggedIn, function(req, res) {
 
 			if(result.workItems.length != 0)
             {
-				console.log("there are work items");
                 result.workItems.forEach(function(item, index){
-					console.log(item.name);
-					console.log(item.description);
                     var Year = item.date.getFullYear();
                     //get month and day with padding since they are 0 indexed
                     var Day = ( "00" + item.date.getDate()).slice(-2);
                     var Mon = ("00" + (item.date.getMonth()+1)).slice(-2);
                     result.workItems[index].date = Mon + "/" + Day + "/" + Year;
-					console.log(item.date);
                 });
             }
 
@@ -108,7 +101,6 @@ router
 	   //Checking what's in params
 	   //console.log("Rendering application " + ObjectId(req.params.id));
 
-		 console.log("rendering test application");
 	   var payload = {};
 
 		 payload.doc = res.locals.results.doc[0];
@@ -124,8 +116,6 @@ router
 	   payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
 	   payload.leadtime = res.locals.leadtime;
 		 payload.partDocId = res.locals.results.doc[0]._id;
-		 console.log("results");
-	   console.log(payload);
 	   
 		 // res.render('siteassessmenttool', payload);
 		 res.render('exportPAF', payload);
@@ -139,8 +129,6 @@ router
 	function(req, res, next) {
 	//Checking what's in params
 	//console.log("Rendering application " + ObjectId(req.params.id));
-
-		console.log("rendering test application");
 	var payload = {};
 
 		payload.doc = res.locals.results.doc[0];
@@ -156,8 +144,6 @@ router
 	payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
 	payload.leadtime = res.locals.leadtime;
 		payload.partDocId = res.locals.results.doc[0]._id;
-		console.log("results");
-	console.log(payload);
 	
 		// res.render('siteassessmenttool', payload);
 		res.render('exportPAF', payload);
@@ -170,10 +156,6 @@ router
 		api.getAssignableUsers, api.getWrapUpDoc, api.getProjectPlanDoc,
 		api.getLeadtimeDefaults,
 		function(req, res, next) {
-		//Checking what's in params
-		//console.log("Rendering application " + ObjectId(req.params.id));
-	
-			console.log("Export to PDF Called");
 		var payload = {};
 	
 			payload.doc = res.locals.results.doc[0];
@@ -189,8 +171,6 @@ router
 		payload.plan = res.locals.plan || ProjectPlanPackage.empty(req.params.id)
 		payload.leadtime = res.locals.leadtime;
 			payload.partDocId = res.locals.results.doc[0]._id;
-			console.log("results - export as PDF");
-		console.log(payload);
 		
 			// res.render('siteassessmenttool', payload);
 			res.render('exportPDF', payload);
@@ -375,7 +355,6 @@ router.route('/displayYear')
 //route catches invalid post requests.
 router.use('*', function route2(req, res, next) {
 	if(res.locals.status == '406'){
-		console.log("in error function");
         res.status(406).send("Could not update note");
 		res.render('/user/login');
     }
@@ -413,7 +392,6 @@ function isLoggedIn(req, res, next) {
 							return next();
 						}
 						else {
-							console.log("user is not vet");
 							res.redirect('/user/login');
 						}
 					}
@@ -428,7 +406,6 @@ function isLoggedIn(req, res, next) {
          .catch(next);
 		}
 		else {
-			console.log("no user id");
 			res.redirect('/user/login');
 		}
 }
@@ -483,7 +460,6 @@ function isLoggedInPost(req, res, next) {
 		}
 		else {
 			//user is not logged in
-			console.log("no user id");
 			res.locals.status = 406;
 			return next('route');
 		}

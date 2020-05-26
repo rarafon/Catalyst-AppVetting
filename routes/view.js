@@ -267,7 +267,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     var payload = {};
 
     if (res.locals.results.new[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'new\'');
+        ;
     } else {
         res.locals.results.new.forEach(function (element) {
             element = formatElement(element);
@@ -280,7 +280,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     payload.project = [];
 
 	if (res.locals.results.project[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'project\'');
+        ;
     } else {
         res.locals.results.project.forEach(function (element) {
             element = formatElement(element);
@@ -289,7 +289,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
 
     if (res.locals.results.handle[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'handle\'');
+        ;
     } else {
         res.locals.results.handle.forEach(function (element) {
             element = formatElement(element);
@@ -304,7 +304,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     payload.unapproved = [];
 
     if (res.locals.results.declined[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'declined\'');
+        ;
     } else {
         res.locals.results.declined.forEach(function (element) {
             element = formatElement(element);
@@ -313,7 +313,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
 
     if (res.locals.results.withdrawn[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'withdrawn\'');
+        ;
     } else {
         res.locals.results.withdrawn.forEach(function (element) {
             element = formatElement(element);
@@ -322,7 +322,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
 	}
 
 	if (res.locals.results.withdrawnooa[0] == null) {
-		console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'withdrawnooa\'');
+		;
 	} else {
 		res.locals.results.withdrawnooa.forEach(function (element) {
 			element = formatElement(element);
@@ -333,7 +333,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     payload.waitlist = [];
     
 	if (res.locals.results.waitlist[0] == null) {
-		console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'waitlist\'');
+		;
 	} else {
 		res.locals.results.waitlist.forEach(function (element) {
 			element = formatElement(element);
@@ -345,7 +345,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     payload.processing = [];
 
     if (res.locals.results.phone[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'phone\'');
+        ;
     } else {
         //need to grab each element and push into the 'processing' array
         res.locals.results.phone.forEach(function (element) {
@@ -356,7 +356,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
 
 
     if (res.locals.results.documents[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'documents\'');
+        ;
     } else {
         res.locals.results.documents.forEach(function (element) {
             element = formatElement(element);
@@ -365,7 +365,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
 
     if (res.locals.results.discuss[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'discuss\'');
+        ;
     } else {
         res.locals.results.discuss.forEach(function (element) {
             element = formatElement(element);
@@ -374,7 +374,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
 
     if (res.locals.results.assess[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'assess\'');
+        ;
     } else {
         res.locals.results.assess.forEach(function (element) {
             element = formatElement(element);
@@ -383,7 +383,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
 
 	if (res.locals.results.assessComp[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'assessComp\'');
+        ;
     } else {
         res.locals.results.assessComp.forEach(function (element) {
             element = formatElement(element);
@@ -392,7 +392,7 @@ router.get('/', isLoggedIn, api.getDocumentByStatus, function(req, res, next) {
     }
 
     if (res.locals.results.approval[0] == null) {
-        console.log('[ ROUTER ] /view/status :: Unable to find Document Packages with status: \'approval\'');
+        ;
     } else {
         res.locals.results.approval.forEach(function (element) {
             element = formatElement(element);
@@ -496,7 +496,6 @@ router.post('/updateProjectNote', isLoggedInPost, api.updateProjectNote, functio
 /* Route to specific application by DocumentPackage Object ID */
 router.get('/:id', isLoggedIn, function(req, res, next) {
     //Checking what's in params
-    console.log("Rendering application " + ObjectId(req.params.id));
 
     /* search by _id. */
     Promise.props({
@@ -674,13 +673,11 @@ function isLoggedIn(req, res, next) {
 
 
 							else {
-								console.log("user is not vet");
 								res.redirect('/user/logout');
 							}
 						}
 						else {
 							//user not active
-							console.log("user not active");
 							res.redirect('/user/logout');
 						}
 					}
@@ -695,7 +692,6 @@ function isLoggedIn(req, res, next) {
          .catch(next);
 		}
 		else {
-			console.log("no user id");
 			res.redirect('/user/login');
 		}
 }
@@ -711,7 +707,6 @@ function isLoggedInPost(req, res, next) {
 			})
 			.then(function (results) {
 					if (!results) {
-						console.log('this2')
 						//user not found in db.  Route to error handler
 						res.locals.status = 406;
 						return next('route');
@@ -729,8 +724,6 @@ function isLoggedInPost(req, res, next) {
 							}
 
 						else {
-							console.log(results.user.user_roles);
-							console.log(results.user.user_roles.indexOf('PROJECT_MANAGEMENT'));
 							//user is not a vetting agent or admin, route to error handler
 							res.locals.status = 406;
 							return next('route');
@@ -748,7 +741,6 @@ function isLoggedInPost(req, res, next) {
 		}
 		else {
 			//user is not logged in
-			console.log("no user id");
 			res.locals.status = 406;
 			return next('route');
 		}

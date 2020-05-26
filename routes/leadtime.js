@@ -44,18 +44,13 @@ module.exports = function(passport) {
 function isLoggedIn(req, res, next) {
 
 	if(req.isAuthenticated()) {
-		console.log(req.user._id);
 		var userID = req.user._id.toString();
 
-		console.log("userID");
-		console.log(userID);
 		var ObjectId = require('mongodb').ObjectID;
 		Promise.props({
 			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 		})
 			     .then(function (results) {
-				     console.log(results);
-
 					   if (!results) {
 						   res.redirect('/user/logout');
 					   }
@@ -78,13 +73,11 @@ function isLoggedIn(req, res, next) {
 							   }
 
 							   else {
-								   console.log("user is not required role");
 								   res.redirect('/user/logout');
 							   }
 						   }
 						   else {
 							   //user not active
-							   console.log("user not active");
 							   res.redirect('/user/logout');
 						   }
 					   }
@@ -99,7 +92,6 @@ function isLoggedIn(req, res, next) {
            .catch(next);
 	}
 	else {
-		console.log("no user id");
 		res.redirect('/user/login');
 	}
 }
@@ -107,7 +99,6 @@ function isLoggedIn(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting or site agent
 function isLoggedInPost(req, res, next) {
 	if(req.isAuthenticated()) {
-		console.log(req.user._id);
 		var userID = req.user._id.toString();
 
 		var ObjectId = require('mongodb').ObjectID;
@@ -116,7 +107,6 @@ function isLoggedInPost(req, res, next) {
 			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 		})
 			     .then(function (results) {
-				     console.log(results);
 
 					   if (!results) {
 						   //user not found in db.  Route to error handler
@@ -157,7 +147,6 @@ function isLoggedInPost(req, res, next) {
 	}
 	else {
 		//user is not logged in
-		console.log("no user id");
 		res.locals.status = 406;
 		return next('route');
 	}

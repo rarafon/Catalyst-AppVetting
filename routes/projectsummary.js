@@ -264,13 +264,8 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     var payload = {};
     payload.part = res.locals.results.part||req.partnerTime;	
 
-    console.log("RR0", payload.part);
-    //console.log(payload.part);
-   // console.log("RR1" + payload.part.pAssoc["5bf483e823ffa1cde60da1cb"]);
-
-
 	if (res.locals.results.handle[0] == null) {
-        console.log('[ API ] getProjectsByStatus: Unable to find Document Packages with status: \'handle\'');
+        ;
     } else {
         res.locals.results.handle.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 element.parts = payload.part.pAssoc[element._id].join("; ");             }
@@ -281,7 +276,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
 
     //separate bucket for approved applications
 	if (res.locals.results.project[0] == null) {
-        console.log('[ API ] getProjectsByStatus: Unable to find Document Packages with status: \'project\'');
+        ;
     } else {
         res.locals.results.project.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                            if (payload.part.pAssoc[element._id]) {                 element.parts = payload.part.pAssoc[element._id].join("; ");             }             }
@@ -306,9 +301,8 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
 
 
 	if (res.locals.results.handleToBeAssigned[0] == null) {
-        // console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'handleToBeAssigned\'');
+        ;
     } else {
-    	//console.log('[ API ] getProjectsByStatus: [' + res.locals.results.handleToBeAssigned.length + '] whose current status: \'handleToBeAssigned\'')
         res.locals.results.handleToBeAssigned.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
                            element.parts = payload.part.pAssoc[element._id].join("; ");             
@@ -319,9 +313,8 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.handle[0] == null) {
-        // console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'handleToBeAssigned\'');
+        ;
     } else {
-    	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.handle.length + '] whose current status: \'handle\'')
         res.locals.results.handle.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
                            element.parts = payload.part.pAssoc[element._id].join("; ");             
@@ -332,9 +325,8 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.project[0] == null) {
-        // console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'handleToBeAssigned\'');
+        ;
     } else {
-    	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.project.length + '] whose current status: \'project\'')
         res.locals.results.project.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
                            element.parts = payload.part.pAssoc[element._id].join("; ");             
@@ -346,9 +338,8 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
 
     // TODO: Result should be sorted by project.date already in the request DB call.
    	if (res.locals.results.completed[0] == null) {
-        // console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'completed\'');
+        ;
     } else {
-    	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.completed.length + '] whose current status: \'completed (both handle-its and projects)\'')
         res.locals.results.completed.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
                            element.parts = payload.part.pAssoc[element._id].join("; ");             
@@ -359,9 +350,8 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.handleAssigned[0] == null) {
-        //console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'handleAssigned\'');
+        ;
     } else {
-    	console.log('[ API ] getProjectsByStatus: [' + res.locals.results.handleAssigned.length + '] No Project Packages whose current status: \'handleAssigned\'');
         res.locals.results.handleAssigned.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
                            element.parts = payload.part.pAssoc[element._id].join("; ");             
@@ -372,7 +362,6 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.handleCompleted[0] == null) {
-        console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'handleCompleted\'');
     } else {
         res.locals.results.handleCompleted.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
@@ -384,7 +373,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.projectUpcoming[0] == null) {
-        console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectUpcoming\'');
+        ;
     } else {
         res.locals.results.projectUpcoming.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
@@ -396,7 +385,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.projectInProgress[0] == null) {
-        console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectInProgress\'');
+        ;
     } else {
         res.locals.results.projectInProgress.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
@@ -408,7 +397,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.projectGoBacks[0] == null) {
-        console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectGoBacks\'');
+        ;
     } else {
         res.locals.results.projectGoBacks.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
@@ -420,7 +409,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.projectCompleted[0] == null) {
-        console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'projectCompleted\'');
+        ;
     } else {
         res.locals.results.projectCompleted.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
@@ -432,7 +421,7 @@ router.get('/', isLoggedIn, api.getProjectsByStatus, api.getSummaryPartners, fun
     }
 
 	if (res.locals.results.nostatus[0] == null) {
-        console.log('[ API ] getProjectsByStatus: No Project Packages whose current status: \'nostatus\'');
+        ;
     } else {
         res.locals.results.nostatus.forEach(function (element) {
                        if (payload.part.pAssoc[element._id]) {                 
@@ -501,8 +490,6 @@ router.post('/updateNote', isLoggedInPost, api.updateVettingNote, function(req, 
 
 /* Route to specific application by DocumentPackage Object ID */
 router.get('/:id', isLoggedIn, function(req, res, next) {
-    //Checking what's in params
-    console.log("Rendering application " + ObjectId(req.params.id));
 
     /* search by _id. */
     Promise.props({
@@ -546,7 +533,6 @@ router.get('/:id', isLoggedIn, function(req, res, next) {
 //route catches invalid post requests.
 router.use('*', function route2(req, res, next) {
 	if(res.locals.status == '406'){
-		console.log("in error function");
         res.status(406).send("Could not update note");
 		res.render('/user/login');
     }
@@ -715,7 +701,6 @@ function isLoggedIn(req, res, next) {
 						}
 						else {
 							//user not active
-							console.log("user not active");
 							res.redirect('/user/logout');
 						}
 					}
@@ -728,7 +713,6 @@ function isLoggedIn(req, res, next) {
          .catch(next);
 		}
 		else {
-			console.log("no user id");
 			res.redirect('/user/login');
 		}
 }
@@ -775,7 +759,6 @@ function isLoggedInPost(req, res, next) {
 		}
 		else {
 			//user is not logged in
-			console.log("no user id");
 			res.locals.status = 406;
 			return next('route');
 		}

@@ -26,7 +26,6 @@ module.exports = function (passport) {
 			res.render('newuserform', payload);
 		})
 		.post(isLoggedInPost, api.postUser, function (req, res) {
-			console.log("In post request");
 			res.json(res.locals);
 		})
 
@@ -61,7 +60,6 @@ module.exports = function (passport) {
 
 		})
 		.post(isLoggedInPost, api.updateUser, function (req, res) {
-			console.log("in update user route");
 			//TODO: compare req.user_id to pk - confirm requesting user = user to be updated
 			res.json(res.locals);
 		})
@@ -90,7 +88,6 @@ module.exports = function (passport) {
 
 	router.route('/changePassword')
 		.post(isLoggedIn, api.updatePassword, function (req, res) {
-			console.log("in change pass route");
 			if (res.locals.status != '200') {
 				res.status(500).send("Could not update password");
 			}
@@ -165,7 +162,6 @@ function isLoggedIn(req, res, next) {
 					}
 
 					else {
-						console.log("user is not active");
 						res.redirect('/user/logout');
 					}
 				}
@@ -180,7 +176,6 @@ function isLoggedIn(req, res, next) {
 			.catch(next);
 	}
 	else {
-		console.log("no user id");
 		res.redirect('/user/login');
 	}
 }
@@ -210,13 +205,11 @@ function isAdmin(req, res, next) {
 						}
 
 						else {
-							console.log("user is not admin");
 							res.redirect('/user/logout');
 						}
 					}
 					else {
 						//user not active
-						console.log("user not active");
 						res.redirect('/user/logout');
 					}
 				}
@@ -292,7 +285,6 @@ function isLoggedInPost(req, res, next) {
 	}
 	else {
 		//user is not logged in
-		console.log("no user id");
 		res.locals.status = 406;
 		return next('route');
 	}

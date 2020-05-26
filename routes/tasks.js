@@ -16,8 +16,6 @@ module.exports = function(passport) {
   var router = express.Router();
   
   router.get('/', isLoggedIn, api.getAssignableUsers, api.getLeadtimeDefaults, function (req, res, next ) {
-		console.log("Leadtime Log");
-		console.log(res.locals.leadtime);
     Promise.props({
 			plan: ProjectPlanPackage.find(ProjectPlanPackage.filterOwnedTasks(req.user.id)).execAsync(),
 			open: ProjectPlanPackage.find(ProjectPlanPackage.filterOpenTasks()).execAsync()
@@ -61,11 +59,6 @@ module.exports = function(passport) {
 							}
 						}
 
-						// console.log("1P");
-						// console.log(apps);
-						// console.log("1O");
-						// console.log(openApps);
-						
 						res.render('usertasks', {
 							userId: req.user._id,
 							user: req.user._id, //for nav bar compat
@@ -117,17 +110,13 @@ module.exports = function(passport) {
 function isLoggedIn(req, res, next) {
 
 	if(req.isAuthenticated()) {
-		console.log(req.user._id);
 		var userID = req.user._id.toString();
 
-		console.log("userID");
-		console.log(userID);
 		var ObjectId = require('mongodb').ObjectID;
 		Promise.props({
 			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 		})
 			     .then(function (results) {
-				     console.log(results);
 
 					   if (!results) {
 						   res.redirect('/user/logout');
@@ -154,13 +143,11 @@ function isLoggedIn(req, res, next) {
 							   }
 
 							   else {
-								   console.log("user is not required role");
 								   res.redirect('/user/logout');
 							   }
 						   }
 						   else {
 							   //user not active
-							   console.log("user not active");
 							   res.redirect('/user/logout');
 						   }
 					   }
@@ -183,7 +170,6 @@ function isLoggedIn(req, res, next) {
 //post request authenticator.  Checks if user is an admin or vetting or site agent
 function isLoggedInPost(req, res, next) {
 	if(req.isAuthenticated()) {
-		console.log(req.user._id);
 		var userID = req.user._id.toString();
 
 		var ObjectId = require('mongodb').ObjectID;
@@ -192,7 +178,6 @@ function isLoggedInPost(req, res, next) {
 			user: User.findOne({'_id' : ObjectId(userID)}).lean().execAsync()
 		})
 			     .then(function (results) {
-				     console.log(results);
 
 					   if (!results) {
 						   //user not found in db.  Route to error handler
