@@ -28,7 +28,7 @@ describe("site file Routes Testing", () => {
       var username = process.env.CATALYST_USER_EMAIL,
           password = process.env.CATALYST_USER_PASSWORD;
       agent.post("/user/login")
-        .set('content-type', 'application/x-www-form-urlencoded')
+        // .set('content-type', 'application/x-www-form-urlencoded')
         .send( { email: username, password: password })
         .end((err, res) => {
           // console.log(res);

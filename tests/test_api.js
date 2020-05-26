@@ -76,8 +76,45 @@ describe("api.js", () => {
 
     it("Check that documents exist", async () => {
       var docs = await DocumentPackage.find({"application.name.first": "QQXDAFB"});
-      
+
       chai.expect(docs.length).to.gte(1);
+
+      doc_id = docs[0]._id;;
+    });
+
+    it("login with correct account information", (done) => {
+      var username = process.env.CATALYST_USER_EMAIL,
+          password = process.env.CATALYST_USER_PASSWORD;
+      agent.post("/user/login")
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send( { email: username, password: password })
+        .end((err, res) => {
+          // console.log(res);
+          res.should.have.status(200);
+          chai.expect(res).to.not.redirectTo(/\/user\/login/);
+          done();
+        });
+    });
+
+    it("should edit the name of the document to /edit/name/", async () => {
+      var new_data = {
+        "value[first]": "QQXDAFB",
+        "value[middle]": "B",
+        "value[last]": "C"
+      };
+      agent.post("/edit/name/" + doc_id)
+        .send( new_data )
+        .end((err, res) => {
+          res.should.have.status(200);
+        });
+    });
+
+    it("should have the new names", async () => {
+      var doc = await DocumentPackage.findById(doc_id);
+      console.log(doc);
+      chai.expect(doc.application.name.first).to.eq("QQXDAFB");
+      chai.expect(doc.application.name.middle).to.eq("B");
+      chai.expect(doc.application.name.last).to.eq("C");
     });
 
     it("Delete the documents", async () => {
