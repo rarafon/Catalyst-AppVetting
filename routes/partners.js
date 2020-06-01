@@ -18,9 +18,7 @@ var ObjectId = require('mongodb').ObjectID;
 
 module.exports = function(passport) {
 
-router.get('/', isLoggedInMultiRoles, api.getProjPartnersLeaders, function(req, res, next) {
-	var results = {};
-
+	router.get('/', api.getProjPartnersLeaders, function(req, res, next) {
 	console.log("Getting Partners");
     console.log(res.locals.results);
 
@@ -31,9 +29,8 @@ router.get('/', isLoggedInMultiRoles, api.getProjPartnersLeaders, function(req, 
 	//results.pAssoc = res.locals.results.pAssoc;
 	//results.pCount = res.locals.results.pCount;
 
-	console.log(results);
 	// res.render('partners', results);
-	res.send(results);
+	res.json(res.locals.results);
 });
 
 
